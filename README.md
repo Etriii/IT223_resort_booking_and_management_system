@@ -1,1 +1,1 @@
-# IT223_ocean_view
+Maya naku mag add ani here basta instead php artisan serce - "npm run dev" dapat e run sa terminal
