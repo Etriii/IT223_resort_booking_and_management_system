@@ -1,9 +1,11 @@
 <p align="center">
-  <img src="./src/assets/react.svg" width="200" alt="Ocean View Logo">
+  <img src="./src/assets/images/logo/ov_logo.png" width="270" alt="Ocean View Logo">
 </p>
 
 <h1 align="center">Ocean View <br/>Resort Booking and Management System</h1>
-
+<div align="center" style="width:100%;">
+  <img src="./src/assets/images/gif/line-animated-birds-wire.gif" alt="Break Line">
+</div>
 ## 📖 About Ocean View RBMS
 
 The Ocean View is an innovative web-based platform designed to revolutionize the beach reservation experience for a resort that currently uses manual processes for managing bookings and resources. The system aims to continue the process of booking beach spots, amenities, and activities for tourists while helping beach management maintain organization and optimize their resources. OceanView will provide a user-friendly interface for users to explore resorts, view availability, make reservations, and manage their bookings effortlessly.
@@ -144,7 +146,7 @@ Prerequisites:
 ```
 ## 📊 Project Analytics
 
-![Alt](https://repobeats.axiom.co/api/embed/3f977d2d3ef680382bb862b62787e434404db6e1.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/e4bc741629106169e150bb81b24827add1c751d1.svg "Repobeats analytics image")
 
 ## 🙏 Acknowledgments
 
@@ -154,3 +156,6 @@ Developed by:
 - Alex, Jr. A. Aparece
 - Aldren Ross M. Luga
 - Micah Angela E. Floro
+
+  <img src="./src/assets/images/gif/dolphine.gif" alt="Ocean View Logo">
+
