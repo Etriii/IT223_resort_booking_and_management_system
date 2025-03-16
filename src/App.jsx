@@ -1,13 +1,24 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react';
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [status, setStatus] = useState("Checking...");
+
+  useEffect(() => {
+    //  fetch("http://localhost:8000/connection_db_test.php")
+    fetch("http://localhost:8000/?controller=User&action=getUsers")
+      .then((response) => response.json())
+      .then((data) => setStatus(data.message))
+      .catch(() => setStatus("Error connecting to database"));
+  }, []);
 
   return (
     <>
+      <p>Status: {status}</p>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

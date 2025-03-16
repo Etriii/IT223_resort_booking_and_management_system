@@ -137,6 +137,7 @@ Prerequisites:
 
 ```bash
   npm run dev
+  php -S localhost:8000 -t src/backends
 ```
 
 6. Access the application:
