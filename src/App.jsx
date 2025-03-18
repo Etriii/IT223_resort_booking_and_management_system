@@ -1,46 +1,131 @@
-// import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
+// import PageNotFound from './pages/auth/PageNotFound';
+// import './App.css'
+
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// // import RootLayout from './layouts/RootLayout';
+
+// import HomePage from './pages/ocean_view/HomePage';
+// // import { BrowserRouter, Router, Routes, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+// // import OceanViewRoutes from "./routes/OceanViewRoutes";
+
+
+// import AdminLayout from './layouts/AdminLayout';
+// import AdminDashboard from './pages/admin/AdminDashboard'
+
+// function App() {
+//   // const [count, setCount] = useState(0)
+//   // const [status, setStatus] = useState("Checking...");
+
+//   // useEffect(() => {
+//   //   //  fetch("http://localhost:8000/connection_db_test.php")
+//   //   fetch("http://localhost:8000/api.php?controller=User&action=getAllUsers")
+//   //     .then((response) => response.json())
+//   //     .then((data) => setStatus(data.message))
+//   //     .catch(() => setStatus("Error connecting to database"));
+//   // }, []);
+
+//   // useEffect(() => {
+//   //   fetch("http://localhost:8000/api.php?controller=User&action=getAllUsers")
+//   //     .then((response) => response.json())
+//   //     .then((data) => setStatus(JSON.stringify(data))) // Convert to string for debugging
+//   //     .catch(() => setStatus("Error fetching data"));
+//   // }, []);
+
+//   // const basename = "oceanview";
+
+//   // const router = createBrowserRouter(
+//   //   createRoutesFromElements(
+//   //     <Route path='oceanview' element={<RootLayout />}>
+//   //       <Route path='/' element={<HomePage />} />
+//   //       <Route path='*' element={<PageNotFound />} />
+//   //     </Route>
+//   //   )
+//   // );
+
+
+
+//   return (
+//     // <p>Status: {status}</p>
+//     // <Routes>
+//     //   {/* <Route exact path="oceanview/*" element={<OceanViewRoutes />} /> */}
+//     //   <Route path={`${basename}/`} element={<HomePage />} />
+//     //   <Route path="*" element={<PageNotFound />} />
+//     // </Routes>
+//     // <RouterProvider router={router} />
+
+//     <Router>
+//       <Routes>
+//         <Route path="oceanview/admin" element={<AdminLayout />}>
+//           <Route path="dashboard" element={<AdminDashboard />} />
+//         </Route>
+//         <Route path="*" element={<PageNotFound />} />
+//       </Routes>
+//     </Router>
+//   )
+// }
+
+// export default App
+
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [status, setStatus] = useState("Checking...");
+import { Routes, Route } from "react-router-dom";
 
-  useEffect(() => {
-    //  fetch("http://localhost:8000/connection_db_test.php")
-    fetch("http://localhost:8000/?controller=User&action=getUsers")
-      .then((response) => response.json())
-      .then((data) => setStatus(data.message))
-      .catch(() => setStatus("Error connecting to database"));
-  }, []);
+//Admin Page 
+import AdminLayout from "./layouts/AdminLayout";
+import { AdminDashboard, Resorts, Users } from "./pages/admin";
 
+//Resort Admin Page
+import ResortAdminLayout from './layouts/ResortAdminLayout';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageRooms } from './pages/resort_admin';
+
+// User Page
+import UserLayout from './layouts/UserLayout';
+import { Bookmarks, MyAccount, MyReservations, TransactionHistory } from './pages/user';
+import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
+import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
+
+import PageNotFound from './pages/auth/PageNotFound';
+
+const App = () => {
   return (
-    <>
-      <p>Status: {status}</p>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
 
-export default App
+      <Route path="oceanview/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="resorts" element={<Resorts />} />
+        <Route path="users" element={<Users />} />
+      </Route>
+
+      <Route path="oceanview/resortadmin" element={<ResortAdminLayout />}>
+        <Route index element={<ResortAdminDashboard />} />
+        <Route path="dashboard" element={<ResortAdminDashboard />} />
+        <Route path="manageresort" element={<ManageResort />} />
+        <Route path="managerooms" element={<ManageRooms />} />
+        <Route path="reservations" element={<Reservations />} />
+      </Route>
+
+      <Route path="oceanview" element={<UserLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="" element={<HomePage />} />
+        <Route path="about" element={<AboutOceanView />} />
+        <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
+        {/* USER */}
+        <Route path="bookmarks" element={<Bookmarks />} />
+        <Route path="myaccount" element={<MyAccount />} />
+        <Route path="myreservations" element={<MyReservations />} />
+        <Route path="resortdetails" element={<ResortDetails />} />
+        <Route path="resortroomlist" element={<ResortRoomList />} />
+        <Route path="resortslist" element={<ResortsList />} />
+        <Route path="transactionhistory" element={<TransactionHistory />} />
+      </Route>
+
+      {/* Catch-all Route for 404 Page */}
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
+  );
+};
+
+export default App;
