@@ -24,7 +24,7 @@ const AdminLayout = () => {
             <div className="w-full">
                 <AdminHeading />
                 <main className="p-4">
-                    <Outlet /> {/* This is where page content will be rendered */}
+                    <Outlet /> 
                 </main>
             </div>
         </div>
