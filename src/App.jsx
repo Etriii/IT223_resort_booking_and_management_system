@@ -82,7 +82,7 @@ import { AdminDashboard, Resorts, Users } from "./pages/admin";
 import { ResortAdminDashboard, ManageResort, Reservations, ManageRooms } from './pages/resort_admin';
 
 // User Page
-import { Bookmarks, MyAccount, MyReservations, TransactionHistory } from './pages/user';
+import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pages/user';
 import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 
@@ -120,7 +120,7 @@ const App = () => {
         <Route path="resortdetails" element={<ResortDetails />} />
         <Route path="resortroomlist" element={<ResortRoomList />} />
         <Route path="resortslist" element={<ResortsList />} />
-        <Route path="transactionhistory" element={<TransactionHistory />} />
+        <Route path="transactionshistory" element={<TransactionsHistory />} />
       </Route>
 
       <Route path="oceanview" element={<LoginLayout />}>

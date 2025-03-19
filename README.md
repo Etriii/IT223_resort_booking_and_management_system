@@ -6,6 +6,7 @@
 <div align="center" style="width:100%;">
   <img src="./src/assets/images/gif/line-animated-birds-wire.gif" alt="Break Line">
 </div>
+
 ## 📖 About Ocean View RBMS
 
 The Ocean View is an innovative web-based platform designed to revolutionize the beach reservation experience for a resort that currently uses manual processes for managing bookings and resources. The system aims to continue the process of booking beach spots, amenities, and activities for tourists while helping beach management maintain organization and optimize their resources. OceanView will provide a user-friendly interface for users to explore resorts, view availability, make reservations, and manage their bookings effortlessly.
@@ -48,6 +49,7 @@ Core Features:
 - ✅ Booking & Payment Management – View, confirm, or cancel reservations and process payments.
 - ✅ Guest Management – Track guest profiles, preferences, and booking history.
 - ✅ Reports & Analytics – Generate financial reports, occupancy trends, and revenue insights.
+- ✅ Promotional Events & Discounts – Resort admins can create events that offer temporary discounts, automatically applying to bookings within the event period.
 
 3. Super Admin Features:
 - ✅ System-Wide Management – Oversee all resorts, admins, and users.
@@ -158,5 +160,7 @@ Developed by:
 - Aldren Ross M. Luga
 - Micah Angela E. Floro
 
-  <img src="./src/assets/images/gif/dolphine.gif" alt="Ocean View Logo">
+<div align="center">
+<img src="./src/assets/images/gif/dolphine.gif" alt="Ocean View Logo">
+</div> 
 
