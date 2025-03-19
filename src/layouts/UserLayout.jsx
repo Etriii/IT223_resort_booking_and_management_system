@@ -17,7 +17,7 @@ const UserLayout = ({ children }) => {
             <div className="w-full">
                 <UserHeading />
                 <main className="p-4">
-                    <Outlet /> {/* This is where page content will be rendered */}
+                    <Outlet />
                 </main>
             </div>
         </div>

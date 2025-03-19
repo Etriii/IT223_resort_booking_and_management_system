@@ -72,21 +72,22 @@ import './App.css'
 
 import { Routes, Route } from "react-router-dom";
 
+// Layouts
+import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layouts';
+
 //Admin Page 
-import AdminLayout from "./layouts/AdminLayout";
 import { AdminDashboard, Resorts, Users } from "./pages/admin";
 
 //Resort Admin Page
-import ResortAdminLayout from './layouts/ResortAdminLayout';
 import { ResortAdminDashboard, ManageResort, Reservations, ManageRooms } from './pages/resort_admin';
 
 // User Page
-import UserLayout from './layouts/UserLayout';
 import { Bookmarks, MyAccount, MyReservations, TransactionHistory } from './pages/user';
 import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 
-import PageNotFound from './pages/auth/PageNotFound';
+// Auth
+import { Login, LoginAs, PageNotFound, Register, } from './pages/auth';
 
 const App = () => {
   return (
@@ -120,6 +121,12 @@ const App = () => {
         <Route path="resortroomlist" element={<ResortRoomList />} />
         <Route path="resortslist" element={<ResortsList />} />
         <Route path="transactionhistory" element={<TransactionHistory />} />
+      </Route>
+
+      <Route path="oceanview" element={<LoginLayout />}>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="loginas" element={<LoginAs />} />
       </Route>
 
       {/* Catch-all Route for 404 Page */}
