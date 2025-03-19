@@ -1,6 +1,6 @@
 import UserLayout from '../../layouts/UserLayout';
 
-const Transactions = () => {
+const TransactionsHistory = () => {
     return (
         <>
             Transactions
@@ -8,4 +8,4 @@ const Transactions = () => {
     );
 }
 
-export default Transactions;
+export default TransactionsHistory;
