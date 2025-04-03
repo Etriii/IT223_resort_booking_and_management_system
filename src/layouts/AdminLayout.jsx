@@ -23,7 +23,7 @@ const AdminLayout = () => {
             <AdminSideNav />
             <div className="w-full">
                 <AdminHeading />
-                <main className="p-4">
+                <main className="p-4 overflow-x-auto">
                     <Outlet /> 
                 </main>
             </div>

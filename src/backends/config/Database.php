@@ -1,10 +1,11 @@
 <?php
-// Sample
-
+/* run ni sa terminal
+ php -S localhost:8000 -t src/backends
+*/
 class Database
 {
     private $host = "localhost";
-    private $db_name = "ov";
+    private $db_name = "it223_ocean_view_db";
     private $username = "root";
     private $password = "";
     private $conn = null;
