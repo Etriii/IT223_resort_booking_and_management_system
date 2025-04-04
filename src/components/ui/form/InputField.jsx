@@ -26,7 +26,7 @@ const InputField = ({
         <div className={`w-full ${className}`}>
             {label && (
                 <label htmlFor={inputId} className="block mb-1 font-sm">
-                    {label}
+                    {label}z
                 </label>
             )}
             <input
@@ -38,7 +38,7 @@ const InputField = ({
                 placeholder={placeholder}
                 required={required}
                 className={combinedClasses}
-                disabled = {disabled}
+                disabled={disabled}
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>

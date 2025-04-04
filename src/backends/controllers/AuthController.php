@@ -55,4 +55,23 @@ class AuthController
             echo json_encode(["error" => "Failed to register"]);
         }
     }
+
+    // public function getUser()
+    // {
+    //     session_start();
+
+    //     if (!isset($_SESSION['user_id'])) {
+    //         echo json_encode(['error' => 'User Not Logged In']);
+    //         return;
+    //     }
+
+    //     echo json_encode($this->userModel->getUserById($_SESSION['user_id']));
+    // }
+
+    public function logout()
+    {
+        session_start();
+        session_destroy();
+        echo json_encode(['message' => 'Logged out successfully']);
+    }
 }

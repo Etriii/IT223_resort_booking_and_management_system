@@ -89,6 +89,8 @@ import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 // Auth
 import { Login, LoginAs, PageNotFound, Register, } from './pages/auth';
 
+import ProtectedRoute from './utils/ProtectedRoute';
+
 const App = () => {
   return (
     <Routes>
@@ -108,6 +110,7 @@ const App = () => {
         <Route path="reservations" element={<Reservations />} />
       </Route>
 
+
       <Route path="oceanview" element={<UserLayout />}>
         <Route index element={<HomePage />} />
         <Route path="" element={<HomePage />} />
@@ -126,7 +129,9 @@ const App = () => {
       <Route path="oceanview" element={<LoginLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="loginas" element={<LoginAs />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="loginas" element={<LoginAs />} />
+        </Route>
       </Route>
 
       {/* Catch-all Route for 404 Page */}

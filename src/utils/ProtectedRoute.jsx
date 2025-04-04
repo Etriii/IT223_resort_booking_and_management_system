@@ -1,18 +1,49 @@
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
-// ProtectedRoute component
-const ProtectedRoute = ({ children, role }) => {
-    const user = JSON.parse(localStorage.getItem("user")); // Simulated auth check
+// const ProtectedRoute = ({ children, role = null }) => {
+//     const user_id = localStorage.getItem("user_id");
 
-    if (!user) {
-        return <Navigate to="/login" replace />; // Redirect if not logged in
+//     if (!user_id) {
+//         return <Navigate to="oceanview/login" replace />;
+//     }
+
+//     return children;
+// };
+
+// export default ProtectedRoute;
+
+import { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+// import { getAuthStatus } from "./auth";
+
+const ProtectedRoute = ({ allowedRoles }) => {
+    // const [auth, setAuth] = useState(null);
+
+    // useEffect(() => {
+    //     getAuthStatus().then(setAuth);
+    // }, []);
+
+    // if (auth === null) return <p>Loading...</p>;
+
+    // if (!auth.isAuthenticated) {
+    //     return <Navigate to="/oceanview/login" replace />;
+    // }
+
+    // if (allowedRoles && !allowedRoles.some(role => auth.roles.includes(role))) {
+    //     return <Navigate to="/oceanview" replace />;
+    // }
+
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        return <Navigate to="/oceanview/login" replace />;
     }
 
-    if (role && user.role !== role) {
-        return <Navigate to="/unauthorized" replace />; // Redirect if wrong role
-    }
+    const [UserRoles, setUserRoles] = useState();
 
-    return children;
+    fetch('http://localhost:8000/api.php?controller=User&action=getUserRoles').then();
+
+    return <Outlet />;
 };
 
 export default ProtectedRoute;

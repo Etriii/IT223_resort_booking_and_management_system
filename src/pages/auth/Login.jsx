@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/ui/form/InputField';
+import Button from '../../components/ui/button/Button';
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -24,14 +26,14 @@ const Login = () => {
 
         const data = await response.json();
 
-        setTimeout(() => { // Delay execution for 1 second
+        setTimeout(() => {
             setLoading(false);
 
             if (data.error) {
                 setError(data.error);
             } else {
                 alert("Login successful!");
-                localStorage.setItem("user", JSON.stringify(data.user)); // Save user session
+                localStorage.setItem("user_id", JSON.stringify(data.user['id']));
                 navigate('/oceanview/loginas');
             }
         }, 1000);
@@ -40,7 +42,7 @@ const Login = () => {
 
     return (
         <div className='flex flex-col space-y-2'>
-            {error ?? <div className='border border-red-500 p-5'>{error}</div>}
+            {error ? <div className='border border-red-500 p-5 text-red-600'>{error}</div> : null}
             <form onSubmit={handleLogin} className='space-y-2'>
 
                 <InputField
@@ -63,14 +65,12 @@ const Login = () => {
                     className="bg-gray-100 text-gray-700"
                 />
 
-                <InputField
-                    name="login"
-                    type="submit"
-                    value={loading ? "Logging in..." : "Login"}
-                    className=" bg-blue-700 text-white border-none rounded cursor-pointer"
-                    disabled={loading}
-                />
+                <Button variant="primary" size="md" onClick={handleLogin} disabled={loading} loading={loading}>
+                    {loading ? "Logging In..." : "Log In"}
+                </Button>
+
             </form>
+
 
             <button onClick={() => navigate('/oceanview/register')} className='text-blue-700'>Dont have an Account?</button>
         </div>
