@@ -14,6 +14,6 @@ class UserRolesController
 
     public function getUserRoles($request)
     {
-        echo json_encode($this->userRolesModel->getUserRoles($request->get('id')));
+        echo json_encode($this->userRolesModel->getUserRoles($request->get('user_id')));
     }
 }

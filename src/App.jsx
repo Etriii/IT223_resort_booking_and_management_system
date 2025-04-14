@@ -87,52 +87,71 @@ import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 
 // Auth
-import { Login, LoginAs, PageNotFound, Register, } from './pages/auth';
+import { Login, LoginAs, PageNotFound, Register, Unauthorized } from './pages/auth';
 
-import ProtectedRoute from './utils/ProtectedRoute';
+import { Authenticate, ProtectedRoute, RedirectIfAuthenticated } from './utils/middlewares';
 
 const App = () => {
   return (
     <Routes>
 
       <Route path="oceanview/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="resorts" element={<Resorts />} />
-        <Route path="users" element={<Users />} />
+        <Route element={<Authenticate />}>
+          <Route element={<ProtectedRoute allowedRoles={['super_admin']} />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="resorts" element={<Resorts />} />
+            <Route path="users" element={<Users />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="oceanview/resortadmin" element={<ResortAdminLayout />}>
-        <Route index element={<ResortAdminDashboard />} />
-        <Route path="dashboard" element={<ResortAdminDashboard />} />
-        <Route path="manageresort" element={<ManageResort />} />
-        <Route path="managerooms" element={<ManageRooms />} />
-        <Route path="reservations" element={<Reservations />} />
+        <Route element={<Authenticate />}>
+          <Route element={<ProtectedRoute allowedRoles={['resort_super_admin', 'resort_admin']} />}>
+            <Route index element={<ResortAdminDashboard />} />
+            <Route path="dashboard" element={<ResortAdminDashboard />} />
+            <Route path="manageresort" element={<ManageResort />} />
+            <Route path="managerooms" element={<ManageRooms />} />
+            <Route path="reservations" element={<Reservations />} />
+          </Route>
+        </Route>
       </Route>
 
-
       <Route path="oceanview" element={<UserLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="" element={<HomePage />} />
-        <Route path="about" element={<AboutOceanView />} />
-        <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
-        {/* USER */}
-        <Route path="bookmarks" element={<Bookmarks />} />
-        <Route path="myaccount" element={<MyAccount />} />
-        <Route path="myreservations" element={<MyReservations />} />
-        <Route path="resortdetails" element={<ResortDetails />} />
-        <Route path="resortroomlist" element={<ResortRoomList />} />
-        <Route path="resortslist" element={<ResortsList />} />
-        <Route path="transactionshistory" element={<TransactionsHistory />} />
+        <Route element={<ProtectedRoute allowedRoles={['guest']} />}>
+          <Route index element={<HomePage />} />
+          <Route path="" element={<HomePage />} />
+          <Route path="about" element={<AboutOceanView />} />
+          <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
+
+          {/* USER */}
+          <Route path="resortslist" element={<ResortsList />} />
+          <Route path="resortdetails" element={<ResortDetails />} />
+          <Route path="resortroomlist" element={<ResortRoomList />} />
+
+          <Route element={<Authenticate />}>
+            <Route path="bookmarks" element={<Bookmarks />} />
+            <Route path="myaccount" element={<MyAccount />} />
+            <Route path="myreservations" element={<MyReservations />} />
+            <Route path="transactionshistory" element={<TransactionsHistory />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="oceanview" element={<LoginLayout />}>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="loginas" element={<LoginAs />} />
+        {/* butangan ni 2 here og check if naka log in naba */}
+        <Route element={<RedirectIfAuthenticated />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
         </Route>
       </Route>
+      {/* <Route element={<ProtectedRoute />}>
+          <Route path="loginas" element={<LoginAs />} />
+        </Route> */}
+
+      {/* Catch-all Route for unauthorized access */}
+      <Route path="oceanview/unauthorized" element={<Unauthorized />} />
 
       {/* Catch-all Route for 404 Page */}
       <Route path="*" element={<PageNotFound />} />

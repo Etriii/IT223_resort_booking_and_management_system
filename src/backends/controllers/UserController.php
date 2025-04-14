@@ -150,4 +150,10 @@ class UserController
         $result = $this->userModel->createUser($name, $email, $password);
         echo json_encode(["success" => $result]);
     }
+
+    public function deleteUser($request)
+    {
+        $user_id = $request->get('user_id');
+        $result = $this->userModel->deleteUser($user_id);
+    }
 }
