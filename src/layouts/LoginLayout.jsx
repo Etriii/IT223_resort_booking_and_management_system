@@ -11,7 +11,7 @@ const LoginLayout = () => {
                 <img src={logo} alt="" className=' w-32 h-32' />
                 <div className="text-center text-white font-semibold text-4xl">Ocean View: Resort Booking and Management System</div>
             </div>
-            <div className='h-lvh bg-gray-100 flex justify-center items-center w-full'>
+            <div className='h-lvh bg-gray-100 flex justify-center items-center w-full overflow-hidden'>
                 <Outlet />
             </div>
         </div>

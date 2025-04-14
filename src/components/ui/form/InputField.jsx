@@ -26,7 +26,7 @@ const InputField = ({
         <div className={`w-full ${className}`}>
             {label && (
                 <label htmlFor={inputId} className="block mb-1 font-sm">
-                    {label}z
+                    {label}
                 </label>
             )}
             <input

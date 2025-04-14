@@ -10,6 +10,7 @@ const LoginAs = () => {
 
     const HandleLogout = () => {
         localStorage.removeItem('user_id');
+        localStorage.removeItem('user_role');
         navigate('/oceanview/login');
     }
 
@@ -17,13 +18,28 @@ const LoginAs = () => {
         fetch(`http://localhost:8000/api.php?controller=User&action=getUserById&id=${localStorage.getItem('user_id')}`)
             .then((response) => response.json())
             .then((data) => setUser(data))
-            .catch(() => setStatus("Error fetching data"));
+            .catch(() => setStatus("Error fetching User By Id"));
 
-        fetch(`http://localhost:8000/api.php?controller=UserRoles&action=getUserRoles&id=${localStorage.getItem('user_id')}`)
-            .then((response) => response.json())
-            .then((data) => setUserRoles(data))
-            .catch(() => setStatus("Error fetching data"));
+        const fetchUserRoles = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api.php?controller=UserRoles&action=getUserRoles&user_id=${localStorage.getItem('user_id')}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                setUserRoles(data);
+
+            } catch (error) {
+                console.log('error fetching user roles: ', error);
+            }
+        }
+
+        fetchUserRoles();
     }, []);
+
 
     return (
         <div className='flex flex-col justify-center items-center text-center p-10'>

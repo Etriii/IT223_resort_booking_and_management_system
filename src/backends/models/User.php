@@ -176,4 +176,10 @@ class User
         $stmt->bindParam(":password", $hashedPassword);
         return $stmt->execute();
     }
+
+    public function deleteUser($user_id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id=" . $user_id);
+        return $stmt->execute();
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-/* run ni sa terminal
+/* run ni sa terminal para maka access kag mga data
  php -S localhost:8000 -t src/backends
 */
 class Database

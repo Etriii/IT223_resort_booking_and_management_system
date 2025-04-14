@@ -1,6 +1,14 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import logout from '../../../../utils/logout'
 
 const UserSideNav = () => {
+
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logout(navigate);
+    }
+
     return (
         <aside className=" h-lvh w-64 border border-gray-500 p-4">
             <h2 className="text-xl font-bold">User Menu</h2>
@@ -39,7 +47,9 @@ const UserSideNav = () => {
                 </li>
 
                 <li className="text-red-600">
-                    <NavLink to="/oceanview/login">Logout</NavLink>
+                    <button type="button" className="text-red-500" onClick={handleLogout}>
+                        Logout
+                    </button>
                 </li>
             </ul>
         </aside>
