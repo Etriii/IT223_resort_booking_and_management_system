@@ -42,7 +42,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     // console.log(userRoles);
 
 
-    // CANCEL NI TANAN. Lain man day siya kay mo daku imong programmon. Like kunware e access niya ang log in page sag naka log in na. Asa to siya i butang na page? if kunware daghan siyag role. sa resort admin ba or sa main na dashboard a dunno maong langgkaton naalng ni
+    // CANCEL NI TANAN. Lain man day siya kay mo daku imong programmon. Like kunware e access niya ang log in page sag naka logged in na. Asa to siya i butang na page? if kunware daghan siyag role. sa resort admin ba or sa main na dashboard a dunno maong langgkaton naalng ni
 
     const userRole = JSON.parse(localStorage.getItem('user_role')) ?? [{ 'role': 'guest' }];
     if (!userRole || !allowedRoles.includes(userRole[0]['role'])) {

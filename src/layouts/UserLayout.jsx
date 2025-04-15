@@ -13,10 +13,10 @@ const UserLayout = ({ children }) => {
         //     </div>
         // </div>
         <div className="flex">
-            <UserSideNav />
+            {/* <UserSideNav /> */}
             <div className="w-full">
                 <UserHeading />
-                <main className="p-4">
+                <main className="p-4 overflow-x-hidden">
                     <Outlet />
                 </main>
             </div>
