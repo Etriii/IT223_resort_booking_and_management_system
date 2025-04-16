@@ -76,7 +76,7 @@ import { Routes, Route } from "react-router-dom";
 import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layouts';
 
 //Admin Page 
-import { AdminDashboard, Resorts, Users } from "./pages/admin";
+import { AdminDashboard, Resorts, Users, AdminMyAccount } from "./pages/admin";
 
 //Resort Admin Page
 import { ResortAdminDashboard, ManageResort, Reservations, ManageRooms } from './pages/resort_admin';
@@ -102,6 +102,7 @@ const App = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="resorts" element={<Resorts />} />
             <Route path="users" element={<Users />} />
+            <Route path="myaccount" element={<AdminMyAccount />} />
           </Route>
         </Route>
       </Route>
