@@ -1,9 +1,13 @@
 import { Outlet } from 'react-router-dom'
+import { useState } from 'react';
 
 import ResortAdminHeading from "../components/ui/layout/headings/ResortAdminHeading";
 import ResortAdminSideNav from "../components/ui/layout/side_navs/ResortAdminSideNav";
 
-const ResortAdminLayout = ({ children }) => {
+const ResortAdminLayout = () => {
+
+    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+
     return (
         // <div className="flex">
         //     <ResortAdminSideNav />
@@ -13,11 +17,11 @@ const ResortAdminLayout = ({ children }) => {
         //     </div>
         // </div>
         <div className="flex">
-            <ResortAdminSideNav />
+            <ResortAdminSideNav isOpen={isSideNavOpen} />
             <div className="w-full">
-                <ResortAdminHeading />
+                <ResortAdminHeading toggleSideNav={() => setIsSideNavOpen(!isSideNavOpen)} isOpen={isSideNavOpen} />
                 <main className="p-4">
-                    <Outlet /> 
+                    <Outlet />
                 </main>
             </div>
         </div>

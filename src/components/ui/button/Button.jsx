@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Button = ({ children, variant = "primary", size = "md", disabled = false, onClick, loading = false }) => {
-    const baseStyles = "rounded cursor-pointer transition duration-100  w-full flex justify-center items-center";
+    const baseStyles = "rounded cursor-pointer transition duration-100  w-full flex justify-center items-center space-x-2";
 
     const variantStyles = {
         primary: "bg-blue-700 text-white border-none hover:bg-blue-800",

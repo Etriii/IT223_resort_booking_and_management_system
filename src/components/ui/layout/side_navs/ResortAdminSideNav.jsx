@@ -1,37 +1,106 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import logout from '../../../../utils/logout'
+import { NavLink, useNavigate, useMatch } from "react-router-dom";
+import { useEffect } from "react";
 
-const ResortAdminSideNav = () => {
+import { MdDashboard, MdOutlineQuestionMark } from "react-icons/md";
+import { BsBuildingGear } from "react-icons/bs";
+import { RiCalendarCheckLine } from "react-icons/ri";
+
+import logo from '../../../../assets/images/logo/ov_logo.png';
+
+const ResortAdminSideNav = ({ className, isOpen }) => {
 
     const navigate = useNavigate();
-    const handleLogout = () => {
-        logout(navigate);
+
+    useEffect(() => {
+
+        const elements = {
+            sidenav: document.getElementById('sidenav'),
+            li_texts: document.querySelectorAll('.li_texts'),
+        };
+
+        if (!Object.values(elements).every((el) => el)) {
+            console.error("Required sidenav elements not found");
+            return;
+        }
+
+        elements.sidenav.classList.toggle("w-64", isOpen);
+        elements.sidenav.classList.toggle("w-16", !isOpen);
+
+        for (const text of elements.li_texts) {
+            if (!isOpen) {
+                text.classList.add("opacity-0");
+                // setTimeout(() => {
+                text.classList.add("hidden");
+                // }, 300);
+            } else {
+                setTimeout(() => {
+                    text.classList.remove("hidden");
+                    text.classList.remove("opacity-0");
+                }, 100);
+            }
+        }
+
+    }, [isOpen]);
+
+    const lists_default_styles = {
+        list: 'flex p-1 items-center space-x-2 hover:bg-green-600 hover:text-white rounded  overflow-x-hidden',
+        icon: 'size-7 ',
+        span: 'li_texts flex-1 whitespace-nowrap hidden',
     }
 
+    const link_styles = {
+        active: 'bg-green-600 text-white pointer-events-none',
+        passive: 'bg-white cursor-pointer',
+    };
+
+    const baseStyles = "duration-300 w-64 border border-right-gray-300 h-lvh shadow-lg sticky top-0 ";
+
+    // <ul>
+
+    //             <li>
+    //                 Audit Logs
+    //             </li>
+    //             <li>
+    //                 Reports & Analytics
+    //             </li>
+
+    //         </ul>
+
     return (
-        <aside className="w-64 border border-gray-500 p-4 h-lvh">
-            <h2 className="text-xl font-bold">Resort Admin Menu</h2>
-            <br />
-            <ul>
-                <li className="text-blue-600">
-                    <NavLink to="/oceanview/resortadmin">Dashboard</NavLink>
+        <aside className={`${baseStyles} ${className}`} id="sidenav">
+            <div className="flex items-center p-1 pl-[9px] space-x-1 border  border-b-gray-100">
+                <img src={logo} alt="" className="size-10" />
+                <h2 className=" li_texts text-md font-medium ">Ocean View </h2>
+            </div>
+            <ul className="pt-3 px-3 space-y-1">
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/dashboard/*')
+                    ? link_styles.active : link_styles.passive}`} onClick={() => navigate('/oceanview/resortadmin/dashboard')}>
+                    <MdDashboard className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Dashboard</span>
                 </li>
-                <li className="text-blue-600">
-                    <NavLink to="/oceanview/resortadmin/manageresort">Manage Resort</NavLink>
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manageresort/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manageresort')}>
+                    <BsBuildingGear className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Manage Resort</span>
                 </li>
-                <li className="text-blue-600">
-                    <NavLink to="/oceanview/resortadmin/reservations">Reservations</NavLink>
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reservations/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reservations')}>
+                    <RiCalendarCheckLine className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Reservations</span>
                 </li>
-                <li>
-                    Audit Logs
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reportsandanalytics/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reportsandanalytics')}>
+                    <MdOutlineQuestionMark className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Reports/Analytics</span>
                 </li>
-                <li>
-                    Reports & Analytics
-                </li>
-                <li className="text-red-600">
-                    <button type="button" className="text-red-500" onClick={handleLogout}>
-                        Logout
-                    </button>
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/logs/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/logs')}>
+                    <MdOutlineQuestionMark className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Logs</span>
                 </li>
             </ul>
         </aside>
