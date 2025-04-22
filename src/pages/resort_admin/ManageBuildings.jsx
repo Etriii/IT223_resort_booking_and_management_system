@@ -1,11 +1,11 @@
 import AdminLayout from "../../layouts/ResortAdminLayout";
 
-const ManageResort = () => {
+const ManageBuildings = () => {
     return (
         <>
-            Manage Rooms
+            Manage Buildings. 
         </>
     );
 }
 
-export default ManageResort;
+export default ManageBuildings;

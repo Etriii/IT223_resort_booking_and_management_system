@@ -79,7 +79,7 @@ import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layou
 import { AdminDashboard, Resorts, Users, AdminMyAccount } from "./pages/admin";
 
 //Resort Admin Page
-import { ResortAdminDashboard, ManageResort, Reservations, ManageRooms } from './pages/resort_admin';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings } from './pages/resort_admin';
 
 // User Page
 import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pages/user';
@@ -90,6 +90,7 @@ import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 import { Login, LoginAs, PageNotFound, Register, Unauthorized } from './pages/auth';
 
 import { Authenticate, ProtectedRoute, RedirectIfAuthenticated } from './utils/middlewares';
+import RAMyAccount from './pages/resort_admin/RAMyAccount';
 
 const App = () => {
   return (
@@ -112,9 +113,10 @@ const App = () => {
           <Route element={<ProtectedRoute allowedRoles={['resort_super_admin', 'resort_admin']} />}>
             <Route index element={<ResortAdminDashboard />} />
             <Route path="dashboard" element={<ResortAdminDashboard />} />
-            <Route path="manageresort" element={<ManageResort />} />
-            <Route path="managerooms" element={<ManageRooms />} />
+            <Route path="manage/resort" element={<ManageResort />} />
+            <Route path="manage/buildings" element={<ManageBuildings />} />
             <Route path="reservations" element={<Reservations />} />
+            <Route path="myaccount" element={<RAMyAccount />} />
           </Route>
         </Route>
       </Route>
