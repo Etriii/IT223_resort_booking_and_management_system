@@ -2,7 +2,7 @@
 
 const Accounts = () => {
     return (
-        <p>Admin Dashboard</p>
+        <p>Admin Dashboard Yehey</p>
     );
 }
 
