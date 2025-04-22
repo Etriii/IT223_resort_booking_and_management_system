@@ -27,11 +27,15 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
     };
 
     const [userProfile, setUserProfile] = useState();
+    const [userName, setUserName] = useState();
 
     useEffect(() => {
         fetch(`http://localhost:8000/api.php?controller=User&action=getUserById&id=${localStorage.getItem('user_id')}`)
             .then((response) => response.json())
-            .then((data) => setUserProfile(data.profile_photo))
+            .then((data) => {
+                setUserProfile(data.profile_photo);
+                setUserName(data.username);
+            })
             .catch((error) => console.error(error));
     }, []);
 
@@ -74,7 +78,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
                         </span>
                         <IoIosNotificationsOutline className="size-7" onClick={() => handleOpenNotif()} />
                     </div>
-                    <span>Username</span>
+                    <span className=" text-nowrap">{`${userName ? userName : 'Username'}`}</span>
                     <div className="relative">
                         <div className=" p-1 bg-gray-100 hover:bg-gray-200 rounded-full relative">
                             <div className=" cursor-pointer size-8 text-gray-700" onClick={() => handleOpenProfile()} >

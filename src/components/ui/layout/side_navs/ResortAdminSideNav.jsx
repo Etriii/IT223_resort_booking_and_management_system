@@ -1,9 +1,11 @@
 import { NavLink, useNavigate, useMatch } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { MdDashboard, MdOutlineQuestionMark } from "react-icons/md";
+import { MdDashboard, MdOutlineQuestionMark, MdEvent } from "react-icons/md";
 import { BsBuildingGear } from "react-icons/bs";
 import { RiCalendarCheckLine } from "react-icons/ri";
+import { IoIosArrowDown } from "react-icons/io";
+
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
 
@@ -49,7 +51,7 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
     }
 
     const link_styles = {
-        active: 'bg-green-600 text-white pointer-events-none',
+        active: 'bg-green-600 text-white ',
         passive: 'bg-white cursor-pointer',
     };
 
@@ -66,6 +68,8 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
 
     //         </ul>
 
+    const [manageResortDropdownIsOpen, setManageResortDropdownIsOpen] = useState(true);
+
     return (
         <aside className={`${baseStyles} ${className}`} id="sidenav">
             <div className="flex items-center p-1 pl-[9px] space-x-1 border  border-b-gray-100">
@@ -79,16 +83,38 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                     <span className={`${lists_default_styles.span}`}>Dashboard</span>
                 </li>
 
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manageresort/*')
-                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manageresort')}>
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/*')
+                    ? link_styles.active : link_styles.passive}  relative`} >
                     <BsBuildingGear className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Manage Resort</span>
+                    <div className={` size-5 cursor-pointer absolute top-[25%] right-2 ${!isOpen ? 'hidden' : ''}`}>
+                        <IoIosArrowDown className={`w-full h-full duration-75  ${manageResortDropdownIsOpen ? '' : 'rotate-90'}`} onClick={() => { setManageResortDropdownIsOpen(!manageResortDropdownIsOpen) }} />
+                    </div>
                 </li>
+
+                <div className={`li_texts p ml-3 space-y-1 ${manageResortDropdownIsOpen ? '' : 'hidden'}`} >
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/resort')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/resort')}>
+                        <BsBuildingGear className={`${lists_default_styles.icon} size-5`} />
+                        <span className={`${lists_default_styles.span}`}>Resort</span>
+                    </li>
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/buildings/*')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/buildings')}>
+                        <BsBuildingGear className={`${lists_default_styles.icon} size-5`} />
+                        <span className={`${lists_default_styles.span}`}>Building</span>
+                    </li>
+                </div>
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reservations/*')
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reservations')}>
                     <RiCalendarCheckLine className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Reservations</span>
+                </li>
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/events/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/events')}>
+                    <MdEvent className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Events</span>
                 </li>
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reportsandanalytics/*')
