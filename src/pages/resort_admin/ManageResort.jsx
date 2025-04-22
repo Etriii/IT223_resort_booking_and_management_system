@@ -3,7 +3,7 @@ import AdminLayout from "../../layouts/ResortAdminLayout";
 const ManageResort = () => {
     return (
         <>
-            Manage Resort
+            Manage Resort Edited Yeheyyy
         </>
     );
 }
