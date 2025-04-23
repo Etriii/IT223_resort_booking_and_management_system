@@ -124,8 +124,8 @@ const Login = () => {
                             <label className="block mb-1">Email</label>
                             <div className="flex items-center border border-gray-300 rounded px-3 py-2 shadow-sm bg-white focus-within:border-green-400">
                                 <FaEnvelope className="text-gray-400 mr-2" />
-                                <input
-                                    type="email"
+                                <input onChange={(e) => setEmail(e.target.value)} 
+                                    type="email" value={email}
                                     placeholder="Your valid email address"
                                     className="w-full focus:outline-none focus:ring-0 focus:border-transparent text-sm text-gray-700"
                                 />
@@ -137,8 +137,8 @@ const Login = () => {
                             <label className="block mb-1">Password</label>
                             <div className="flex items-center border border-gray-300 rounded px-3 py-2 shadow-sm bg-white focus-within:border-green-400">
                                 <FaLock className="text-gray-400 mr-2" />
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
+                                <input onChange={(e) => setPassword(e.target.value)}
+                                    type={showPassword ? 'text' : 'password'} value={password}
                                     placeholder="Your current password"
                                     className="w-full focus:outline-none focus:ring-0 focus:border-transparent text-sm text-gray-700"
                                 />
