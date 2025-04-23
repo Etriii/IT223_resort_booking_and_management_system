@@ -11,8 +11,17 @@ const LoginLayout = () => {
                 <img src={logo} alt="" className=' w-32 h-32' />
                 <div className="text-center text-white font-semibold text-4xl">Ocean View: Resort Booking and Management System</div>
             </div>
-            <div className='h-lvh bg-gray-100 flex justify-center items-center w-full overflow-hidden flex-col space-y-2'>
+            <div className='md:h-lvh bg-gray-100 flex justify-center items-center w-full overflow-hidden flex-col space-y-2 p-3'>
+                <div className='flex justify-center items-center flex-col px-7 py-4 md:hidden'>
+                    <img src={logo} alt="" className='size-[110px]' />
+                    <div className="text-center font-semibold text-2xl">Ocean View: Resort Booking and Management System</div>
+                </div>
                 <Outlet />
+                <footer className=" text-gray-400 py-4">
+                    <div className="max-w-7xl mx-auto text-center text-sm">
+                        © {new Date().getFullYear()} Ocean View. All Rights Reserved.
+                    </div>
+                </footer>
             </div>
         </div>
     )

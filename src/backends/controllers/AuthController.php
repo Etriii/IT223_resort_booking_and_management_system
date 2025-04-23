@@ -21,10 +21,25 @@ class AuthController
             return;
         }
 
+        $user_email = $this->userModel->getUserByEmail($email);
+
+        if (!$user_email) {
+            echo json_encode([
+                'error' => [
+                    'email' => 'Invalid email'
+                ]
+            ]);
+            return;
+        }
+
         $user = $this->userModel->getUserByEmail($email);
 
         if (!$user || !password_verify($password, $user['password'])) {
-            echo json_encode(["error" => "Invalid credentials"]);
+            echo json_encode([
+                'error' => [
+                    'password' => 'Invalid password'
+                ]
+            ]);
             return;
         }
 

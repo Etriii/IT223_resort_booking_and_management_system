@@ -182,4 +182,10 @@ class User
         $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id=" . $user_id);
         return $stmt->execute();
     }
+
+    public function getUserEmail($user_email)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE email=" . $user_email);
+        return $stmt->execute();
+    }
 }
