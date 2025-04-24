@@ -16,7 +16,7 @@ const UserLayout = ({ children }) => {
             {/* <UserSideNav /> */}
             <div className="w-full">
                 <UserHeading />
-                <main className="p-4 overflow-x-hidden">
+                <main className="p-2 overflow-x-hidden">
                     <Outlet />
                 </main>
             </div>
