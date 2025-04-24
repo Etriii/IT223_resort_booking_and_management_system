@@ -57,17 +57,6 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
 
     const baseStyles = "duration-300 w-64 border border-right-gray-300 h-lvh shadow-lg sticky top-0 ";
 
-    // <ul>
-
-    //             <li>
-    //                 Audit Logs
-    //             </li>
-    //             <li>
-    //                 Reports & Analytics
-    //             </li>
-
-    //         </ul>
-
     const [manageResortDropdownIsOpen, setManageResortDropdownIsOpen] = useState(true);
 
     return (
@@ -84,7 +73,7 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                 </li>
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/*')
-                    ? link_styles.active : link_styles.passive}  relative`} >
+                    ? link_styles.active : link_styles.passive}  relative`}  onClick={() => navigate('/oceanview/resortadmin/manage/resort')}>
                     <BsBuildingGear className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Manage Resort</span>
                     <div className={` size-5 cursor-pointer absolute top-[25%] right-2 ${!isOpen ? 'hidden' : ''}`}>

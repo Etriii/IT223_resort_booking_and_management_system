@@ -11,7 +11,7 @@ const Unauthorized = () => {
                 <strong className="font-bold">Access Denied!</strong>
                 <span className="block sm:inline">
                     You are currently logged in, but your user role does not have permission to access this page. Please{' '}
-                    <span onClick={() => logout(navigate)} className="underline cursor-pointer mr-1"  >
+                    <span onClick={() => logout(navigate)} className="underline cursor-pointer mr-1 font-bold text-red-600"  >
                         log out
                     </span>
                     and sign in with an authorized account.
@@ -19,7 +19,7 @@ const Unauthorized = () => {
             </div>
             <div>
                 Or go to
-                <span className="underline cursor-pointer" onClick={() => navigate('/oceanview/login')}>
+                <span className=" font-semibold cursor-pointer ml-2" onClick={() => navigate('/oceanview/login')}>
                     Home
                 </span>
             </div>
@@ -31,18 +31,9 @@ const Unauthorized = () => {
             <div>
                 <h2 className="text-red-600 text-xl">403 - Unauthorized</h2>
                 <p>You do not have permission to access this page.</p>
-                {/* <button onClick={handleBack} className="border border-gray-400 px-2 rounded">Go Back</button> */}
             </div>
-            {/* <div className="text-center p-2">
-                <h2 className=" font-bold">Possible reasons</h2>
-                <ul className=" list-disc">
-                    <li>You are corrently logged and your user role is not authorized to access this page</li>
-                    <li>You are corrently logged and your user role is not authorized to access this page</li>
-                </ul>
-            </div> */}
 
-
-            {localStorage.getItem('user_id') ? '' : ''}
+            {localStorage.getItem('user_id') ? isUnAuthorized : ''}
         </div>
     );
 };
