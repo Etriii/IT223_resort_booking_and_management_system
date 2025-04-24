@@ -90,7 +90,7 @@ const Login = () => {
                             setErrorPassword(data.error.password);
                         }
                     }
-                } else {
+                } else {    
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));
 
