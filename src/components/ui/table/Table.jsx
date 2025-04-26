@@ -1,7 +1,7 @@
-import { list } from 'postcss';
 import React from 'react'
+import LoadingTable from "./LoadingTable";
 
-const Table = ({ children, theadings, }) => {
+const Table = ({ children, theadings, isLoading = false }) => {
 
     const styles = {
         table: 'min-w-full border-separate border-spacing-0 py-1',
@@ -12,8 +12,22 @@ const Table = ({ children, theadings, }) => {
         col: '',
     };
 
+    if (!theadings.length > 0) {
+        return (
+            <div className='p-4 text-red-400'>
+                Error!  No table headings
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <LoadingTable row_count={3} col_count={theadings.length} />
+        );
+    }
+
     return (
-        <div className="overflow-x-auto">
+        // <div className="overflow-x-auto">
             <table className={`${styles.table}`}>
                 <thead className={`${styles.theading}`}>
                     <tr>
@@ -31,7 +45,7 @@ const Table = ({ children, theadings, }) => {
                     {children}
                 </tbody>
             </table>
-        </div>
+        // </div>
     )
 }
 

@@ -16,9 +16,9 @@ const InputField = ({
     const inputId = id || `input-${name}`;
 
     const defaultClasses =
-        "w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2";
+        "w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-1 ";
 
-    const errorClass = error ? "border-red-500" : "border-gray-300 focus:ring-blue-500";
+    const errorClass = error ? "border-red-500" : "border-gray-300 focus:ring-green-500";
 
     const combinedClasses = `${defaultClasses} ${errorClass} ${className}`.trim();
 

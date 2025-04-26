@@ -16,4 +16,10 @@ class ResortsController
     {
         echo json_encode($this->resortsModel->getResorts());
     }
+
+    public function createResorts() {
+        $validated = [];
+
+        
+    }
 }

@@ -19,10 +19,15 @@ const ActionNotification = ({ children, variant = 'create', isOpen }) => {
     useEffect(() => {
         setIsActive(isOpen);
 
-        setTimeout(() => {
-            setIsActive(!isOpen);
-        }, 3000);
+        if (isOpen) {
+            const timer = setTimeout(() => {
+                setIsActive(false);
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
     }, [isOpen]);
+
 
     return isActive ? (
         <div className={`${baseStyles} ${variants[variant]}`}>
