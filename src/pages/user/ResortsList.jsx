@@ -1,6 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';  
-import { Container } from 'react-bootstrap';
 import UserFooter from '../../components/ui/layout/footers/UserFooter.jsx';
 import ControlledCarousel from '../../components/ui/carousel/resortcarousel.jsx';
 import ResortCard from '../../components/ui/card/card.jsx';

@@ -1,5 +1,4 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import React from 'react';
 import backgroundImage from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/backgroundaboutus.jpg";
 import ambot from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/ambot.jpg";
 import gal1 from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/gal1.jpg";
@@ -48,71 +47,33 @@ function ResortCard() {
             description: "Experience paradise like never before with crystal clear waters and white sand beaches.",
             buttonLink: "#",
         },
-        
     ];
 
     return (
         <div>
-            <h2 className='py-10 text-center'>
+            <h2 className="pt-10 text-center text-3xl font-semibold">
                 All Resorts
             </h2>
-            <div className="mt-10 row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5">
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">
                 {resorts.map((resort, index) => (
-                    <div className="col" key={index}>
-                        <Card
-                            style={{
-                                width: '33rem',
-                                height: '28rem',
-                                position: 'relative',
-                                marginBottom: '2.5rem',
-                                borderRadius: '10px',
-                                overflow: 'hidden',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Card.Img
-                                variant="top"
+                    <div key={index} className="relative overflow-hidden rounded-xl flex justify-center items-center mb-10" style={{ width: '33rem', height: '26rem' }}>
+                        <div className="relative w-full h-full">
+                            <img
                                 src={resort.image}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                }}
+                                alt={resort.title}
+                                className="w-full h-full object-cover"
                             />
-
-                            <Card.Body
-                                style={{
-                                    position: 'absolute',
-                                    bottom: '0',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)',
-                                    width: '100%',
-                                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                                    color: 'white',
-                                    padding: '20px',
-                                    textAlign: 'start',
-                                    paddingBottom: '22px'
-                                }}
-                            >
-                                <Card.Title><h1 style={{ fontSize: '20px' }}>{resort.title}</h1></Card.Title>
-                                <Card.Text><h5 style={{ fontSize: '12px' }}>{resort.location}</h5></Card.Text>
-                                <Button
-                                    variant="primary"
+                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-black bg-opacity-60 p-6 pl-8 pr-8">
+                                <h1 className="text-white text-xl font-bold">{resort.title}</h1>
+                                <h5 className="text-white text-sm">{resort.location}</h5>
+                                <a
                                     href={resort.buttonLink}
-                                    style={{
-                                        fontSize: '14px',
-                                        borderRadius: '20px',
-                                        padding: '8px',
-                                        fontWeight: 'bold',
-                                        width: '100%',
-                                    }}
+                                    className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full text-sm"
                                 >
                                     Visit now
-                                </Button>
-                            </Card.Body>
-                        </Card>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>

@@ -1,28 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Carousel, Container, Row, Col, Button } from 'react-bootstrap'; 
 import backgroundImage from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/backgroundaboutus.jpg";
-import ambot from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/ambot.jpg"
+import ambot from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/ambot.jpg";
 import gal1 from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/gal1.jpg";
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
   const intervalRef = useRef(null);
 
-  const handleSelect = (selectedIndex) => {
-    setIndex(selectedIndex);
-  };
-
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % resorts.length);
-    }, 5000);
-
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
   const resorts = [
     {
-      image: backgroundImage, 
+      image: backgroundImage,
       title: "Friday’s Beach Resort",
       location: "Boracay Island, Philippines",
       description: "Fridays Beach in Boracay Island, Philippines is a resort with boundless opportunities for family adventures, productive meetings, and memorable special events.",
@@ -36,61 +23,84 @@ function ControlledCarousel() {
       buttonLink: "#",
     },
     {
-        image: gal1, 
-        title: "Sea Eagles",
-        location: "Palawan, Philippines",
-        description: "Experience paradise like never before with crystal clear waters and white sand beaches.",
-        buttonLink: "#",
-      },
-
-
+      image: gal1,
+      title: "Sea Eagles",
+      location: "Palawan, Philippines",
+      description: "Experience paradise like never before with crystal clear waters and white sand beaches.",
+      buttonLink: "#",
+    },
   ];
 
-  return (
-    <Container fluid className="px-12 pb-16">
-      <Carousel activeIndex={index} onSelect={handleSelect} slide interval={5000}>
-        {resorts.map((resort, i) => (
-          <Carousel.Item key={i}>
-            <Row className="d-flex align-items-center">
-              {/*left image*/}
-              <Col md={7} className="p-0">
-                <div style={{ position: 'relative', height: '350px', overflow: 'hidden', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px' }}>
-                  <img
-                    src={resort.image}
-                    alt={resort.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                  {/*text sa left image* */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '20px',
-                    left: '20px',
-                    color: 'white',
-                    textShadow: '2px 2px 8px rgba(0,0,0,1)',
-                     backgroundColor: 'rgba(0, 0, 0, 0.422)',
-                     padding: '10px'
-                  }}>
-                    <h2 className="fw-bold" style={{ textShadow: '12px 12px 100px #000000'}}>{resort.title}</h2>
-                    <h5 style={{ textShadow: '12px 12px 100px #000000',}}>{resort.location}</h5>
-                    <hr style={{ width: '50%', borderTop: '2px solid white' }} />
-                  </div>
-                </div>
-              </Col>
+  const handlePrev = () => {
+    setIndex((prevIndex) => (prevIndex - 1 + resorts.length) % resorts.length);
+  };
 
-              {/*right side*/}
-              <Col md={5} className="bg-cyan-800 d-flex flex-column justify-content-start align-items-start p-5 text-white" style={{ borderTopRightRadius: '10px', borderBottomRightRadius: '10px', height: '350px' }}>
-                <h2 className="fw-bold">{resort.title}</h2>
-                <hr style={{ width: '100%', borderTop: '1px solid white' }} />
-                <p style={{ fontSize: '14px'}}>{resort.description}</p>
-                <Button variant="primary" href={resort.buttonLink} className="mt-3 fw-bold px-5 py-3" style={{fontSize: '16px'}}>
+  const handleNext = () => {
+    setIndex((prevIndex) => (prevIndex + 1) % resorts.length);
+  };
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % resorts.length);
+    }, 5000);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  return (
+    <div className="w-full px-12 pb-16 relative">
+      <div className="relative overflow-hidden">
+        {resorts.map((resort, i) => (
+          <div
+            key={i}
+            className={`${i === index ? "block" : "hidden"} transition-all duration-700`}
+          >
+
+            {/*left*/}
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="relative w-full md:w-7/12 h-[350px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <img
+                  src={resort.image}
+                  alt={resort.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-5 left-5 bg-black/50 p-4 rounded-md text-white">
+                  <h2 className="text-2xl font-bold drop-shadow-lg">{resort.title}</h2>
+                  <h5 className="text-md drop-shadow-lg">{resort.location}</h5>
+                  <hr className="border-white border-t-2 w-1/2 mt-2" />
+                </div>
+              </div>
+
+              {/* Right */}
+              <div className="w-full md:w-5/12 bg-cyan-800 text-white flex flex-col justify-start items-start p-8 rounded-b-lg md:rounded-r-lg md:rounded-bl-none h-[350px]">
+                <h2 className="text-2xl font-bold">{resort.title}</h2>
+                <hr className="w-full border-t border-white my-2" />
+                <p className="text-lg">{resort.description}</p>
+                <a
+                  href={resort.buttonLink}
+                  className="mt-5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg no-underline"
+                >
                   Visit now
-                </Button>
-              </Col>
-            </Row>
-          </Carousel.Item>
+                </a>
+              </div>
+            </div>
+          </div>
         ))}
-      </Carousel>
-    </Container>
+      </div>
+
+      <button
+        onClick={handlePrev}
+        className="absolute top-1/2 left-16 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 pb-4 rounded-full text-5xl"
+      >
+        &#8249; 
+      </button>
+      <button
+        onClick={handleNext}
+        className="absolute top-1/2 right-16 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 pb-4 rounded-full text-5xl"
+      >
+        &#8250; 
+      </button>
+    </div>
   );
 }
 

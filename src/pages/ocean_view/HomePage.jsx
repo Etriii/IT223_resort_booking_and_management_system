@@ -63,7 +63,7 @@ const HomePage = () => {
     />
   </div>
   <div className="w-2/3 p-4 flex flex-col justify-center">
-    <div className="card-body">
+    <div className="card-body pl-8">
       <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
         Seamlessly blending luxury with nature.
       </h4>
@@ -71,7 +71,7 @@ const HomePage = () => {
         A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
       </p>
       <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
-        <a href="/about-us" className="no-underline text-[20px]">
+        <a href="/about-us" className="no-underline text-[1.2rem]">
           About Us
         </a>
       </span>
@@ -115,7 +115,7 @@ const HomePage = () => {
             },
           ].map((resort, idx) => (
             <div className="card h-full" key={idx}>
-              <img src={resort.image} className="card-img-top rounded-[0rem] h-[20rem]" alt="..." />
+              <img src={resort.image} className="card-img-top rounded-[1rem] h-[20rem]" alt="..." />
               <div className="card-body">
                 <h5 className="font-caladea tracking-widest text-[#812C2C] text-[25px] mt-4">
                   {resort.title}
@@ -129,7 +129,7 @@ const HomePage = () => {
 
         <div className="mt-12 mx-5">
           <div className="text-center mb-5 mt-32">
-            <span className="me-5 p-3 border border-black rounded-[50px] text-[2rem]">
+            <span className="me-5 p-3 border border-black rounded-[50px] text-[1.5rem]">
 
               <Link to="/oceanview/resortslist" className="no-underline tracking-wide">
                 View All Resorts
