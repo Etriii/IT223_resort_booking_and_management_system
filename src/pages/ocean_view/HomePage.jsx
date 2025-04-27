@@ -11,8 +11,8 @@ const HomePage = () => {
   return (
 
     <div>
-      <div id='body' className='px-12'>
-        <section style={{ height: "300px", position: 'relative', borderRadius: '1rem' }}>
+      <div id='body' className='px-40'>
+        <section style={{ height: "350px", position: 'relative', borderRadius: '1rem' }}>
           <div
             style={{
               position: 'absolute',
@@ -31,15 +31,15 @@ const HomePage = () => {
           <div style={{ position: 'relative', zIndex: 1, color: 'white', textAlign: 'center' }}>
             <h1 style={{
               fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '70px',
+              fontSize: '50px',
               textShadow: '12px 12px 80px #000000',
-              paddingTop: '3.25rem',
+              paddingTop: '5.5rem',
             }}>
               Ocean View
             </h1>
             <p style={{
               fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '20px',
+              fontSize: '18px',
               textShadow: '12px 12px 80px #000000',
               paddingTop: '1.25rem',
               width: '65rem',
@@ -54,37 +54,37 @@ const HomePage = () => {
 
 
 
-        <div className="card max-w-full h-[250px] flex mt-12">
-          <div className="w-1/3">
-            <img
-              src={ambot}
-              alt="..."
-              className="w-full h-full object-cover rounded-[1rem]"
-            />
-          </div>
-          <div className="w-2/3">
-            <div className="card-body p-4">
-              <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
-                Seamlessly blending luxury with nature.
-              </h4>
-              <p className="tracking-widest font-cantarell text-[15px] w-[60rem]">
-                A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
-              </p>
-              <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
-                <a href="/about-us" className="no-underline text-[20px]">
-                  About Us
-                </a>
-              </span>
-            </div>
-          </div>
-        </div>
+        <div className="flex mt-24 max-w-full">
+  <div className="w-1/3">
+    <img
+      src={ambot}
+      alt="..."
+      className="w-full h-full object-cover rounded-[1rem]"
+    />
+  </div>
+  <div className="w-2/3 p-4 flex flex-col justify-center">
+    <div className="card-body pl-8">
+      <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
+        Seamlessly blending luxury with nature.
+      </h4>
+      <p className="tracking-widest font-cantarell text-[15px]">
+        A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
+      </p>
+      <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
+        <a href="/about-us" className="no-underline text-[1.2rem]">
+          About Us
+        </a>
+      </span>
+    </div>
+  </div>
+</div>
 
 
 
 
 
 
-        <div className="w-[70rem] ms-5 mb-0 mt-12">
+        <div className="w-[70rem] mb-0 mt-24">
           <h3 className="font-caladea tracking-widest text-[#812C2C] text-[35px] w-full">
             Experience a warm welcome at Ocean View.
           </h3>
@@ -115,7 +115,7 @@ const HomePage = () => {
             },
           ].map((resort, idx) => (
             <div className="card h-full" key={idx}>
-              <img src={resort.image} className="card-img-top rounded-[1rem] h-[22rem]" alt="..." />
+              <img src={resort.image} className="card-img-top rounded-[1rem] h-[20rem]" alt="..." />
               <div className="card-body">
                 <h5 className="font-caladea tracking-widest text-[#812C2C] text-[25px] mt-4">
                   {resort.title}
@@ -129,7 +129,7 @@ const HomePage = () => {
 
         <div className="mt-12 mx-5">
           <div className="text-center mb-5 mt-32">
-            <span className="me-5 p-5 border border-black rounded-[50px] text-[2.5rem]">
+            <span className="me-5 p-3 border border-black rounded-[50px] text-[1.5rem]">
 
               <Link to="/oceanview/resortslist" className="no-underline tracking-wide">
                 View All Resorts

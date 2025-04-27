@@ -20,7 +20,7 @@ const UserHeading = () => {
     }, []);
 
     return (
-        <header className="border border-gray-400 py-3 w-full sticky top-0 bg-white z-10 px-4">
+        <header className="border border-gray-400 w-full sticky top-0 bg-white z-10 px-4" style={{paddingTop: '0.70rem', paddingBottom: '0.50rem'}}>
             {loggedIn ?
                 <div className="flex justify-between items-center">
                     <h1 className="">User heading Logged In</h1>
@@ -28,7 +28,7 @@ const UserHeading = () => {
                 </div>
                 :
                 <div className="flex justify-between items-center">
-                    <h1 className="">User heading Not Logged In</h1>
+                    <h5 className="">User heading Not Logged In</h5>
                     <button type="button" onClick={navigateToLogInPage}>Log In</button>
                 </div>
             }
