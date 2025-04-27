@@ -7,14 +7,16 @@ const LoginLayout = () => {
     return (
         // bg-center bg-cover
         <div className='grid md:grid-cols-2 w-full h-full bg-center bg-cover' >
-            <div className='h-lv w-full hidden md:flex flex-col justify-center items-center' style={{ backgroundImage: `url(${background_image})`, backgroundSize: "cover" }}>
-                <img src={logo} alt="" className=' w-32 h-32' />
-                <div className="text-center text-white font-semibold text-4xl">Ocean View: Resort Booking and Management System</div>
+            <div className='h-lv w-full hidden md:flex flex-col justify-center items-center space-y-2' style={{
+                backgroundImage: `url(${background_image})`, backgroundSize: "cover", backgroundPosition: "center"
+            }}>
+                <img src={logo} alt="" className=' w-32 h-32 bg-white rounded-full' />
+                <div className="text-center text-white font-semibold text-4xl drop-shadow-[0_0_2px_black]">Ocean View <br />Resort Booking and Management System</div>
             </div>
             <div className='md:h-lvh bg-gray-100 flex justify-center items-center w-full overflow-hidden flex-col space-y-2 p-3'>
                 <div className='flex justify-center items-center flex-col px-7 py-4 md:hidden'>
                     <img src={logo} alt="" className='size-[110px]' />
-                    <div className="text-center font-semibold text-2xl">Ocean View: Resort Booking and Management System</div>
+                    <div className="text-center font-semibold text-2xl text-gray-800">Ocean View: Resort Booking and Management System</div>
                 </div>
                 <Outlet />
                 <footer className=" text-gray-400 py-4">

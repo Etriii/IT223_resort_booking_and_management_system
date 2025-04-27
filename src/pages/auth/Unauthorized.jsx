@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import logout from '../../utils/logout';
+import { useEffect } from "react";
 const Unauthorized = () => {
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Unauthorized Access";
+    }, []);
 
     const isUnAuthorized = (
         <div className="space-y-2">

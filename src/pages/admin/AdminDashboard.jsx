@@ -1,9 +1,14 @@
 // import AdminLayout from "../../layouts/AdminLayout";
+import { useEffect } from "react";
+const Dashboard = () => {
 
-const Accounts = () => {
+    useEffect(() => {
+        document.title = "Admin Dashboard | Ocean View";
+    }, []);
+
     return (
         <p>Admin Dashboard</p>
     );
 }
 
-export default Accounts;
+export default Dashboard;

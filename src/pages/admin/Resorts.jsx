@@ -43,6 +43,8 @@ const Resorts = () => {
 
 
     useEffect(() => {
+
+        document.title = "Resorts | Ocean View";
         const fetchResorts = async () => {
             try {
                 const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getResorts`);

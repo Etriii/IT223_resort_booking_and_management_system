@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import UserFooter from '../../components/ui/layout/footers/UserFooter.jsx';
 import ControlledCarousel from '../../components/ui/carousel/resortcarousel.jsx';
 import ResortCard from '../../components/ui/card/card.jsx';
 const ResortsList = () => {
+  useEffect(() => {
+    document.title = "Resort List | Ocean View";
+  }, []);
   return (
     <div>
       <div id="body" className="px-40">
@@ -68,7 +71,7 @@ const ResortsList = () => {
         </div>
 
         <div className="mt-8">
-        <ResortCard />
+          <ResortCard />
         </div>
       </div>
 

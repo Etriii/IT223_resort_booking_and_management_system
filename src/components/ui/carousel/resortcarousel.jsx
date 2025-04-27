@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import backgroundImage from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/backgroundaboutus.jpg";
-import ambot from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/ambot.jpg";
-import gal1 from "C:/xampp/htdocs/(main) IT223_resort_booking_and_management_system/IT223_resort_booking_and_management_system/src/assets/images/home/gal1.jpg";
+import backgroundImage from "../../../assets/images/home/backgroundaboutus.jpg";
+import ambot from "../../../assets/images/home/ambot.jpg";
+import gal1 from "../../../assets/images/home/gal1.jpg";
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
