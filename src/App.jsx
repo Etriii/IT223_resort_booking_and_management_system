@@ -131,7 +131,7 @@ const App = () => {
 
           {/* USER */}
           <Route path="resortslist" element={<ResortsList />} />
-          <Route path="resortdetails" element={<ResortDetails />} />
+          <Route path="resortdetails/:id" element={<ResortDetails />} />
           <Route path="resortroomlist" element={<ResortRoomList />} />
 
           <Route element={<Authenticate />}>
