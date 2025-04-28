@@ -3,10 +3,10 @@
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../core/Model.php';
 
-class UserRole
+class Payment
 {
     private $conn;
-    private $table = 'user_roles';
+    private $table = 'payments';
 
     public function __construct()
     {
@@ -14,11 +14,15 @@ class UserRole
         $this->conn = $db->connect();
     }
 
-    public function getUserRoles($user_id)
+    public function create() {}
+    public function getPayments()
     {
-        $stmt = $this->conn->prepare("SELECT roles.role as role, resort_id FROM " . $this->table . " JOIN  roles on roles.id = user_roles.role_id WHERE user_roles.user_id = :user_id");
-        $stmt->bindParam('user_id', $user_id);
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getPaymentByBookingId($id) {}
+    public function update() {}
+
+    public function destroy() {}
 }
