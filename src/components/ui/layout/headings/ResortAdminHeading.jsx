@@ -21,6 +21,8 @@ const ResortAdminHeading = ({ className, toggleSideNav, isOpen }) => {
         if (path.includes('/oceanview/resortadmin/dashboard')) return 'Dashboard';
         if (path.includes('/oceanview/resortadmin/manageresort')) return 'Manage Resort';
         if (path.includes('/oceanview/resortadmin/reservations')) return 'Reservations';
+        if (path.includes('/oceanview/resortadmin/events')) return 'Events';
+
 
         return 'Admin Page';
     };

@@ -173,7 +173,7 @@ const Resorts = () => {
                     <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                         2
                     </button>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button className="px-3 py-1 rounnded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                         3
                     </button>
                     <span className="text-gray-400">...</span>

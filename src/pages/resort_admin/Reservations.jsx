@@ -7,9 +7,9 @@ const ManageResort = () => {
     }, []);
     return (
         <>
-            Reservations
+            ReservationsJ
         </>
     );
-}
+}   
 
 export default ManageResort;
