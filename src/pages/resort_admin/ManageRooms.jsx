@@ -1,33 +1,46 @@
 import AdminLayout from "../../layouts/ResortAdminLayout";
-import { useEffect } from "react";
+import { useState } from "react";
 
 const ManageResort = () => {
-  useEffect(() => {
-    const toggleSidebar = () => {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const isHidden = sidebar.classList.contains("-translate-x-full");
-      if (isHidden) {
-        sidebar.classList.remove("-translate-x-full");
-        overlay.classList.remove("hidden");
-      } else {
-        sidebar.classList.add("-translate-x-full");
-        overlay.classList.add("hidden");
-      }
-    };
+  const [showSidebar, setShowSidebar] = useState(true);
 
-    window.toggleSidebar = toggleSidebar;
-
-    return () => {
-      delete window.toggleSidebar;
-    };
-  }, []);
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
 
   return (
     <AdminLayout>
-      {/* -- Sidebar-- */}
+      {/* Sidebar */}
+      {showSidebar && (
+        <div id="sidebar" className="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white p-4 shadow-lg z-40">
+          {/* Sidebar content goes here */}
+          <button
+            onClick={toggleSidebar}
+            className="text-white hover:text-gray-300 mb-4"
+          >
+            Close Sidebar
+          </button>
+          <p>Sidebar Content</p>
+        </div>
+      )}
+      {showSidebar && (
+        <div
+          id="overlay"
+          className="fixed inset-0 bg-black opacity-50 z-30"
+          onClick={toggleSidebar}
+        />
+      )}
 
       <main className="p-8 max-w-6xl mx-auto space-y-12">
+        <div className="flex justify-end">
+          <button
+            onClick={toggleSidebar}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow-md"
+          >
+            {showSidebar ? "Hide Sidebar" : "Show Sidebar"}
+          </button>
+        </div>
+
         <section className="bg-gray-100 p-6 mt-8 rounded-2xl shadow-md">
           <h2 className="text-xl font-semibold mb-4">Add New Room</h2>
           <form action="save_room.php" method="POST" encType="multipart/form-data" className="space-y-4">
