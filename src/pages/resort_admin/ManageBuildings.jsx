@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import AdminLayout from "../../layouts/ResortAdminLayout";
 import { useState } from "react";
 
 const ManageBuildings = () => {
+    useEffect(() => {
+        document.title = "Manage Building | Ocean View";
+    }, []);
+   
   const [showPopup, setShowPopup] = useState(false);
   const [buildings, setBuildings] = useState([
     {

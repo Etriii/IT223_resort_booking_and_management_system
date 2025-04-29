@@ -1,4 +1,4 @@
-import React, { useState, userEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/ui/form/InputField';
 import Button from '../../components/ui/button/Button';
@@ -11,6 +11,10 @@ import { PiWarningCircleBold } from "react-icons/pi";
 
 const Login = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Sign In | Ocean View";
+    }, []);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -90,7 +94,7 @@ const Login = () => {
                             setErrorPassword(data.error.password);
                         }
                     }
-                } else {    
+                } else {
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));
 
@@ -119,7 +123,7 @@ const Login = () => {
         <>
             {/* {error ? <div className='border border-red-500 p-5 text-red-600'>{error}</div> : null} */}
             <ErrorAlert error={error} clearError={() => setError('')} />
-                
+
             <div className='flex flex-col space-y-2 bg-white p-7 rounded-lg'>
                 <form onSubmit={handleLogin} className='space-y-2'>
 
@@ -129,7 +133,7 @@ const Login = () => {
                             <div className="flex items-center border border-gray-300 rounded px-3 py-2 shadow-sm bg-white focus-within:border-blue-400 focus-within:ring-1">
                                 <FaEnvelope className="text-gray-400 mr-2 size-5" />
                                 <input onChange={(e) => setEmail(e.target.value)}
-                                    type="email" value={email} name='email'
+                                    type="email" value={email} name='email' required={true}
                                     placeholder="Your valid email address"
                                     className="w-full focus:outline-none focus:ring-0 focus:border-transparent text-sm text-gray-700"
                                 />
@@ -148,7 +152,7 @@ const Login = () => {
                                 <FaLock className="text-gray-400 mr-2 size-5" />
                                 <input onChange={(e) => setPassword(e.target.value)}
                                     type={showPassword ? 'text' : 'password'} value={password}
-                                    placeholder="Your current password"
+                                    placeholder="Your current password" required={true}
                                     className="w-full focus:outline-none focus:ring-0 focus:border-transparent text-sm text-gray-700"
                                 />
                                 <div onClick={togglePassword} className="cursor-pointer text-gray-400 ml-2">

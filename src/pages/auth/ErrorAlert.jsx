@@ -1,7 +1,13 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
 const ErrorAlert = ({ error, clearError }) => {
+
+  useEffect(() => {
+    document.title = "Error | Ocean View";
+  }, []);
+
   if (!error) return null;
 
   return (

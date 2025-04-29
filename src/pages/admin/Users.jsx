@@ -7,6 +7,10 @@ const Accounts = () => {
     const [currentUser, setCurrentUser] = useState(1);
 
     useEffect(() => {
+        document.title = "Users | Ocean View";
+    }, []);
+
+    useEffect(() => {
         // fetch("http://localhost:8000/api.php?controller=User&action=getAllUsers")
         fetch(`http://localhost:8000/api.php?controller=User&action=getUserById&id=${currentUser}`)
             // fetch(`http://localhost:8000/api.php?controller=User&action=getUserByEmail&email=${currentUser}`)

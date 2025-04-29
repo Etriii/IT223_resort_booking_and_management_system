@@ -6,7 +6,12 @@ import fridayImage from '../../assets/images/home/friday.jpeg';
 import fridayssImage from '../../assets/images/home/fridayss.jpeg';
 import UserFooter from '../../components/ui/layout/footers/UserFooter.jsx';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 const HomePage = () => {
+
+  useEffect(() => {
+    document.title = "Home | Ocean View";
+  }, []);
 
   return (
 
@@ -55,29 +60,29 @@ const HomePage = () => {
 
 
         <div className="flex mt-24 max-w-full">
-  <div className="w-1/3">
-    <img
-      src={ambot}
-      alt="..."
-      className="w-full h-full object-cover rounded-[1rem]"
-    />
-  </div>
-  <div className="w-2/3 p-4 flex flex-col justify-center">
-    <div className="card-body pl-8">
-      <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
-        Seamlessly blending luxury with nature.
-      </h4>
-      <p className="tracking-widest font-cantarell text-[15px]">
-        A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
-      </p>
-      <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
-        <a href="/about-us" className="no-underline text-[1.2rem]">
-          About Us
-        </a>
-      </span>
-    </div>
-  </div>
-</div>
+          <div className="w-1/3">
+            <img
+              src={ambot}
+              alt="..."
+              className="w-full h-full object-cover rounded-[1rem]"
+            />
+          </div>
+          <div className="w-2/3 p-4 flex flex-col justify-center">
+            <div className="card-body pl-8">
+              <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
+                Seamlessly blending luxury with nature.
+              </h4>
+              <p className="tracking-widest font-cantarell text-[15px]">
+                A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
+              </p>
+              <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
+                <a href="/about-us" className="no-underline text-[1.2rem]">
+                  About Us
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
 
 
 

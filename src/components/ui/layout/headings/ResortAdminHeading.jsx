@@ -1,7 +1,6 @@
 import { FaRegUserCircle, FaUserCog } from "react-icons/fa";
 import { IoIosNotificationsOutline, IoIosArrowDown } from "react-icons/io";
-// import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
-// i comment sa muan kay mag error ko  -micah
+import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 import { HiLogout } from "react-icons/hi";
 
 import { useLocation, useNavigate, useMatch } from 'react-router-dom';
@@ -22,6 +21,8 @@ const ResortAdminHeading = ({ className, toggleSideNav, isOpen }) => {
         if (path.includes('/oceanview/resortadmin/dashboard')) return 'Dashboard';
         if (path.includes('/oceanview/resortadmin/manageresort')) return 'Manage Resort';
         if (path.includes('/oceanview/resortadmin/reservations')) return 'Reservations';
+        if (path.includes('/oceanview/resortadmin/events')) return 'Events';
+
 
         return 'Admin Page';
     };

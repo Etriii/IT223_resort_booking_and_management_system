@@ -1,4 +1,11 @@
+import { useEffect } from "react";
+
 const NotFound = () => {
+    
+    useEffect(() => {
+        document.title = "Error | Ocean View";
+    }, []);
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <div className="text-center">
