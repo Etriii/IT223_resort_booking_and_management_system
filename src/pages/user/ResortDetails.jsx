@@ -5,7 +5,106 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ControlledCarousel from "../../components/ui/carousel/resortdetailscarousel.jsx";
 import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
+import React, { useEffect, useState } from "react";
+import { useParams, Link, NavLink } from "react-router-dom";
+import backgroundImage from "../../assets/images/home/backgroundaboutus.jpg";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import ControlledCarousel from "../../components/ui/carousel/resortdetailscarousel.jsx";
+import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
+import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
 
+const ResortDetails = ({ initialBookmarkStatus }) => {
+  const { id } = useParams();
+  const [resort, setResort] = useState(null);
+  const [error, setError] = useState(null);
+  const [isBookmarked, setIsBookmarked] = useState(initialBookmarkStatus === 1);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [reviews, setReviews] = useState([]); // Placeholder for reviews state
+  const [reviewsAverage, setReviewsAverage] = useState(0); // Placeholder for average reviews
+  const [reviewsCount, setReviewsCount] = useState(0); // Placeholder for reviews count
+  const [expandedReviews, setExpandedReviews] = useState([]);
+  const [newReview, setNewReview] = useState(""); // New review text
+  const [formRating, setFormRating] = useState(0); // Rating for new review
+  const [guestReview, setGuestReview] = useState(null); // Guest's own review
+
+  useEffect(() => {
+    document.title = "Resort Details | Ocean View";
+    fetchResortDetails();
+    fetchReviews(); // Fetch reviews as well
+  }, [id]);
+
+  const fetchResortDetails = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api.php?controller=Resorts&action=getResorts&id=${id}`
+      );
+      const data = await response.json();
+      console.log("Resort API response:", data);
+
+      if (Array.isArray(data)) {
+        const resortFound = data.find((res) => res.id === parseInt(id));
+        setResort(resortFound);
+      } else if (data?.name && data?.location) {
+        setResort(data);
+      } else if (data?.data?.name && data?.data?.location) {
+        setResort(data.data);
+      } else {
+        setError("Failed to load resort details: Invalid data format.");
+      }
+    } catch (err) {
+      setError("Failed to load resort details.");
+      console.error(err);
+    }
+  };
+
+  const fetchReviews = async () => {
+    // Fetch reviews from API or mock data
+    const fetchedReviews = []; // Replace with actual API fetch call
+    const average = 4.5; // Placeholder rating
+    setReviews(fetchedReviews);
+    setReviewsAverage(average);
+    setReviewsCount(fetchedReviews.length);
+  };
+
+  const handleBookmarkToggle = () => {
+    setIsBookmarked(!isBookmarked);
+    if (!isBookmarked) {
+      setBookmarks((prevBookmarks) => [...prevBookmarks, id]);
+    } else {
+      setBookmarks((prevBookmarks) =>
+        prevBookmarks.filter((bookmarkId) => bookmarkId !== id)
+      );
+    }
+  };
+
+  const toggleReviewExpansion = (reviewID) => {
+    setExpandedReviews((prev) =>
+      prev.includes(reviewID)
+        ? prev.filter((id) => id !== reviewID)
+        : [...prev, reviewID]
+    );
+  };
+
+  const handleAddReview = () => {
+    // Add review logic here
+    console.log("Adding new review:", newReview, formRating);
+  };
+
+  const handleUpdateReview = () => {
+    // Update review logic here
+    console.log("Updating review:", newReview, formRating);
+  };
+
+  const handleDeleteReview = () => {
+    // Delete review logic here
+    console.log("Deleting review");
+  };
+
+  if (error) {
+    return <div className="text-center mt-20 text-red-500">{error}</div>;
+  }
+
+  if (!resort) {
 const ResortDetails = ({ initialBookmarkStatus }) => {
   const { id } = useParams();
   const [resort, setResort] = useState(null);
@@ -298,6 +397,14 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
             </div>
           </div>
+
+
+
+
+
+
+
+
           <div className="mt-32 mb-40">
             <NavLink
               to="/oceanview/resortslist"
@@ -306,6 +413,16 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               Book Now
             </NavLink>
           </div>
+
+
+
+
+
+
+
+
+
+
           <hr className="w-full border-t border-black my-2" />
           <h3 className="text-2xl font-bold pb-4">Reviews</h3>
           <div>
