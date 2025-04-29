@@ -1,1 +1,100 @@
-/* e delete rani. for structure purpose rani */
+#resortbg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 75vh;
+}
+
+.resort {
+    background-color: #282626;
+    font-family: "Calistoga", sans-serif;
+    letter-spacing: 0.3rem;
+}
+
+.beachname {
+    font-family: "Calistoga", sans-serif;
+    font-size: 30px;
+    letter-spacing: 0.1rem;
+}
+
+.resortname {
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 0.4rem;
+}
+
+.resortlocation {
+    color: white;
+    font-size: 20px;
+}
+
+.nav-link {
+    letter-spacing: 0.1rem;
+    margin-bottom: -30px;
+}
+
+#navlink-resort {
+    color: grey;
+}
+
+.carousel-item .gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 13%),
+                linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 13%);
+    pointer-events: none;
+}
+
+.rate {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.write-review {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.write-review .btn {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.review {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.star-rating .fa-star {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.star-rating .fa-star.checked {
+    color: gold;
+}
+
+.breadcrumb .breadcrumb-item a {
+    text-decoration: none;
+    color: black;
+}
+
+.card-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.seemore:hover {
+    cursor: pointer;
+}
+
+.seemore {
+    display: none;
+}

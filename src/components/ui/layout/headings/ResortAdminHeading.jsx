@@ -66,7 +66,7 @@ const ResortAdminHeading = ({ className, toggleSideNav, isOpen }) => {
     }
 
     return (
-        <header className={`w-ful shadow-lg px-2 py-1 flex justify-start items-center space-x-2 sticky top-0 bg-white w-full  ${className}`}>
+        <header className={`w-ful shadow-lg px-2 py-1 flex justify-start items-center space-x-2 sticky top-0 bg-white w-full z-[500]  ${className}`}>
             <div className=" hover:bg-gray-200 rounded">
                 <TbLayoutSidebarRightExpandFilled className={`size-7 text-gray-700 cursor-pointer ${isOpen ? '' : 'transform scale-x-[-1]'} duration-500 hover:text-black`} onClick={toggleSideNav} />
             </div>
