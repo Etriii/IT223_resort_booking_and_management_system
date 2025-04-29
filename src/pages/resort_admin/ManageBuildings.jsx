@@ -7,7 +7,7 @@ const ManageBuildings = () => {
     }, []);
     return (
         <>
-            Manage Buildings. 
+            Buildings
         </>
     );
 }

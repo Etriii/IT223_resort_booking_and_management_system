@@ -2,7 +2,7 @@ import { NavLink, useNavigate, useMatch } from "react-router-dom";
 import { useEffect } from "react";
 
 import { MdDashboard, MdHistory } from "react-icons/md";
-import { TbBuildingFactory } from "react-icons/tb";
+import { TbBuildingPavilion } from "react-icons/tb";
 import { FaUsersCog } from "react-icons/fa";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
@@ -53,7 +53,7 @@ const AdminSideNav = ({ className, isOpen }) => {
 
     const lists_default_styles = {
         list: 'flex p-1 items-center space-x-2 hover:bg-green-600 hover:text-white rounded  overflow-x-hidden',
-        icon: 'size-7 ',
+        icon: 'size-6 ml-[1.5px]',
         span: 'li_texts flex-1 whitespace-nowrap hidden',
     }
 
@@ -79,7 +79,7 @@ const AdminSideNav = ({ className, isOpen }) => {
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/admin/resorts/*')
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/admin/resorts')}>
-                    <TbBuildingFactory className={`${lists_default_styles.icon}`} />
+                    <TbBuildingPavilion className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Manage Resorts</span>
                 </li>
 

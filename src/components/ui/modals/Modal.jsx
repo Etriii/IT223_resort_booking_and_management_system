@@ -13,6 +13,7 @@ const Modal = ({
     onCancel,
     children,
 }) => {
+
     if (!isOpen) return null;
 
     // useEffect(() => {
@@ -37,16 +38,10 @@ const Modal = ({
                     textColor: 'text-teal-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
-                                onClick={onConfirm}
-                            >
+                            <button className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600" onClick={onConfirm}>
                                 Create
                             </button>
-                            <button
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-                                onClick={onCancel}
-                            >
+                            <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" onClick={onCancel}>
                                 Cancel
                             </button>
                         </>
@@ -173,6 +168,9 @@ const Modal = ({
                     <button onClick={onClose} className="text-gray-600 hover:text-gray-900" >
                         <IoClose className='size-7' />
                     </button>
+                </div>
+                <div className='p-5 bg-pink-400'>
+                    {children}
                 </div>
                 <div className="text-sm text-gray-700 mb-4">{message}</div>
                 <div className="flex justify-end space-x-3">{buttons}</div>
