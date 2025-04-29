@@ -5,7 +5,9 @@ import { MdDashboard, MdOutlineQuestionMark, MdEvent } from "react-icons/md";
 import { BsBuildingGear } from "react-icons/bs";
 import { RiCalendarCheckLine } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
-
+import { TbBuildingPavilion, TbBuildingCircus } from "react-icons/tb";
+import { AiOutlineSetting } from "react-icons/ai";
+import { PiBuildingApartment } from "react-icons/pi";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
 
@@ -46,7 +48,7 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
 
     const lists_default_styles = {
         list: 'flex p-1 items-center space-x-2 hover:bg-green-600 hover:text-white rounded  overflow-x-hidden',
-        icon: 'size-7 ',
+        icon: 'size-6 ml-[1.5px]',
         span: 'li_texts flex-1 whitespace-nowrap hidden',
     }
 
@@ -73,8 +75,8 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                 </li>
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/*')
-                    ? link_styles.active : link_styles.passive}  relative`}  onClick={() => navigate('/oceanview/resortadmin/manage/resort')}>
-                    <BsBuildingGear className={`${lists_default_styles.icon}`} />
+                    ? link_styles.active : link_styles.passive}  relative`} onClick={() => navigate('/oceanview/resortadmin/manage/resort')}>
+                    <AiOutlineSetting className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Manage Resort</span>
                     <div className={` size-5 cursor-pointer absolute top-[25%] right-2 ${!isOpen ? 'hidden' : ''}`}>
                         <IoIosArrowDown className={`w-full h-full duration-75  ${manageResortDropdownIsOpen ? '' : 'rotate-90'}`} onClick={() => { setManageResortDropdownIsOpen(!manageResortDropdownIsOpen) }} />
@@ -84,13 +86,18 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                 <div className={`li_texts p ml-3 space-y-1 ${manageResortDropdownIsOpen ? '' : 'hidden'}`} >
                     <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/resort')
                         ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/resort')}>
-                        <BsBuildingGear className={`${lists_default_styles.icon} size-5`} />
+                        <TbBuildingPavilion className={`${lists_default_styles.icon} size-5`} />
                         <span className={`${lists_default_styles.span}`}>Resort</span>
                     </li>
                     <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/buildings/*')
                         ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/buildings')}>
-                        <BsBuildingGear className={`${lists_default_styles.icon} size-5`} />
+                        <PiBuildingApartment className={`${lists_default_styles.icon} size-5`} />
                         <span className={`${lists_default_styles.span}`}>Building</span>
+                    </li>
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/rooms/*')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/rooms/1')}>
+                        <TbBuildingCircus className={`${lists_default_styles.icon} size-5`} />
+                        <span className={`${lists_default_styles.span}`}>Rooms</span>
                     </li>
                 </div>
 

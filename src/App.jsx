@@ -79,7 +79,7 @@ import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layou
 import { AdminDashboard, Resorts, Users, AdminMyAccount } from "./pages/admin";
 
 //Resort Admin Page
-import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, Events } from './pages/resort_admin';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events } from './pages/resort_admin';
 
 // User Page
 import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pages/user';
@@ -115,6 +115,7 @@ const App = () => {
             <Route path="dashboard" element={<ResortAdminDashboard />} />
             <Route path="manage/resort" element={<ManageResort />} />
             <Route path="manage/buildings" element={<ManageBuildings />} />
+            <Route path="manage/rooms/:building_id" element={<ManageRooms />} />
             <Route path="reservations" element={<Reservations />} />
             <Route path="myaccount" element={<RAMyAccount />} />
             <Route path="events" element={<Events />} />

@@ -86,22 +86,10 @@ const Resorts = () => {
                                         ? 'Are you sure?'
                                         : 'Information'
                 }
-                message={
-                    modalVariant === 'create'
-                        ? 'Enter the details to create a new item.'
-                        : modalVariant === 'read'
-                            ? 'Here are the details of the item.'
-                            : modalVariant === 'update'
-                                ? 'Edit the details of the item.'
-                                : modalVariant === 'delete'
-                                    ? 'Are you sure you want to delete this item?'
-                                    : modalVariant === 'confirmation'
-                                        ? 'Please confirm your action.'
-                                        : 'This is some important information.'
-                }
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             >
+                yes
             </Modal>
             {notify && (
                 <ActionNotification isOpen={true} variant={`${notify.type}`}>

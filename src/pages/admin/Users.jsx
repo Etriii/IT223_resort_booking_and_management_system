@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 
+import Table from '../../components/ui/table/Table';
+import TableData from '../../components/ui/table/TableData';
+
 const Accounts = () => {
 
     const [status, setStatus] = useState("Checking...");
@@ -10,24 +13,44 @@ const Accounts = () => {
         document.title = "Users | Ocean View";
     }, []);
 
-    useEffect(() => {
-        // fetch("http://localhost:8000/api.php?controller=User&action=getAllUsers")
-        fetch(`http://localhost:8000/api.php?controller=User&action=getUserById&id=${currentUser}`)
-            // fetch(`http://localhost:8000/api.php?controller=User&action=getUserByEmail&email=${currentUser}`)
-            // fetch(`http://localhost:8000/api.php?controller=User&action=getUserByEmail&email=${currentUser}`)
-            .then((response) => response.json())
-            .then((data) => setStatus(JSON.stringify(data)))
-            .catch(() => setStatus("Error fetching data"));
-    }, [currentUser]);
-
     return (
-        <>
-            <div>
-                <p>Users</p>
-                <div>{status}</div>
-                <input type="text" value={currentUser} onChange={(e) => setCurrentUser(e.target.value)} />
-            </div>
-        </>
+        <div>
+            <Table theadings={['id', '1', '2', '3', '4', '5', '6']}>
+                <TableData
+                    columns={[
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                    ]}
+                />
+                <TableData
+                    columns={[
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                    ]}
+                />
+                <TableData
+                    columns={[
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                        'yes',
+                    ]}
+                />
+            </Table>
+        </div>
     );
 }
 
