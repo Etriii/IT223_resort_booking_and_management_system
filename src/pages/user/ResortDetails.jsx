@@ -298,14 +298,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
           <div className="mt-32 mb-40">
             <NavLink
               to="/oceanview/resortslist"
@@ -314,16 +306,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               Book Now
             </NavLink>
           </div>
-
-
-
-
-
-
-
-
-
-
           <hr className="w-full border-t border-black my-2" />
           <h3 className="text-2xl font-bold pb-4">Reviews</h3>
           <div>
