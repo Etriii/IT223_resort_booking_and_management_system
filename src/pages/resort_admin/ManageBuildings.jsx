@@ -6,7 +6,7 @@ import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
 import { FiFilter } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
@@ -14,8 +14,8 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import Modal from "../../components/ui/modals/Modal";
 import InputField from "../../components/ui/form/InputField";
 
-const Buildings = () => {
-  const [buildings, setBuildings] = useState();
+const ManageBuildings = () => {
+  const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notify, setNotify] = useState(null);
 
@@ -40,6 +40,7 @@ const Buildings = () => {
   };
 
   useEffect(() => {
+    
     document.title = "Manage Buildings | Ocean View";
 
     const fetchBuildings = async () => {
@@ -106,7 +107,7 @@ const Buildings = () => {
           <span>Search:</span>
           <InputField />
           <button
-            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-nowrap"
             onClick={() => openModal("create")}
           >
             <IoMdAdd />
@@ -122,7 +123,7 @@ const Buildings = () => {
               bld.id,
               bld.name,
               bld.floor_count,
-              bld.total_rooms,
+              bld.room_per_floor,
               <ToggleDiv buttonText="Actions">
                 <div
                   className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
@@ -151,4 +152,4 @@ const Buildings = () => {
   );
 };
 
-export default Buildings;
+export default ManageBuildings;
