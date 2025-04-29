@@ -1,211 +1,154 @@
-import { useEffect } from "react";
-import AdminLayout from "../../layouts/ResortAdminLayout";
-import { useState } from "react";
+import React from "react";
+import Table from "../../components/ui/table/Table";
+import TableData from "../../components/ui/table/TableData";
+import ActionNotification from "../../components/ui/modals/ActionNotification";
+import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
-const ManageBuildings = () => {
-    useEffect(() => {
-        document.title = "Manage Building | Ocean View";
-    }, []);
-   
-  const [showPopup, setShowPopup] = useState(false);
-  const [buildings, setBuildings] = useState([
-    {
-      id: 1,
-      image: "b1.jpg",
-      name: "ALEX BUILDING",
-      floors: 15,
-      rooms: 10,
-    },
-    {
-      id: 2,
-      image: "b2.jpg",
-      name: "MICAH BUILDING",
-      floors: 10,
-      rooms: 5,
-    },
-    {
-      id: 3,
-      image: "b3.jpg",
-      name: "JELOU BUILDING",
-      floors: 10,
-      rooms: 5,
-    },
-  ]);
+import { FiFilter } from "react-icons/fi";
+import { IoMdAdd } from "react-icons/io";
+import React, { useEffect, useState } from "react";
+import { LuEye } from "react-icons/lu";
+import { BiSolidEditAlt } from "react-icons/bi";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
-  const handleAddBuilding = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+import Modal from "../../components/ui/modals/Modal";
+import InputField from "../../components/ui/form/InputField";
 
-    const newBuilding = {
-      id: buildings.length + 1,
-      image: URL.createObjectURL(formData.get("image")),
-      name: formData.get("name"),
-      floors: Number(formData.get("floor_count")),
-      rooms: Number(formData.get("room_per_floor")),
+const Buildings = () => {
+  const [buildings, setBuildings] = useState();
+  const [loading, setLoading] = useState(true);
+  const [notify, setNotify] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalVariant, setModalVariant] = useState("create");
+
+  const openModal = (variant) => {
+    setModalVariant(variant);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleConfirm = () => {
+    console.log("Confirmed");
+    closeModal();
+  };
+
+  const handleCancel = () => {
+    console.log("Canceled");
+    closeModal();
+  };
+
+  useEffect(() => {
+    document.title = "Manage Buildings | Ocean View";
+
+    const fetchBuildings = async () => {
+      try {
+        const resort_id = localStorage.getItem("user_role")
+          ? JSON.parse(localStorage.getItem("user_role"))[0]["resort_id"]
+          : null;
+
+        const res = await fetch(
+          `http://localhost:8000/api.php?controller=Buildings&action=getBuildingsByResortId&resort_id=${resort_id}`
+        );
+        const data = await res.json();
+        setBuildings(data);
+      } catch (err) {
+        setNotify({
+          type: "error",
+          message: "Failed to fetch buildings",
+        });
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setBuildings([...buildings, newBuilding]);
-    setShowPopup(false);
-    e.target.reset();
-  };
-
-  const handleRemoveBuilding = (id) => {
-    const updatedBuildings = buildings.filter(building => building.id !== id);
-    setBuildings(updatedBuildings);
-  };
+    fetchBuildings();
+  }, []);
 
   return (
-    <AdminLayout>
-      {/* --Sidebar-- */}
-
-      {/* Add New Building Button */}
-      <div className="flex justify-end p-4">
-        <button
-          onClick={() => setShowPopup(true)}
-          className="mt-5 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded w-50 shadow-md mr-20"
-        >
-          Add New Building
-        </button>
-      </div>
-
-      {/* Building Table */}
-      <main className="p-8 max-w-7xl mx-auto space-y-12">
-        <section className="bg-white p-6 rounded-2xl shadow-md overflow-x-auto">
-          <table className="min-w-full border border-gray-300">
-            <thead className="bg-blue-600 text-white h-24">
-              <tr>
-                <th className="px-4 py-3 text-left text-xl font-bold">ID</th>
-                <th className="px-4 py-3 text-left text-xl font-bold">Image</th>
-                <th className="px-4 py-3 text-left text-xl font-bold">Building Name</th>
-                <th className="px-4 py-3 text-left text-xl font-bold">Floors</th>
-                <th className="px-4 py-3 text-left text-xl font-bold">Rooms</th>
-                <th className="px-4 py-3 text-center text-xl font-bold">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {buildings.map((building) => (
-                <tr key={building.id} className="border-t border-gray-300">
-                  <td className="px-4 py-6 text-center border-b border-gray-300 text-2xl font-semibold">
-                    {building.id}
-                  </td>
-                  <td className="px-4 py-6 border-b border-gray-300">
-                    <img
-                      src={building.image}
-                      alt={building.name}
-                      className="w-64 h-full object-cover rounded-md shadow-lg"
-                    />
-                  </td>
-                  <td className="px-4 py-6 font-bold border-b border-gray-300 text-xl">
-                    {building.name}
-                  </td>
-                  <td className="px-4 py-6 text-left border-b border-gray-300 text-xl">
-                    {building.floors}
-                  </td>
-                  <td className="px-4 py-6 text-left border-b border-gray-300 text-xl">
-                    {building.rooms}
-                  </td>
-                  <td className="px-4 py-6 space-y-2 border-b border-gray-300">
-                    <div className="flex flex-col items-center space-y-2">
-                      <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded w-32 shadow-md">
-                        Edit Building
-                      </button>
-                      <button 
-                        onClick={() => handleRemoveBuilding(building.id)}
-                        className="bg-orange-400 hover:bg-orange-500 text-white font-semibold px-4 py-2 rounded w-32 shadow-md"
-                      >
-                        Remove
-                      </button>
-                      <button 
-                        onClick={() => alert(`Viewing rooms for ${building.name}`)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded w-32 shadow-md"
-                      >
-                        View Rooms
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      </main>
-
-      {/* Popup Form Modal */}
-      {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md relative">
-            <button
-              onClick={() => setShowPopup(false)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-black text-2xl"
-            >
-              <i className="fas fa-times"></i>
-            </button>
-
-            <h2 className="text-2xl font-semibold mb-6">Add New Building</h2>
-            <form onSubmit={handleAddBuilding} className="space-y-4">
-              <div>
-                <label className="block font-medium">Resort ID</label>
-                <input
-                  type="number"
-                  name="resort_id"
-                  className="w-full border p-2 rounded-lg"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium">Building Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  className="w-full border p-2 rounded-lg"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-medium">Floor Count</label>
-                  <input
-                    type="number"
-                    name="floor_count"
-                    className="w-full border p-2 rounded-lg"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium">Rooms Per Floor</label>
-                  <input
-                    type="number"
-                    name="room_per_floor"
-                    className="w-full border p-2 rounded-lg"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-medium">Building Image</label>
-                <input
-                  type="file"
-                  name="image"
-                  accept="image/*"
-                  className="w-full border p-2 rounded-lg"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
-              >
-                Save Building
-              </button>
-            </form>
-          </div>
-        </div>
+    <div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        variant={modalVariant}
+        title={
+          modalVariant === "create"
+            ? "Add Building"
+            : modalVariant === "update"
+            ? "Edit Building"
+            : modalVariant === "read"
+            ? "View Building"
+            : "Delete Building"
+        }
+        message="Modal content goes here"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+      {notify && (
+        <ActionNotification isOpen={true} variant={notify.type}>
+          {notify.message}
+        </ActionNotification>
       )}
-    </AdminLayout>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-4">
+          <button className="flex items-center gap-2 border px-3 py-2 rounded-md text-sm hover:bg-gray-100">
+            <FiFilter />
+            Filter
+          </button>
+          <select className="px-3 py-2 border rounded-md text-sm">
+            {[...Array(10)].map((_, i) => (
+              <option key={i + 1}>{i + 1} entries</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span>Search:</span>
+          <InputField />
+          <button
+            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            onClick={() => openModal("create")}
+          >
+            <IoMdAdd />
+            Add Building
+          </button>
+        </div>
+      </div>
+      <Table theadings={["ID", "Name", "Floors", "Rooms", "Actions"]}>
+        {buildings.map((bld, index) => (
+          <TableData
+            key={bld.id || index}
+            columns={[
+              bld.id,
+              bld.name,
+              bld.floor_count,
+              bld.total_rooms,
+              <ToggleDiv buttonText="Actions">
+                <div
+                  className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
+                  onClick={() => openModal("read")}
+                >
+                  <LuEye className="mr-2" /> View
+                </div>
+                <div
+                  className="px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => openModal("update")}
+                >
+                  <BiSolidEditAlt className="mr-2" /> Edit
+                </div>
+                <div
+                  className="px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => openModal("delete")}
+                >
+                  <MdOutlineDeleteForever className="mr-2" /> Delete
+                </div>
+              </ToggleDiv>,
+            ]}
+          />
+        ))}
+      </Table>
+    </div>
   );
 };
 
-export default ManageBuildings;
+export default Buildings;
