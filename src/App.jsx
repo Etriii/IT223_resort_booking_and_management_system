@@ -85,7 +85,7 @@ import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, Mana
 import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pages/user';
 import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
-
+import ResortBuilding from './pages/user/ResortBuildings';
 // Auth
 import { Login, LoginAs, PageNotFound, Register, Unauthorized } from './pages/auth';
 
@@ -133,7 +133,8 @@ const App = () => {
           {/* USER */}
           <Route path="resortslist" element={<ResortsList />} />
           <Route path="resortdetails/:id" element={<ResortDetails />} />
-          <Route path="resortroomlist" element={<ResortRoomList />} />
+          <Route path="resortroomlist/:building_id" element={<ResortRoomList />} />
+          <Route path="resortbuildings/:id" element={<ResortBuilding />} />
 
           <Route element={<Authenticate />}>
             <Route path="bookmarks" element={<Bookmarks />} />
