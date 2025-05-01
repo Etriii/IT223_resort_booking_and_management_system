@@ -25,6 +25,30 @@ class Room
 
     public function getRoomById($id) {}
 
+    public function getAvailableRooms($data)
+    {
+        $sql = "
+        SELECT rooms.*
+        FROM rooms
+        WHERE rooms.building_id = :building_id
+          AND rooms.id NOT IN (
+            SELECT room_id
+            FROM bookings
+            WHERE status NOT IN ('Cancelled', 'Completed')
+              AND check_in < :check_out
+              AND check_out > :check_in
+        )
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':building_id' => $data['building_id'],
+            ':check_in' => $data['check_in'],
+            ':check_out' => $data['check_out'],
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getRoomsByBuildingId($building_id, $start_date = null, $end_date = null)
     {
         $stmt = $this->conn->prepare("
@@ -43,11 +67,11 @@ class Room
             WHERE 
                 r.building_id = :building_id
         ");
-    
+
         $stmt->bindParam(':building_id', $building_id, PDO::PARAM_INT);
         $stmt->execute();
         $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
         if (!empty($start_date) && !empty($end_date)) {
             $bookingsStmt = $this->conn->prepare("
                 SELECT room_id FROM bookings
@@ -60,16 +84,16 @@ class Room
             $bookingsStmt->bindParam(':check_in', $start_date, PDO::PARAM_STR);
             $bookingsStmt->bindParam(':check_out', $end_date, PDO::PARAM_STR);
             $bookingsStmt->execute();
-    
+
             $bookedRoomIds = array_column($bookingsStmt->fetchAll(PDO::FETCH_ASSOC), 'room_id');
-    
+
             $rooms = array_filter($rooms, function ($room) use ($bookedRoomIds) {
                 return !in_array($room['id'], $bookedRoomIds);
             });
-    
+
             $rooms = array_values($rooms);
         }
-    
+
         return $rooms;
     }
 

@@ -1,6 +1,11 @@
+<<<<<<< HEAD
+import React from 'react'
+import { Navigate, useParams } from 'react-router-dom';
+=======
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useEffect } from "react";
+>>>>>>> main
 
 const ManageRooms = () => {
 
@@ -12,13 +17,24 @@ const ManageRooms = () => {
   /*
     process ata ani kay get nimo tanan buildings nga naa sa imong resorts (please see localstorage naa didto ang resort id nimo)
     then after ana e check nimo if ang gi pasa sa wildcard nga building_id kay wala sa imong buildings kay e butang sa page not found
+<<<<<<< HEAD
+  */ 
+=======
   */
+>>>>>>> main
 
   if (!building_id) {
     return <Navigate to="/oceanview/pagenotfound" replace />
   }
 
   return (
+<<<<<<< HEAD
+    <div>ManageRooms of Building id {building_id}</div>
+  )
+}
+
+export default ManageRooms
+=======
     <main className="p-8 max-w-6xl mx-auto space-y-12">
       <section className="bg-gray-100 p-6 mt-8 rounded-2xl shadow-md">
         <h2 className="text-xl font-semibold mb-4">Add New Room</h2>
@@ -93,3 +109,4 @@ const ManageRooms = () => {
 };
 
 export default ManageRooms;
+>>>>>>> main

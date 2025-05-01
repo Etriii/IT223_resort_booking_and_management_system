@@ -5,15 +5,15 @@ require_once __DIR__ . '/../core/Request.php';
 
 class ReviewsController
 {
-    private $eventsModel;
+    private $reviewModel;
 
     public function __construct()
     {
-        $this->eventsModel = new Review();
+        $this->reviewModel = new Review();
     }
 
     public function getAllReviews()
     {
-        echo json_encode($this->eventsModel->getReviews());
+        echo json_encode($this->reviewModel->getReviews());
     }
 }
