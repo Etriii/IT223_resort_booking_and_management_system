@@ -5,15 +5,15 @@ require_once __DIR__ . '/../core/Request.php';
 
 class TriggerLogsController
 {
-    private $eventsModel;
+    private $triggerLogModel;
 
     public function __construct()
     {
-        $this->eventsModel = new TriggerLog();
+        $this->triggerLogModel = new TriggerLog();
     }
 
     public function getAllTriggerLogs()
     {
-        echo json_encode($this->eventsModel->getTriggerLogs());
+        echo json_encode($this->triggerLogModel->getTriggerLogs());
     }
 }

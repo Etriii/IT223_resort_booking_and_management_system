@@ -5,15 +5,15 @@ require_once __DIR__ . '/../core/Request.php';
 
 class RoleController
 {
-    private $eventsModel;
+    private $roleModel;
 
     public function __construct()
     {
-        $this->eventsModel = new Role();
+        $this->roleModel = new Role();
     }
 
     public function getRoles()
     {
-        echo json_encode($this->eventsModel->getRoles());
+        echo json_encode($this->roleModel->getRoles());
     }
 }

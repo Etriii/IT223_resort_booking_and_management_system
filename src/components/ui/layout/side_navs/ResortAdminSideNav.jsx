@@ -1,13 +1,11 @@
-import { NavLink, useNavigate, useMatch } from "react-router-dom";
+import {  useNavigate, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { MdDashboard, MdOutlineQuestionMark, MdEvent } from "react-icons/md";
-import { BsBuildingGear } from "react-icons/bs";
 import { RiCalendarCheckLine } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
-import { TbBuildingPavilion, TbBuildingCircus } from "react-icons/tb";
+import { TbBuildingPavilion, TbBuildingCircus, TbBuildingCommunity } from "react-icons/tb";
 import { AiOutlineSetting } from "react-icons/ai";
-import { PiBuildingApartment } from "react-icons/pi";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
 
@@ -91,7 +89,7 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                     </li>
                     <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/buildings/*')
                         ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/manage/buildings')}>
-                        <PiBuildingApartment className={`${lists_default_styles.icon} size-5`} />
+                        <TbBuildingCommunity className={`${lists_default_styles.icon} size-5`} />
                         <span className={`${lists_default_styles.span}`}>Building</span>
                     </li>
                     <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/manage/rooms/*')
