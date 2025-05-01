@@ -20,8 +20,7 @@ const Events = () => {
   const [notify, setNotify] = useState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("create"); // Default to create
-
+  const [modalVariant, setModalVariant] = useState("create");
   const openModal = (variant) => {
     setModalVariant(variant);
     setIsModalOpen(true);

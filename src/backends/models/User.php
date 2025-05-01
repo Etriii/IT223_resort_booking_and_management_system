@@ -147,9 +147,39 @@ class User
 
     public function getAllUsers()
     {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
+        // $stmt->execute();
+        // return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt = $this->conn->prepare("
+        SELECT 
+            users.*, 
+            GROUP_CONCAT(user_roles.role_id) AS roles
+        FROM users
+        LEFT JOIN user_roles ON users.id = user_roles.user_id
+        GROUP BY users.id
+    ");
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($users as &$user) {
+        if ($user['roles']) {
+            $roleIds = explode(',', $user['roles']);
+            $roleNames = array_map(function($id) {
+                switch ($id) {
+                    case '1': return 'Super Admin';
+                    case '2': return 'Resort Admin';
+                    case '4': return 'Guest';
+                    default: return 'Unknown';
+                }
+            }, $roleIds);
+            $user['role_names'] = $roleNames;
+        } else {
+            $user['role_names'] = ['No Role'];
+        }
+    }
+
+    return $users;
     }
 
     public function getUserById($id)

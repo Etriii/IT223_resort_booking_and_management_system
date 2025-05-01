@@ -62,7 +62,7 @@ const AdminSideNav = ({ className, isOpen }) => {
         passive: 'bg-white cursor-pointer',
     };
 
-    const baseStyles = "duration-300 w-64 border border-right-gray-300 h-lvh shadow-lg sticky top-0 ";
+    const baseStyles = "duration-300 w-64 border border-right-gray-300 h-lvh shadow-lg sticky top-0 z-[500]";
 
     return (
         <aside className={`${baseStyles} ${className}`} id="sidenav">

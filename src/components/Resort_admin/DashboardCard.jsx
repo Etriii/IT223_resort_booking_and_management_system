@@ -1,20 +1,20 @@
 import React from "react";
 
 const DashboardCards = ({title , value , bg}) => {
-    const cardColor = [
-      {
-        bg: "bg-green-500",
-      },
-      {
-        bg: "bg-blue-500",
-      },
-      {
-        bg: "bg-yellow-500",
-      },
-      {
-        bg: "bg-red-500",
-      },
-    ];
+    // const cardColor = [
+    //   {
+    //     bg: "bg-green-500",
+    //   },
+    //   {
+    //     bg: "bg-blue-500",
+    //   },
+    //   {
+    //     bg: "bg-yellow-500",
+    //   },
+    //   {
+    //     bg: "bg-red-500",
+    //   },
+    // ];
   
     return (
         <>

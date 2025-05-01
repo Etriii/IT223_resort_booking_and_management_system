@@ -45,11 +45,8 @@ const Linechart = () => {
       <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
     </div>
   </div>
-
-        </div>
-
-  
-  )
+</div>
+ )
 }
 
 export default Linechart
