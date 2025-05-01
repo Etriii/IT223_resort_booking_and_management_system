@@ -86,6 +86,7 @@ import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pag
 import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 import ResortBuilding from './pages/user/ResortBuildings';
+// import ResortRoomDetails from './pages/user/ResortRoomDetails';
 // Auth
 import { Login, LoginAs, PageNotFound, Register, Unauthorized } from './pages/auth';
 
@@ -135,7 +136,8 @@ const App = () => {
           <Route path="resortdetails/:id" element={<ResortDetails />} />
           <Route path="resortroomlist/:building_id" element={<ResortRoomList />} />
           <Route path="resortbuildings/:id" element={<ResortBuilding />} />
-
+          {/* <Route path="resortroomdetails/:id" element={<ResortRoomDetails />} /> */}
+          
           <Route element={<Authenticate />}>
             <Route path="bookmarks" element={<Bookmarks />} />
             <Route path="myaccount" element={<MyAccount />} />

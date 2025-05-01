@@ -11,6 +11,10 @@ const HomePage = () => {
 
   useEffect(() => {
     document.title = "Home | Ocean View";
+    if (localStorage.getItem('user_id')){console.log("Yes po")}
+    else{
+        console.log("awww")
+    }
   }, []);
 
   return (

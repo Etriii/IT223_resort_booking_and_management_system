@@ -4,10 +4,12 @@ import { useParams } from 'react-router-dom';
 import backgroundImage from '../../assets/images/home/backgroundaboutus.jpg';
 import { useState, useEffect } from 'react';
 import FilterCard from '../../components/ui/card/roomsfiltercard.jsx';
-import { Building, Building2Icon } from 'lucide-react';
+import RoomDetailModal from '../../components/ui/modals/roomdetails.jsx';
+import RoomBookingModal from '../../components/ui/modals/roombooking.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const ResortRoomList = () => {
-    const { building_id } = useParams(); 
+    const { building_id } = useParams();
     const [allRooms, setAllRooms] = useState([]);
     const [filteredRooms, setFilteredRooms] = useState([]);
     const [error, setError] = useState(null);
@@ -21,6 +23,11 @@ const ResortRoomList = () => {
         roomType: 'All',
         guests: ''
     });
+
+    const navigate = useNavigate();
+    const [selectedRoom, setSelectedRoom] = useState(null);
+    const [isRoomDetailModalOpen, setIsRoomDetailModalOpen] = useState(false);
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
     useEffect(() => {
         document.title = "Rooms in Building | Ocean View";
@@ -36,19 +43,19 @@ const ResortRoomList = () => {
     const getRoomsByBuildingId = async () => {
         try {
             setLoading(true);
-    
+
             const { checkInDate, checkOutDate } = filters;
-    
+
             let url = `http://localhost:8000/api.php?controller=Rooms&action=getRoomsByBuildingId&building_id=${building_id}`;
-    
+
             if (checkInDate && checkOutDate) {
                 url += `&start_date=${encodeURIComponent(checkInDate)}&end_date=${encodeURIComponent(checkOutDate)}`;
             }
-    
+
             const response = await fetch(url);
             const data = await response.json();
             console.log("Rooms API response:", data);
-    
+
             if (Array.isArray(data)) {
                 setAllRooms(data);
                 setFilteredRooms(data);
@@ -68,14 +75,14 @@ const ResortRoomList = () => {
         const filtered = allRooms.filter(room => {
             const price = parseFloat(room.price_per_night);
             if (price < filters.budget[0] || price > filters.budget[1]) return false;
-    
+
             if (filters.roomType !== 'All' && room.room_type_name !== filters.roomType) return false;
-    
+
             if (filters.guests && parseInt(room.room_type_capacity) < parseInt(filters.guests)) return false;
-    
+
             return true;
         });
-    
+
         setFilteredRooms(filtered);
     };
 
@@ -95,6 +102,37 @@ const ResortRoomList = () => {
         }));
     };
 
+    const openRoomDetailModal = (room) => {
+        setSelectedRoom(room);
+        setIsRoomDetailModalOpen(true);
+        setIsBookingModalOpen(false);
+    };
+
+    const closeRoomDetailModal = () => {
+        setIsRoomDetailModalOpen(false);
+    };
+
+    const openBookingModal = (room) => {
+        setSelectedRoom(room);
+        setIsBookingModalOpen(true);
+        setIsRoomDetailModalOpen(false);
+    };
+
+    const closeBookingModal = () => {
+        setIsBookingModalOpen(false);
+    };
+
+const handleBookNow = (room) => {
+    if (localStorage.getItem('user_id')) {
+        console.log("Yes po")
+        openBookingModal(room);
+    } else {
+        const confirmLogin = window.confirm("You need to log in to book a room. Do you want to go to the login page?");
+        if (confirmLogin) {
+            navigate('/oceanview/login');
+        }
+    }
+};
     return (
         <div>
             <div className="px-40 min-h-screen">
@@ -154,12 +192,12 @@ const ResortRoomList = () => {
                                                     <div className="w-4/5 pr-4">
                                                         <p className="text-sm text-gray-600 mt-1">{room.description}</p>
 
-                                                        <a
-                                                            href={`/oceanview/resortbuildings/${room.id}`}
-                                                            className="text-blue-600 no-underline py-3 text-sm font-bold inline-block mt-2"
+                                                        <button
+                                                            onClick={() => openRoomDetailModal(room)}
+                                                            className="text-blue-600 no-underline py-3 text-sm font-bold inline-block mt-2 hover:text-blue-900"
                                                         >
                                                             View Details
-                                                        </a>
+                                                        </button>
                                                     </div>
 
                                                     {/* Right */}
@@ -171,17 +209,34 @@ const ResortRoomList = () => {
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-end">
-                                                    <a
-                                                        href={`/oceanview/resortbuildings/${room.id}`}
+                                                    <button
+                                                        onClick={() => handleBookNow(room)}
                                                         className="text-white px-8 rounded-lg bg-blue-600 no-underline py-3 text-xs hover:bg-blue-700 font-bold inline-block"
                                                     >
                                                         Book Now
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
+
+                                {isRoomDetailModalOpen && (
+                                    <RoomDetailModal
+                                        room={selectedRoom}
+                                        isOpen={isRoomDetailModalOpen}
+                                        onClose={closeRoomDetailModal}
+                                        onBookNow={openBookingModal}
+                                    />
+                                )}
+
+                                {isBookingModalOpen && (
+                                    <RoomBookingModal
+                                        room={selectedRoom}
+                                        isOpen={isBookingModalOpen}
+                                        onClose={closeBookingModal}
+                                    />
+                                )}
                             </div>
                         )}
                     </div>

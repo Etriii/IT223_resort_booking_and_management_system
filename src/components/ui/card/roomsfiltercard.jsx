@@ -61,7 +61,7 @@ const FilterCard = ({
 
   return (
     <div className="w-full sticky h-fit text-black px-6 rounded-xl border border-white/20">
-      <h1 className="text-xl font-bold mb-2">Filter by</h1>
+      <h1 className="text-base font-bold mb-2">Filter by</h1>
       <hr className="w-full border-t border-neutral-400 my-2" />
 
       {/* Budget */}

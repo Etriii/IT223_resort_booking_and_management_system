@@ -114,7 +114,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
             backgroundImage: `url(${resort.main_image || backgroundImage})`,
           }}
         >
-          <div className="absolute inset-y-20 inset-x-64 flex items-center justify-center text-center bg-black/70 rounded-xl">
+          <div className="absolute inset-y-20 inset-x-96 flex items-center justify-center text-center bg-black/60 rounded-xl">
             <div className="resort p-3">
               <h1 className="text-white text-4xl font-bold border-b-2 border-white pb-2">
                 {resort.name || "Resort Name Not Available"}
