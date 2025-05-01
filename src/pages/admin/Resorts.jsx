@@ -1,15 +1,14 @@
 import AdminLayout from "../../layouts/AdminLayout";
 import Table from '../../components/ui/table/Table';
 import TableData from '../../components/ui/table/TableData';
-import ActionNotification from "../../components/ui/modals/ActionNotification";
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
 import { FiFilter } from 'react-icons/fi';
 import { IoMdAdd } from "react-icons/io";
-import { useState, useEffect } from "react";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import { useState, useEffect } from "react";
 
 import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
@@ -22,7 +21,7 @@ const Resorts = () => {
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalVariant, setModalVariant] = useState('create'); // Default to create
+    const [modalVariant, setModalVariant] = useState('create'); 
 
     const openModal = (variant) => {
         setModalVariant(variant);
@@ -40,7 +39,6 @@ const Resorts = () => {
         console.log("Action Canceled");
         closeModal();
     };
-
 
     useEffect(() => {
 
