@@ -160,6 +160,15 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUserByUsername($username)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getUserByEmail($email)
     {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE email = :email");
@@ -168,15 +177,34 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createUser($name, $email, $password)
+    public function createUser($username, $email, $password)
     {
-        $stmt = $this->conn->prepare("INSERT INTO " . $this->table . " (name, email, password) VALUES (:name, :email, :password)");
+        $conn = (new Database())->connect();
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        $stmt->bindParam(":name", $name);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":password", $hashedPassword);
-        return $stmt->execute();
+    
+        try {
+            $stmt = $conn->prepare("CALL createUser(:username, :email, :password)");
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $hashedPassword);
+    
+            $stmt->execute();
+    
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            return $result['user_id'];
+    
+        } catch (PDOException $e) {
+            error_log("Error creating user: " . $e->getMessage());
+            return false;
+        }
     }
+    
+    
+    
+    
+    
+    
 
     public function deleteUser($user_id)
     {
