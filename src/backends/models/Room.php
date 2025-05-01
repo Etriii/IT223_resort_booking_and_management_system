@@ -23,7 +23,13 @@ class Room
 
     public function create() {}
 
-    public function getRoomById($id) {}
+    public function getRoomById($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     public function getAvailableRooms($data)
     {
@@ -72,29 +78,13 @@ class Room
         $stmt->execute();
         $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (!empty($start_date) && !empty($end_date)) {
-            $bookingsStmt = $this->conn->prepare("
-                SELECT room_id FROM bookings
-                WHERE 
-                    (check_in BETWEEN :check_in AND :check_out 
-                    OR check_out BETWEEN :check_in AND :check_out
-                    OR :check_in BETWEEN check_in AND check_out
-                    OR :check_out BETWEEN check_in AND check_out)
-            ");
-            $bookingsStmt->bindParam(':check_in', $start_date, PDO::PARAM_STR);
-            $bookingsStmt->bindParam(':check_out', $end_date, PDO::PARAM_STR);
-            $bookingsStmt->execute();
-
-            $bookedRoomIds = array_column($bookingsStmt->fetchAll(PDO::FETCH_ASSOC), 'room_id');
-
-            $rooms = array_filter($rooms, function ($room) use ($bookedRoomIds) {
-                return !in_array($room['id'], $bookedRoomIds);
-            });
-
-            $rooms = array_values($rooms);
-        }
-
         return $rooms;
+    }
+
+    public function getOverlappingReservations($resort_id, $parsedCheckIn, $parsedCheckOut)
+    {
+        //para mawa ang error sakoa
+        return [];
     }
 
     public function update() {}

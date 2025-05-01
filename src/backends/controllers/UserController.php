@@ -137,19 +137,27 @@ class UserController
     }
 
     public function createUser(Request $request)
-    {
-        $name = $request->get('name');
-        $email = $request->get('email');
-        $password = $request->get('password');
+{
+    $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!$name || !$email || !$password) {
-            echo json_encode(["error" => "Name, email, and password are required"]);
-            return;
-        }
+    $username = $data['username'] ?? null;
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
 
-        $result = $this->userModel->createUser($name, $email, $password);
-        echo json_encode(["success" => $result]);
+    if (!$username || !$email || !$password) {
+        echo json_encode(["success" => false, "message" => "Username, email, and password are required"]);
+        return;
     }
+
+    if ($this->userModel->getUserByEmail($email)) {
+        echo json_encode(["success" => false, "message" => "Email already exists"]);
+        return;
+    }
+
+    $user_id = $this->userModel->createUser($username, $email, $password);
+}
+
+    
 
     public function deleteUser($request)
     {

@@ -15,17 +15,6 @@ import Modal from "../../components/ui/modals/Modal";
 import InputField from "../../components/ui/form/InputField";
 
 const ManageBuildings = () => {
-<<<<<<< HEAD
-    useEffect(() => {
-        document.title = "Manage Building | Ocean View";
-    }, []);
-    return (
-        <>
-            Buildings
-        </>
-    );
-}
-=======
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notify, setNotify] = useState(null);
@@ -162,6 +151,5 @@ const ManageBuildings = () => {
     </div>
   );
 };
->>>>>>> main
 
 export default ManageBuildings;
