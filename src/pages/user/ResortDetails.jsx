@@ -256,7 +256,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
 
               <NavLink
-                to="/oceanview/resortslist"
+                to={`/oceanview/resortbuildings/${resort.id}`}
                 className="text-black border-2 border-black hover:text-white hover:bg-blue-500 hover:border-none no-underline font-bold p-4 flex justify-center rounded-full"
               >
                 View All Rooms
@@ -308,7 +308,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
           <div className="mt-32 mb-40">
             <NavLink
-              to="/oceanview/resortslist"
+              to={`/oceanview/resortbuildings/${resort.id}`}
               className="text-white bg-blue-500 hover:bg-blue-700  no-underline font-bold p-5 flex justify-center rounded-full mx-40"
             >
               Book Now

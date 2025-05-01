@@ -13,7 +13,7 @@ const AdminLayout = () => {
             <AdminSideNav isOpen={isSideNavOpen} />
             <div className="overflow-x-hidden w-screen h-lvh">
                 <AdminHeading toggleSideNav={() => setIsSideNavOpen(!isSideNavOpen)} isOpen={isSideNavOpen} />
-                <main className="p-2 h-lvh">
+                <main className="p-2">
                     <Outlet />
                 </main>
             </div>

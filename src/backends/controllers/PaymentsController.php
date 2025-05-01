@@ -5,15 +5,15 @@ require_once __DIR__ . '/../core/Request.php';
 
 class PaymentsController
 {
-    private $eventsModel;
+    private $paymentModel;
 
     public function __construct()
     {
-        $this->eventsModel = new Payment();
+        $this->paymentModel = new Payment();
     }
 
     public function getPayments()
     {
-        echo json_encode($this->eventsModel->getPayments());
+        echo json_encode($this->paymentModel->getPayments());
     }
 }
