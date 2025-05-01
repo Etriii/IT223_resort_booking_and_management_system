@@ -5,15 +5,15 @@ require_once __DIR__ . '/../core/Request.php';
 
 class BookingDetailsController
 {
-    private $eventsModel;
+    private $bookingDetailModel;
 
     public function __construct()
     {
-        $this->eventsModel = new BookingDetail();
+        $this->bookingDetailModel = new BookingDetail();
     }
 
     public function getBookingDetails()
     {
-        echo json_encode($this->eventsModel->getBookingDetails());
+        echo json_encode($this->bookingDetailModel->getBookingDetails());
     }
 }
