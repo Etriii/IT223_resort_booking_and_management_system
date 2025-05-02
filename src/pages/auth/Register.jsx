@@ -31,6 +31,8 @@ const Register = () => {
 
     const togglePassword = () => setShowPassword(!showPassword);
 
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -42,26 +44,30 @@ const Register = () => {
 
         // Form validations
         if (!username.trim()) {
-            setErrorUsername("Username is required.");
+            await sleep(1000);
             setLoading(false);
+            setErrorUsername("Username is required.");
             return;
         }
 
         if (!/\S+@\S+\.\S+/.test(email)) {
-            setErrorEmail("Valid email is required.");
+            await sleep(1000);
             setLoading(false);
+            setErrorEmail("Valid email is required.");
             return;
         }
 
         if (password.length < 6) {
-            setErrorPassword("Password must be at least 6 characters.");
+            await sleep(1000);
             setLoading(false);
+            setErrorPassword("Password must be at least 6 characters.");
             return;
         }
 
         if (password !== confirmPassword) {
-            setErrorConfirm("Passwords do not match.");
+            await sleep(1000);
             setLoading(false);
+            setErrorConfirm("Passwords do not match.");
             return;
         }
 
@@ -77,14 +83,13 @@ const Register = () => {
             console.log('API Response:', data);
 
             setTimeout(() => {
-                setLoading(false);
                 if (data.success) {
                     navigate('/oceanview/login');
                 } else {
                     setError(data.message || "Registration failed.");
                 }
-            }, 1000);
-
+                setLoading(false);
+            }, 1500);
         } catch (error) {
             console.error("Registration error:", error);
             setLoading(false);
@@ -167,7 +172,7 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <Button variant="primary" size="md" onClick={handleRegister} disabled={loading} loading={loading}>
+                        <Button btn_type='submit' variant="primary" size="md" onClick={handleRegister} disabled={loading} loading={loading}>
                             {loading ? "Creating Account..." : "Sign Up"}
                         </Button>
                     </div>

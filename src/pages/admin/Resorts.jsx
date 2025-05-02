@@ -13,32 +13,11 @@ import { useState, useEffect } from "react";
 import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 
+import ActionNotification from "../../components/ui/modals/ActionNotification";
+
+import { CreateResortModal, ReadResortModal, UpdateResortModal, DeleteResortModal } from "./modals";
+
 const Resorts = () => {
-
-    const [resorts, setResorts] = useState();
-    const [loading, setLoading] = useState(true);
-    const [notify, setNotify] = useState();
-
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalVariant, setModalVariant] = useState('create'); 
-
-    const openModal = (variant) => {
-        setModalVariant(variant);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => setIsModalOpen(false);
-
-    const handleConfirm = () => {
-        console.log("Action Confirmed");
-        closeModal();
-    };
-
-    const handleCancel = () => {
-        console.log("Action Canceled");
-        closeModal();
-    };
 
     useEffect(() => {
 
@@ -65,32 +44,128 @@ const Resorts = () => {
         fetchResorts();
     }, []);
 
+    const [resorts, setResorts] = useState();
+    const [loading, setLoading] = useState(true);
+    const [notify, setNotify] = useState();
+
+    const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false });
+
+    const closeModal = () => {
+        setModal(prev => ({ ...prev, isOpen: false }));
+    };
+
+    const [createResortFormData, setCreateResortFormData] = useState({
+        name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: ''
+    });
+
+    // const [createResortFormDataError, setCreateResortFormDataError] = useState({
+    //     name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: ''
+    // });
+
+    const handleFormInputChange = (e) => {
+        const { name, value } = e.target;
+        setCreateResortFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const openModal = (variant, resort) => {
+        let children;
+
+        switch (variant) {
+            case 'create':
+                children = <CreateResortModal handleFormInputChange={handleFormInputChange} formData={createResortFormData} />;
+                break;
+            case 'read':
+                children = <ReadResortModal />;
+                break;
+            case 'update':
+                children = <UpdateResortModal />;
+                break;
+            case 'delete':
+                children = <DeleteResortModal />;
+                break;
+            default:
+                children = <>Nahh wala</>;
+        }
+
+        setModal({ isOpen: true, variant, children, loading: false });
+    };
+
+    const handleConfirm = () => {
+
+        setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
+
+        // Check where 
+        // Validation
+
+        const timer = setTimeout(() => {
+            setModal(prev => ({ ...prev, loading: false }));//pang remove nga loading button
+
+            console.log("Form submitted:", createResortFormData);
+
+
+            setNotify({
+                open: true,
+                type: 'create',
+                message: 'Resort Successfully Created!'
+            });
+            closeModal();
+        }, 2000);
+
+        setNotify({});
+    };
+
+
+    // Table Filters
+
+    const [filters, setFilters] = useState({
+        paginate: 10,
+        page: 1,
+        resort_name: null,
+        status: '',
+        tax_rate: '',
+        contact_details: '',
+    });
+
+    const filteredResorts = resorts?.filter(resort => {
+        const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
+        const statusMatch = !filters.status || resort.status?.toLowerCase() === filters.status.toLowerCase();
+        const taxRateMatch = !filters.tax_rate || String(resort.tax_rate) === String(filters.tax_rate);
+        const contactMatch = !filters.contact_details || resort.contact_details?.includes(filters.contact_details);
+
+        // return nameMatch;
+        return nameMatch && statusMatch && taxRateMatch && contactMatch;
+    }) || [];
+
+    const totalPages = Math.ceil(filteredResorts.length / filters.paginate);
+    const paginatedResorts = filteredResorts.slice(
+        (filters.page - 1) * filters.paginate,
+        filters.page * filters.paginate
+    );
+
+    useEffect(() => {
+        setFilters((prev) => ({ ...prev, page: 1 }));
+    }, [filters.resort_name, filters.paginate]);
+
+
     return (
         <div>
-            <Modal
-                isOpen={isModalOpen}
+            <Modal isOpen={modal.isOpen}
                 onClose={closeModal}
-                variant={modalVariant}
-                title={
-                    modalVariant === 'create'
-                        ? 'Create Item'
-                        : modalVariant === 'read'
-                            ? 'View Item'
-                            : modalVariant === 'update'
-                                ? 'Edit Item'
-                                : modalVariant === 'delete'
-                                    ? 'Delete Item'
-                                    : modalVariant === 'confirmation'
-                                        ? 'Are you sure?'
-                                        : 'Information'
+                variant={modal.variant}
+                title={modal.variant === 'create' ?
+                    'Create Resort' : modal.variant === 'read' ?
+                        'View Resort' : modal.variant === 'update' ?
+                            'Edit Resort' : modal.variant === 'delete' ?
+                                'Delete Resort' : modal.variant === 'confirmation' ?
+                                    'Are you sure?' : 'Information'
                 }
+                loading={modal.loading}
+                children={modal.children}/* Here ang mga body sa imong modal */
                 onConfirm={handleConfirm}
-                onCancel={handleCancel}
-            >
-                yes
-            </Modal>
+                onCancel={() => closeModal()}
+            />
             {notify && (
-                <ActionNotification isOpen={true} variant={`${notify.type}`}>
+                <ActionNotification isOpen={notify.open} variant={`${notify.type}`}>
                     {notify.message}
                 </ActionNotification>
             )}
@@ -101,27 +176,38 @@ const Resorts = () => {
                         Filter
                     </button>
 
-                    <select className="px-3 py-2 border rounded-md text-sm text-gray-700 focus: outline-green-600">
-                        {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>{i + 1} entries</option>
+                    <select value={filters.paginate} onChange={(e) =>
+                        setFilters((prev) => ({
+                            ...prev,
+                            paginate: parseInt(e.target.value, 10),
+                        }))
+                    } className="bg-gray-100 rounded p-1">
+                        {[...Array(5)].map((_, i) => (
+                            <option key={i + 1} value={(i + 1) * 10}>
+                                {(i + 1) * 10} entries
+                            </option>
                         ))}
                     </select>
+
                 </div>
                 <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-2">
-                        <span>username:</span>
-                        <InputField />
+                        <InputField placeholder="Username" value={filters.resort_name || ''} onChange={(e) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                resort_name: e.target.value
+                            }))
+                        } />
                     </div>
-                    <button className="px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap" onClick={() => openModal('create')}>
+                    <button className="px-3 py-[7px] bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap" onClick={() => openModal('create')}>
                         <IoMdAdd /> <span>Add Resort</span>
                     </button>
                 </div>
             </div>
 
-
             <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading}>
-                {resorts && resorts.length > 0 ? (
-                    resorts.map((resort, index) => (
+                {filteredResorts.length > 0 ? (
+                    paginatedResorts.map((resort, index) => (
                         <TableData
                             key={resort.id || index}
                             columns={[
@@ -139,41 +225,73 @@ const Resorts = () => {
                             ]}
                         />
                     ))
-                ) : (<tr></tr>)}
+                ) : (
+                    <tr><td colSpan={7}>No resorts found.</td></tr>
+                )}
+
             </Table>
 
             <div className="flex md:justify-between md:items-center md:flex-row p-2 flex-wrap justify-center items-center flex-col-reverse space-y-2">
                 <div>
-                    <span>Showing n of n entries</span>
+                    <span>
+                        Showing {(filters.page - 1) * filters.paginate + 1}
+                        –
+                        {Math.min(filters.page * filters.paginate, filteredResorts.length)} of {filteredResorts.length} entries
+                    </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    {/* First */}
+                    <button
+                        onClick={() => setFilters(prev => ({ ...prev, page: 1 }))}
+                        disabled={filters.page === 1}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                    >
                         &laquo;
                     </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    {/* Prev */}
+                    <button
+                        onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+                        disabled={filters.page === 1}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                    >
                         &lt;
                     </button>
-                    <button className="px-3 py-1 rounded-md bg-green-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-green-500">
-                        1
-                    </button>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        2
-                    </button>
-                    <button className="px-3 py-1 rounnded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        3
-                    </button>
-                    <span className="text-gray-400">...</span>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        10
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    {/* Page Numbers */}
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setFilters(prev => ({ ...prev, page: i + 1 }))}
+                            className={`px-3 py-1 rounded-md ${filters.page === i + 1
+                                ? 'bg-green-500 text-white font-semibold'
+                                : 'text-green-500 hover:bg-green-100'
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+
+                    {/* Next */}
+                    <button
+                        onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+                        disabled={filters.page === totalPages}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                    >
                         &gt;
                     </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    {/* Last */}
+                    <button
+                        onClick={() => setFilters(prev => ({ ...prev, page: totalPages }))}
+                        disabled={filters.page === totalPages}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                    >
                         &raquo;
                     </button>
                 </div>
             </div>
+
 
         </div>
     );

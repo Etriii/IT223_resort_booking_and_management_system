@@ -1,6 +1,5 @@
 import Table from '../../components/ui/table/Table';
 import TableData from '../../components/ui/table/TableData';
-import defaultProfile from '../../assets/images/admin/admin logo.png';
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
 import { FiFilter } from 'react-icons/fi';
@@ -20,7 +19,7 @@ const Accounts = () => {
     const [notify, setNotify] = useState();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalVariant, setModalVariant] = useState('create'); 
+    const [modalVariant, setModalVariant] = useState('create');
 
     const openModal = (variant) => {
         setModalVariant(variant);
@@ -114,7 +113,7 @@ const Accounts = () => {
             </div>
 
 
-            <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Roles', 'Status', 'Action']} isLoading={loading}>
+            <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Role', 'Status', 'Action']} isLoading={loading}>
                 {users && users.length > 0 ? (
                     users.map((user, index) => (
                         <TableData
@@ -122,26 +121,26 @@ const Accounts = () => {
                             columns={[
                                 user.id,
                                 <div className="flex justify-center items-center">
-                                <img
-                                    src={user.profile_photo ? user.profile_photo : defaultProfile}
-                                    alt="Profile"
-                                    className="w-10 h-10 rounded-full"
-                                    onError={(e) => { e.target.src = defaultProfile; }}/>
+                                    <img
+                                        src={user.profile_photo ? user.profile_photo : '/images/user_profiles/default_profile.png'}
+                                        alt="Profile"
+                                        className=" size-10 object-cover bg-center rounded-full border border-gray-200 shadow-lg"
+                                        onError={(e) => { e.target.src = defaultProfile; }} />
                                 </div>,
                                 user.username,
                                 user.email,
                                 user.role_names?.map((role, i) => (
-                                    <span key={i} className="mr-1 bg-green-100 text-green-800 px-2 py-1 rounded">
-                                      {role}
+                                    <span key={i} className="mr-1  text-gray-600 px-2 py-1 rounded">
+                                        {role}
                                     </span>
-                                  )),
-                                <span className={`${user.status == 'active'?'text-green-600':'text-red-600'} font-bold`} >  {user.status} </span>,
+                                )),
+                                <span className={`${user.status == 'active' ? 'text-green-600' : 'text-red-600'} font-bold`} >  {user.status} </span>,
                                 <ToggleDiv buttonText="Actions">
                                     <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}> <LuEye className="size-5 mr-2" />View </div>
                                     <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
                                     <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
                                 </ToggleDiv>
-                              ]}
+                            ]}
                         />
                     ))
                 ) : (

@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 
 const ActionNotification = ({ children, variant = 'create', isOpen }) => {
 
-    const baseStyles = `absolute top-4 left-1/2 transform -translate-x-1/2 max-w-md w-full px-4 py-2 rounded shadow-md z-50 text-center`;
+    const baseStyles = `absolute top-4 left-1/2 transform -translate-x-1/2 max-w-md w-full px-4 py-2 rounded shadow-md z-[601] text-center`;
 
     const variants = {
         create: 'bg-green-100 text-green-800 border border-green-300',
@@ -28,6 +28,7 @@ const ActionNotification = ({ children, variant = 'create', isOpen }) => {
         }
     }, [isOpen]);
 
+    if (!isOpen) return null;
 
     return isActive ? (
         <div className={`${baseStyles} ${variants[variant]}`}>

@@ -6,7 +6,7 @@ const Table = ({ children, theadings, isLoading = false }) => {
     const styles = {
         table: 'min-w-full border-separate border-spacing-0 py-1',
         theading: 'bg-green-600 text-white ',
-        th: 'border px-3 py-2 text-sm font-semibold text-left whitespace-nowrap text-nowrap last:rounded-tr-sm first:rounded-tl-sm first:w-20 text-left first:text-center last:text-center last:w-28',
+        th: 'border px-3 py-2 text-sm font-semibold text-left whitespace-nowrap text-nowrap last:rounded-tr-sm first:rounded-tl-sm first:w-18 text-left first:text-center last:text-center last:w-28',
         tbody: '',
         row: '',
         col: '',
