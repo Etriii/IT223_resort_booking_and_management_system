@@ -1,7 +1,7 @@
 import React from 'react'
 import LoadingTable from "./LoadingTable";
 
-const Table = ({ children, theadings, isLoading = false }) => {
+const Table = ({ children, theadings, isLoading = false , containerRef}) => {
 
     const styles = {
         table: 'min-w-full border-separate border-spacing-0 py-1',
@@ -22,13 +22,13 @@ const Table = ({ children, theadings, isLoading = false }) => {
 
     if (isLoading) {
         return (
-            <LoadingTable row_count={3} col_count={theadings.length} />
+            <LoadingTable row_count={10} col_count={theadings.length} />
         );
     }
 
     return (
-        // <div className="overflow-x-auto">
-            <table className={`${styles.table}`}>
+        <div className="overflow-x-auto">
+            <table className={`${styles.table}`} ref={containerRef}>
                 <thead className={`${styles.theading}`}>
                     <tr>
                         {theadings.map((theading, index) => (
@@ -45,7 +45,7 @@ const Table = ({ children, theadings, isLoading = false }) => {
                     {children}
                 </tbody>
             </table>
-        // </div>
+        </div>
     )
 }
 

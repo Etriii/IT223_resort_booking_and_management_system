@@ -1,23 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import { IoIosArrowDown } from "react-icons/io";
 
-const ToggleDiv = ({ buttonText = "Actions", children }) => {
+const ToggleDiv = ({ buttonText = "Actions", children, containerRef }) => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [isAbove, setIsAbove] = useState(false);
+    const buttonRef = useRef(null);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target)
+            ) {
                 setIsOpen(false);
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
@@ -49,17 +54,39 @@ const ToggleDiv = ({ buttonText = "Actions", children }) => {
     //         };
     //     }, []);
 
+    useEffect(() => {
+        if (isOpen && buttonRef.current && containerRef.current) {
+            const buttonRect = buttonRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const spaceBelow = containerRect.bottom - buttonRect.bottom;
+            const dropdownHeight = dropdownRef.current
+                ? dropdownRef.current.offsetHeight
+                : 0;
+
+            if (spaceBelow < dropdownHeight) {
+                setIsAbove(true);
+            } else {
+                setIsAbove(false);
+            }
+        }
+    }, [isOpen]);
+
     return (
-        <div className="w-full relative" ref={dropdownRef}>
+        <div className="w-full relative">
             <div
+                ref={buttonRef}
                 onClick={() => setIsOpen(!isOpen)}
                 className="cursor-pointer bg-blue-500 text-white rounded p-2 text-center hover:bg-blue-600 transition flex items-center justify-between px-2"
             >
-                {buttonText} <IoIosArrowDown className={`${isOpen ? ' rotate-180' : ''}  duration-200`} />
+                {buttonText}{" "}
+                <IoIosArrowDown className={`${isOpen ? "rotate-180" : ""} duration-200`} />
             </div>
 
             {isOpen && (
-                <div className="w-32 border border-gray-300 bg-white rounded-md shadow absolute top-full mt-1 right-0 z-10">
+                <div
+                    className={`w-32 border border-gray-300 bg-white rounded-md shadow absolute transition-all right-0 z-10 ${isAbove ? ' bottom-[110%]' : ' top-[110%]'}`}
+                    ref={dropdownRef}
+                >
                     {children}
                 </div>
             )}

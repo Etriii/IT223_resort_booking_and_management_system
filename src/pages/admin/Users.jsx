@@ -7,12 +7,14 @@ import { IoMdAdd } from "react-icons/io";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 
 const Accounts = () => {
+
+    const containerRef = useRef(null);
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -113,7 +115,7 @@ const Accounts = () => {
             </div>
 
 
-            <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Role', 'Status', 'Action']} isLoading={loading}>
+            <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Role', 'Status', 'Action']} isLoading={loading} containerRef={containerRef}>
                 {users && users.length > 0 ? (
                     users.map((user, index) => (
                         <TableData
@@ -135,7 +137,7 @@ const Accounts = () => {
                                     </span>
                                 )),
                                 <span className={`${user.status == 'active' ? 'text-green-600' : 'text-red-600'} font-bold`} >  {user.status} </span>,
-                                <ToggleDiv buttonText="Actions">
+                                <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                                     <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}> <LuEye className="size-5 mr-2" />View </div>
                                     <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
                                     <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>

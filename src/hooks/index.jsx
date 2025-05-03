@@ -1,1 +1,0 @@
-/* e delete rani. for structure purpose rani */
