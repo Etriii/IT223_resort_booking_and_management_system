@@ -20,7 +20,7 @@ const ResortAdminLayout = () => {
             <ResortAdminSideNav isOpen={isSideNavOpen} />
             <div className="w-full">
                 <ResortAdminHeading toggleSideNav={() => setIsSideNavOpen(!isSideNavOpen)} isOpen={isSideNavOpen} />
-                <main className="p-2 min-h-full">
+                <main className="p-2 ">
                     <Outlet />
                 </main>
             </div>

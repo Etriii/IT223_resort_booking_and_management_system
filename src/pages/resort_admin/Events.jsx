@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
@@ -15,6 +15,9 @@ import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 
 const Events = () => {
+
+  const containerRef = useRef(null);
+
   const [events, setEvents] = useState();
   const [loading, setLoading] = useState(true);
   const [notify, setNotify] = useState();
@@ -137,7 +140,7 @@ const Events = () => {
           </button>
         </div>
       </div>
-      <Table theadings={["ID", "Name", "start_date", "end_date", "actions"]}>
+      <Table theadings={["ID", "Name", "start_date", "end_date", "actions"]} containerRef={containerRef}>
         {events && events.length > 0 ? (
           events.map((event, index) => (
             <TableData
@@ -147,7 +150,7 @@ const Events = () => {
                 event.name || "Event Name",
                 event.start_date || "2025-11-11",
                 event.end_date || "2025-12-12",
-                <ToggleDiv buttonText="Actions">
+                <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                   <div
                     className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
                     onClick={() => openModal("read")}

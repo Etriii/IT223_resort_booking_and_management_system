@@ -22,7 +22,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
         if (path.includes('/oceanview/admin/resorts')) return 'Manage Resorts';
         if (path.includes('/oceanview/admin/users')) return 'Manage Users';
         if (path.includes('/oceanview/admin/myaccount')) return 'My Account';
-
+        if (path.includes('/oceanview/admin/activitylogs')) return 'Activity Logs';
         return 'Admin Page';
     };
 
@@ -106,7 +106,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
                             </div>
                         </div>
                         <div className={`absolute top-full right-0 h-[90vh] bg-red-200 w-64 rounded ${isOpenNotification ? '' : 'hidden'}`}>
-                                
+
                         </div>
                     </div>
                 </div>
