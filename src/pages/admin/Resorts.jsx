@@ -94,8 +94,8 @@ const Resorts = () => {
     });
 
     const [editResortForm, setEditResortForm] = useState({
-        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
-        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+        values: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
     });
 
     const [deleteResortForm, setDeleteResortForm] = useState({
@@ -103,7 +103,7 @@ const Resorts = () => {
     });
 
 
-
+    //i forgot e lahi man day dapat mi sila :> 
     const handleFormInputChange = (e) => {
         const { name, value } = e.target;
         setCreateResortForm(prev => ({

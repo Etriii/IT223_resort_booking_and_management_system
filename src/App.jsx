@@ -76,13 +76,13 @@ import { Routes, Route } from "react-router-dom";
 import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layouts';
 
 //Admin Page 
-import { AdminDashboard, Resorts, Users, AdminMyAccount } from "./pages/admin";
+import { AdminDashboard, Resorts, Users, AdminMyAccount, AdminActivityLogs } from "./pages/admin";
 
 //Resort Admin Page
-import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount } from './pages/resort_admin';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount, ReportAndAnalytics, ResortActivityLogs, ResortSchedules } from './pages/resort_admin';
 
 // User Page
-import { Bookmarks, MyAccount, MyReservations, TransactionsHistory,  ResortsList, ResortDetails, ResortRoomList, ResortBuildings  } from './pages/user';
+import { Bookmarks, MyAccount, MyReservations, TransactionsHistory, ResortsList, ResortDetails, ResortRoomList, ResortBuildings } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
 // import ResortRoomDetails from './pages/user/ResortRoomDetails';
 // Auth
@@ -103,10 +103,12 @@ const App = () => {
             <Route path="resorts" element={<Resorts />} />
             <Route path="users" element={<Users />} />
             <Route path="myaccount" element={<AdminMyAccount />} />
+            <Route path="activitylogs" element={<AdminActivityLogs />} />
           </Route>
         </Route>
       </Route>
 
+      {/* Mag add og restrictions sa mga resort_admin lang */}
       <Route path="oceanview/resortadmin" element={<ResortAdminLayout />}>
         <Route element={<Authenticate />}>
           <Route element={<ProtectedRoute allowedRoles={['resort_super_admin', 'resort_admin']} />}>
@@ -115,9 +117,16 @@ const App = () => {
             <Route path="manage/resort" element={<ManageResort />} />
             <Route path="manage/buildings" element={<ManageBuildings />} />
             <Route path="manage/rooms/:building_id" element={<ManageRooms />} />
+            {/* I think mag add dri og mga incoming reservations */}
             <Route path="reservations" element={<Reservations />} />
-            <Route path="myaccount" element={<RAMyAccount />} />
+            <Route path="schedules" element={<ResortSchedules />} />
             <Route path="events" element={<Events />} />
+            <Route path="reportsandanalytics" element={<ReportAndAnalytics />} />
+            <Route path="activitylogs" element={<ResortActivityLogs />} />
+
+
+
+            <Route path="myaccount" element={<RAMyAccount />} />
           </Route>
         </Route>
       </Route>
@@ -132,10 +141,10 @@ const App = () => {
           {/* USER */}
           <Route path="resortslist" element={<ResortsList />} />
           <Route path="resortdetails/:id" element={<ResortDetails />} />
-          <Route path="resortroomlist/:building_id" element={<ResortRoomList />} />
           <Route path="resortbuildings/:id" element={<ResortBuildings />} />
+          <Route path="resortroomlist/:building_id" element={<ResortRoomList />} />
           {/* <Route path="resortroomdetails/:id" element={<ResortRoomDetails />} /> */}
-          
+
           <Route element={<Authenticate />}>
             <Route path="bookmarks" element={<Bookmarks />} />
             <Route path="myaccount" element={<MyAccount />} />

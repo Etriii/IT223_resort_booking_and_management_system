@@ -19,10 +19,14 @@ const ResortAdminHeading = ({ className, toggleSideNav, isOpen }) => {
         const path = location.pathname;
 
         if (path.includes('/oceanview/resortadmin/dashboard')) return 'Dashboard';
-        if (path.includes('/oceanview/resortadmin/manageresort')) return 'Manage Resort';
+        if (path.includes('/oceanview/resortadmin/manage/resort')) return 'Manage Resort';
+        if (path.includes('/oceanview/resortadmin/manage/buildings')) return 'Manage Buildings';
+        if (path.includes('/oceanview/resortadmin/manage/rooms')) return 'Manage Rooms';
         if (path.includes('/oceanview/resortadmin/reservations')) return 'Reservations';
+        if (path.includes('/oceanview/resortadmin/schedules')) return 'Reservation Schedules';
         if (path.includes('/oceanview/resortadmin/events')) return 'Events';
-
+        if (path.includes('/oceanview/resortadmin/reportsandanalytics')) return 'Reports and Analytics';
+        if (path.includes('/oceanview/resortadmin/activitylogs')) return 'Activity Logs';
 
         return 'Admin Page';
     };

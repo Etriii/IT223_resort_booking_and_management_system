@@ -8,7 +8,6 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { PiWarningCircleBold } from "react-icons/pi";
 
-
 const Login = () => {
     const navigate = useNavigate();
 
@@ -56,6 +55,7 @@ const Login = () => {
             default:
                 break;
         }
+     
     }
 
     const handleLogin = async (e) => {

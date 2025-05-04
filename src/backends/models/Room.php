@@ -55,7 +55,7 @@ class Room
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getRoomsByBuildingId($building_id, $start_date = null, $end_date = null)
+    public function getRoomsByBuildingId($building_id)
     {
         $stmt = $this->conn->prepare("
             SELECT 
@@ -63,22 +63,19 @@ class Room
                 rt.name AS room_type_name,
                 rt.description AS room_type_description,
                 rt.capacity AS room_type_capacity,
-                b.name AS building_name
-            FROM 
-                rooms AS r
-            LEFT JOIN 
-                room_types rt ON r.room_type_id = rt.id
-            LEFT JOIN 
-                buildings b ON r.building_id = b.id
-            WHERE 
-                r.building_id = :building_id
+                b.name AS building_name,
+                b.resort_id,
+                resorts.name AS resort_name
+            FROM rooms AS r
+            LEFT JOIN room_types rt ON r.room_type_id = rt.id
+            LEFT JOIN buildings b ON r.building_id = b.id
+            LEFT JOIN resorts ON b.resort_id = resorts.id
+            WHERE r.building_id = :building_id
         ");
-
+    
         $stmt->bindParam(':building_id', $building_id, PDO::PARAM_INT);
         $stmt->execute();
-        $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $rooms;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getOverlappingReservations($resort_id, $parsedCheckIn, $parsedCheckOut)
