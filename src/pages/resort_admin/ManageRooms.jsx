@@ -26,6 +26,7 @@ const ManageBuildings = () => {
     description: "",
     inclusions: "",
     amenities: "",
+    floor_number: "", // 👈 Add this
     price_per_night: "",
     is_available: "1", // Default to available
     room_image: null,
@@ -40,8 +41,9 @@ const ManageBuildings = () => {
 
   const handleBuildingChange = async (event) => {
     const buildingId = event.target.value;
-    const selectedBuilding = buildings.find((bld) => bld.id === buildingId);
-    setSelectedBuilding(selectedBuilding);
+
+    const selectedBuilding = buildings.find((bld) => String(bld.id) === String(buildingId));
+
 
     if (buildingId) {
       try {
@@ -144,8 +146,15 @@ const ManageBuildings = () => {
         );
         const data = await res.json();
         setBuildings(data);
-        setSelectedBuilding(data[0] || { id: "bruzy-1", name: "Bruzy Building 1" });
-        fetchRooms();
+        if (data.length > 0) {
+          setSelectedBuilding(data[0]);
+          const firstBuildingId = data[0].id;
+          const res = await fetch(
+            `http://localhost:8000/api.php?controller=Rooms&action=getRoomsByBuildingId&building_id=${firstBuildingId}`
+          );
+          const roomsData = await res.json();
+          setRooms(roomsData);
+        }
       } catch (err) {
         setNotify({
           type: "error",
@@ -182,17 +191,18 @@ const ManageBuildings = () => {
           <div>
             <label className="block font-medium mb-1">Building</label>
             <select
-              name="building_id"
-              className="w-full border p-3 rounded-lg"
-              value={roomFormData.building_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="1">Jelou Building 1</option>
-              <option value="2">Alex Building 1</option>
-              <option value="3">Micah Building 1</option>
-              <option value="bruzy-1">Bruzy Building 1</option> {/* Default added here */}
-            </select>
+            name="building_id"
+            className="w-full border p-3 rounded-lg"
+            value={roomFormData.building_id}
+            onChange={handleInputChange}
+            required
+          >
+  {buildings.map((bld) => (
+    <option key={bld.id} value={bld.id}>
+      {bld.name}
+    </option>
+  ))}
+</select>
           </div>
 
           <div>
@@ -227,6 +237,39 @@ const ManageBuildings = () => {
               rows="3"
             ></textarea>
           </div>
+          
+          <div>
+            <label className="block font-medium mb-1">Floor Number</label>
+              <input
+                type="number"
+                  name="floor_number"
+                  value={roomFormData.floor_number}
+                  onChange={handleInputChange}
+                className="w-full border p-3 rounded-lg"
+              required/>
+            </div>
+
+        <div>
+           <label className="block font-medium mb-1">Amenities</label>
+            <textarea
+              name="amenities"
+                value={roomFormData.amenities}
+                  onChange={handleInputChange}
+                className="w-full border p-3 rounded-lg"
+              rows="3"></textarea>
+          </div>
+
+        <div>
+          <label className="block font-medium mb-1">Inclusions</label>
+            <textarea
+              name="inclusions"
+                value={roomFormData.inclusions}
+              onChange={handleInputChange}
+            className="w-full border p-3 rounded-lg"
+          rows="3">
+        </textarea>
+      </div>
+
 
           <div className="flex justify-center mt-6">
             <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg">
@@ -250,9 +293,7 @@ const ManageBuildings = () => {
             onChange={handleBuildingChange}
             className="px-3 py-2 border rounded-md text-sm"
           >
-            <option key="bruzy-1" value="bruzy-1">
-              Bruzy Building 1
-            </option>
+
             {buildings.map((building) => (
               <option key={building.id} value={building.id}>
                 {building.name}
@@ -267,8 +308,10 @@ const ManageBuildings = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <span>Search:</span>
+          <InputField />
           <button
-            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-nowrap"
             onClick={() => openModal("create")}
           >
             <IoMdAdd />
@@ -277,18 +320,14 @@ const ManageBuildings = () => {
         </div>
       </div>
 
-      <Table theadings={["ID", "Name", "Location", "Type", "Description", "Inclusions", "Amenities", "Price", "Status", "Actions"]}>
+      <Table theadings={["ID", "Name", "Type", "Price", "Status", "Actions"]}>
         {rooms.map((room, index) => (
           <TableData
             key={room.id || index}
             columns={[
               room.id,
               room.name,
-              room.location,
               room.type,
-              room.description,
-              room.inclusions,
-              room.amenities,
               room.price,
               room.status,
               <ToggleDiv buttonText="Actions">
