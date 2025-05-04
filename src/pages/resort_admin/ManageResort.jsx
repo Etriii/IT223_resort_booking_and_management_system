@@ -11,7 +11,7 @@ const ManageResort = () => {
 
   return (
     <>
-      <div class="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-9 gap-4 p-3">
+      <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-9 gap-4 p-3">
         <Manage_Resort/>
         <CarouselImageCard label = "Image 1"/>
         <CarouselImageCard label = "Image 2"/>

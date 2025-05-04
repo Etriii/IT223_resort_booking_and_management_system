@@ -79,18 +79,17 @@ import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layou
 import { AdminDashboard, Resorts, Users, AdminMyAccount } from "./pages/admin";
 
 //Resort Admin Page
-import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events } from './pages/resort_admin';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount } from './pages/resort_admin';
 
 // User Page
-import { Bookmarks, MyAccount, MyReservations, TransactionsHistory } from './pages/user';
-import { ResortsList, ResortDetails, ResortRoomList } from './pages/user';
+import { Bookmarks, MyAccount, MyReservations, TransactionsHistory,  ResortsList, ResortDetails, ResortRoomList, ResortBuildings  } from './pages/user';
 import { HomePage, AboutOceanView, TermsAndPrivacy } from './pages/ocean_view';
-
+// import ResortRoomDetails from './pages/user/ResortRoomDetails';
 // Auth
 import { Login, LoginAs, PageNotFound, Register, Unauthorized } from './pages/auth';
 
 import { Authenticate, ProtectedRoute, RedirectIfAuthenticated } from './utils/middlewares';
-import RAMyAccount from './pages/resort_admin/RAMyAccount';
+
 
 const App = () => {
   return (
@@ -133,8 +132,10 @@ const App = () => {
           {/* USER */}
           <Route path="resortslist" element={<ResortsList />} />
           <Route path="resortdetails/:id" element={<ResortDetails />} />
-          <Route path="resortroomlist" element={<ResortRoomList />} />
-
+          <Route path="resortroomlist/:building_id" element={<ResortRoomList />} />
+          <Route path="resortbuildings/:id" element={<ResortBuildings />} />
+          {/* <Route path="resortroomdetails/:id" element={<ResortRoomDetails />} /> */}
+          
           <Route element={<Authenticate />}>
             <Route path="bookmarks" element={<Bookmarks />} />
             <Route path="myaccount" element={<MyAccount />} />

@@ -2,17 +2,18 @@ import React from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const CarouselImageCard = ({ label }) => {
-  const carouselStyle =
+  const parentStyle =
     "relative overflow-hidden lg:col-span-2 sm:col-span-2 text-center p-6 h-[40lvh] flex flex-col justify-end bg-gray-200 rounded-2xl";
   const buttonLAyout = "absolute inset-0 flex items-center justify-center opacity-80 hover:opacity-30 transition-all";
 
   return (
     <>
-    <div className={carouselStyle}>
-      <div>
+    <div className={parentStyle}>
+      <div className="bg-gray-700">
       <button
         className={buttonLAyout}
       >
+        
         <FaCloudUploadAlt className="text-[10rem] text-gray-400 pointer-events-none" />
       </button>
       </div>

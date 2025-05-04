@@ -147,9 +147,40 @@ class User
 
     public function getAllUsers()
     {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
+        // $stmt->execute();
+        // return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt = $this->conn->prepare("
+        SELECT 
+            users.*, 
+            GROUP_CONCAT(user_roles.role_id) AS roles
+        FROM users
+        LEFT JOIN user_roles ON users.id = user_roles.user_id
+        GROUP BY users.id
+    ");
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($users as &$user) {
+        if ($user['roles']) {
+            $roleIds = explode(',', $user['roles']);
+            $roleNames = array_map(function($id) {
+                switch ($id) {
+                    case '1': return 'Super Admin';
+                    case '2': return 'Resort Super Admin';
+                    case '3': return 'Resort Admin';
+                    case '4': return 'Guest';
+                    default: return 'Unknown';
+                }
+            }, $roleIds);
+            $user['role_names'] = $roleNames;
+        } else {
+            $user['role_names'] = ['No Role'];
+        }
+    }
+
+    return $users;
     }
 
     public function getUserById($id)
@@ -157,6 +188,15 @@ class User
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE id = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserByUsername($username)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -168,15 +208,34 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createUser($name, $email, $password)
+    public function createUser($username, $email, $password)
     {
-        $stmt = $this->conn->prepare("INSERT INTO " . $this->table . " (name, email, password) VALUES (:name, :email, :password)");
+        $conn = (new Database())->connect();
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        $stmt->bindParam(":name", $name);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":password", $hashedPassword);
-        return $stmt->execute();
+    
+        try {
+            $stmt = $conn->prepare("CALL createUser(:username, :email, :password)");
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $hashedPassword);
+    
+            $stmt->execute();
+    
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            return $result['user_id'];
+    
+        } catch (PDOException $e) {
+            error_log("Error creating user: " . $e->getMessage());
+            return false;
+        }
     }
+    
+    
+    
+    
+    
+    
 
     public function deleteUser($user_id)
     {

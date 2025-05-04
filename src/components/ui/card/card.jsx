@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import backgroundImage from '../../../assets/images/home/backgroundaboutus.jpg';
 
 const Resorts = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [resorts, setResorts] = useState([]);
     const [error, setError] = useState(null);
 
@@ -31,7 +32,7 @@ const Resorts = () => {
                     {error}
                 </div>
             )}
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">    
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
                 {resorts && resorts.length > 0 ? (
                     resorts.map((resort, index) => (
                         <div
@@ -41,7 +42,7 @@ const Resorts = () => {
                         >
                             <div className="relative w-full h-full">
                                 <img
-                                    src={resort.main_image}
+                                    src={resort.main_image ? resort.main_image : backgroundImage}
                                     alt={resort.name}
                                     className="w-full h-full object-cover"
                                 />
@@ -49,7 +50,7 @@ const Resorts = () => {
                                     <h1 className="text-white text-xl font-bold">{resort.name}</h1>
                                     <h5 className="text-white text-sm">{resort.location}</h5>
                                     <NavLink
-                                         to={`/oceanview/resortdetails/${resort.id}`}
+                                        to={`/oceanview/resortdetails/${resort.id}`}
                                         className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full text-sm"
                                     >
                                         Visit now

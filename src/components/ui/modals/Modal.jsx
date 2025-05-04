@@ -3,12 +3,14 @@ import React, { useEffect } from 'react';
 
 import { IoClose } from "react-icons/io5";
 
+import Button from '../button/Button';
+
 const Modal = ({
     isOpen,
     onClose,
     variant,
+    loading,
     title,
-    message,
     onConfirm,
     onCancel,
     children,
@@ -16,6 +18,7 @@ const Modal = ({
 
     if (!isOpen) return null;
 
+    //enable rani if mag peform na
     // useEffect(() => {
     //     const handleEscKeyPress = (event) => {
     //         if (event.key === 'Escape') {
@@ -30,6 +33,13 @@ const Modal = ({
     //     };
     // }, [onClose]); 
 
+    const initial_heading_theme = {
+        create: 'bg-teal-50 text-teal-800',
+        read: 'bg-blue-50 text-blue-800',
+        update: 'bg-yellow-50 text-yellow-800',
+        delete: 'bg-red-50 text-red-800',
+    };
+
     const getVariantStyles = () => {
         switch (variant) {
             case 'create':
@@ -38,9 +48,9 @@ const Modal = ({
                     textColor: 'text-teal-800',
                     buttons: (
                         <>
-                            <button className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600" onClick={onConfirm}>
-                                Create
-                            </button>
+                            <Button variant="create" size="md" onClick={onConfirm} disabled={loading} loading={loading} className={'w-auto bg-teal-500 text-white rounded-md hover:bg-teal-600'}>
+                                {loading ? "Creating..." : "Create"}
+                            </Button>
                             <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" onClick={onCancel}>
                                 Cancel
                             </button>
@@ -52,14 +62,9 @@ const Modal = ({
                     background: 'bg-blue-50',
                     textColor: 'text-blue-800',
                     buttons: (
-                        <>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                onClick={onClose}
-                            >
-                                Close
-                            </button>
-                        </>
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onClose} >
+                            Close
+                        </button>
                     ),
                 };
             case 'update':
@@ -68,16 +73,10 @@ const Modal = ({
                     textColor: 'text-yellow-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                                onClick={onConfirm}
-                            >
-                                Save Changes
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-                                onClick={onCancel}
-                            >
+                            <Button btn_type='submit' variant="update" size="md" onClick={onConfirm} disabled={loading} loading={loading} className={'w-auto px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600'}>
+                                {loading ? "Saving..." : "Save Changes"}
+                            </Button>
+                            <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" onClick={onCancel}>
                                 Cancel
                             </button>
                         </>
@@ -89,16 +88,10 @@ const Modal = ({
                     textColor: 'text-red-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                                onClick={onConfirm}
-                            >
-                                Delete
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-                                onClick={onCancel}
-                            >
+                            <Button btn_type='submit' variant="delete" size="md" onClick={onConfirm} disabled={loading} loading={loading} className={'w-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600'}>
+                                {loading ? "Deleting..." : "Delete"}
+                            </Button>
+                            <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" onClick={onCancel}     >
                                 Cancel
                             </button>
                         </>
@@ -110,16 +103,10 @@ const Modal = ({
                     textColor: 'text-yellow-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                                onClick={onConfirm}
-                            >
+                            <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onConfirm}>
                                 Confirm
                             </button>
-                            <button
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-                                onClick={onCancel}
-                            >
+                            <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" onClick={onCancel} >
                                 Cancel
                             </button>
                         </>
@@ -131,10 +118,7 @@ const Modal = ({
                     textColor: 'text-blue-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                onClick={onClose}
-                            >
+                            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onClose}   >
                                 Close
                             </button>
                         </>
@@ -146,10 +130,7 @@ const Modal = ({
                     textColor: 'text-gray-800',
                     buttons: (
                         <>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                onClick={onClose}
-                            >
+                            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onClose}    >
                                 Close
                             </button>
                         </>
@@ -162,18 +143,19 @@ const Modal = ({
 
     return (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50">
-            <div className={`w-[90%] sm:w-96 p-4 rounded-lg shadow-lg ${background} ${textColor}`}  >
-                <div className="flex justify-between items-center mb-4">
+            <div className={`w-[90%] sm:w-96 rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background} ${textColor}`}  >
+                <div className={`flex justify-between items-center mb-2 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
                     <h3 className="text-xl font-semibold">{title}</h3>
                     <button onClick={onClose} className="text-gray-600 hover:text-gray-900" >
                         <IoClose className='size-7' />
                     </button>
                 </div>
-                <div className='p-5 bg-pink-400'>
-                    {children}
+                <div className='pl-4 pr-4 pb-4'>
+                    <div className='p-2'>
+                        {children}
+                    </div>
+                    <div className="flex justify-end space-x-3 mt-2">{buttons}</div>
                 </div>
-                <div className="text-sm text-gray-700 mb-4">{message}</div>
-                <div className="flex justify-end space-x-3">{buttons}</div>
             </div>
         </div >
     );

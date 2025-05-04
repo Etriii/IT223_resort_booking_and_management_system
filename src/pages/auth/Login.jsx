@@ -177,7 +177,7 @@ const Login = () => {
                             </a>
                         </div>
 
-                        <Button variant="primary" size="md" onClick={handleLogin} disabled={loading} loading={loading}>
+                        <Button btn_type='submit' variant="primary" size="md" onClick={handleLogin} disabled={loading} loading={loading}>
                             {loading ? "Logging In..." : "Log In"}
                         </Button>
                     </div>
