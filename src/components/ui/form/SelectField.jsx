@@ -1,5 +1,6 @@
+import { DeleteIcon } from "lucide-react";
 import React from "react";
-
+import { HiInformationCircle } from "react-icons/hi";
 const SelectField = ({
   id,
   label,
@@ -46,7 +47,7 @@ const SelectField = ({
           </option>
         ))}
       </select>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <div className="flex items-center text-red-500 mt-1"><HiInformationCircle /> <p className="text-red-500 text-sm ">{error}</p></div>}
     </div>
   );
 };

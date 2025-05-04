@@ -3,28 +3,24 @@ import { IoIosArrowDown } from "react-icons/io";
 
 const ToggleDiv = ({ buttonText = "Actions", children, containerRef }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isAbove, setIsAbove] = useState(false);
+    const [isAbove, setIsAbove] = useState(false); // State to track if the dropdown should be above
     const buttonRef = useRef(null);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target) &&
-                buttonRef.current &&
-                !buttonRef.current.contains(event.target)
-            ) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target) && buttonRef.current && !buttonRef.current.contains(event.target)) {
                 setIsOpen(false);
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
 
     //     const [positionClass, setPositionClass] = useState("top-full");
     //     const divRef = useRef(null); 
@@ -54,42 +50,68 @@ const ToggleDiv = ({ buttonText = "Actions", children, containerRef }) => {
     //         };
     //     }, []);
 
+
+    // useEffect(() => {
+    //     if (isOpen && buttonRef.current && containerRef.current) {
+    //         const buttonRect = buttonRef.current.getBoundingClientRect();
+    //         const containerRect = containerRef.current.getBoundingClientRect();
+    //         const spaceBelow = containerRect.bottom - buttonRect.bottom;
+    //         const dropdownHeight = dropdownRef.current
+    //             ? dropdownRef.current.offsetHeight
+    //             : 0;
+
+    //         if (spaceBelow < dropdownHeight) {
+    //             setIsAbove(true);
+    //         } else {
+    //             setIsAbove(false);
+    //         }
+    //     }
+    // }, [isOpen]);
+
     useEffect(() => {
-        if (isOpen && buttonRef.current && containerRef.current) {
+        if (isOpen && buttonRef.current && containerRef.current && dropdownRef.current) {
+            const rows = containerRef.current.querySelectorAll('tbody tr');
+            if (rows.length < 5) return;
+
             const buttonRect = buttonRef.current.getBoundingClientRect();
             const containerRect = containerRef.current.getBoundingClientRect();
-            const spaceBelow = containerRect.bottom - buttonRect.bottom;
-            const dropdownHeight = dropdownRef.current
-                ? dropdownRef.current.offsetHeight
-                : 0;
+            const dropdownHeight = dropdownRef.current.offsetHeight;
 
-            if (spaceBelow < dropdownHeight) {
-                setIsAbove(true);
-            } else {
-                setIsAbove(false);
-            }
+            const spaceBelow = containerRect.bottom - buttonRect.bottom;
+
+            setIsAbove(spaceBelow < dropdownHeight);
         }
     }, [isOpen]);
 
+
+    // useEffect(() => {
+    //     if (isOpen && buttonRef.current) {
+    //         const buttonRect = buttonRef.current.getBoundingClientRect();
+    //         const spaceBelow = window.innerHeight - (buttonRect.bottom + 50); // Space available below the button
+    //         const dropdownHeight = dropdownRef.current ? dropdownRef.current.offsetHeight : 0;
+
+    //         if (spaceBelow < dropdownHeight) {
+    //             setIsAbove(true);
+    //         } else {
+    //             setIsAbove(false);
+    //         }
+    //     }
+    // }, [isOpen]);
+
     return (
-        <div className="w-full relative">
-            <div
-                ref={buttonRef}
-                onClick={() => setIsOpen(!isOpen)}
-                className="cursor-pointer bg-blue-500 text-white rounded p-2 text-center hover:bg-blue-600 transition flex items-center justify-between px-2"
-            >
-                {buttonText}{" "}
-                <IoIosArrowDown className={`${isOpen ? "rotate-180" : ""} duration-200`} />
+        <div className="w-full relative" ref={dropdownRef}>
+            <div ref={buttonRef} onClick={() => setIsOpen(!isOpen)}
+                className="cursor-pointer bg-blue-500 text-white rounded  text-center hover:bg-blue-600 transition flex items-center justify-between px-2 py-1" >
+                {buttonText} <IoIosArrowDown className={`${isOpen ? ' rotate-180' : ''}  duration-200`} />
             </div>
 
-            {isOpen && (
-                <div
+            {isOpen &&
+                (<div
                     className={`w-32 border border-gray-300 bg-white rounded-md shadow absolute transition-all right-0 z-10 ${isAbove ? ' bottom-[110%]' : ' top-[110%]'}`}
-                    ref={dropdownRef}
-                >
+                    ref={dropdownRef}>
                     {children}
                 </div>
-            )}
+                )}
         </div>
     );
 };

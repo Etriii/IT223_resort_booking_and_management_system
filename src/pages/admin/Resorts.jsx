@@ -13,7 +13,9 @@ import Modal from "../../components/ui/modals/Modal";
 
 import ActionNotification from "../../components/ui/modals/ActionNotification";
 
-import { CreateResortModal, ReadResortModal, UpdateResortModal, DeleteResortModal } from "./modals";
+import { CreateResortModal, ReadResortModal, UpdateResortModal, DeleteResortModal, FilterModal } from "./modals";
+
+import { createResort, editResort, deleteResort } from '../../services';
 
 const Resorts = () => {
 
@@ -46,18 +48,17 @@ const Resorts = () => {
     }, []);
 
     const [loading, setLoading] = useState(true);
-
-    const [notify, setNotify] = useState();
+    const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
 
     const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
 
     const openModal = (variant, resort) => {
         let children;
-        let modal_title = '';
+        let modal_title;
 
         switch (variant) {
             case 'create':
-                children = <CreateResortModal handleFormInputChange={handleFormInputChange} formData={createResortFormData} />;
+                children = <CreateResortModal handleFormInputChange={handleFormInputChange} formData={createResortForm} />;
                 modal_title = 'Create Resort';
                 break;
             case 'read':
@@ -73,8 +74,8 @@ const Resorts = () => {
                 modal_title = 'Delete Resort';
                 break;
             case 'filter':
-                children = <div>Wala pakoi ma huna^2 an aning unsay filteron</div>;
-                modal_title = 'filter';
+                children = <FilterModal filters={filters} setFilters={setFilters} />;
+                modal_title = 'Filters';
                 break;
             default:
                 children = <>Nahh wala</>;
@@ -87,41 +88,74 @@ const Resorts = () => {
         setModal(prev => ({ ...prev, isOpen: false }));
     };
 
-
-    const [createResortFormData, setCreateResortFormData] = useState({
-        name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: ''
+    const [createResortForm, setCreateResortForm] = useState({
+        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
     });
 
-    // const [createResortFormDataError, setCreateResortFormDataError] = useState({
-    //     name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: ''
-    // });
+    const [editResortForm, setEditResortForm] = useState({
+        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+    });
+
+    const [deleteResortForm, setDeleteResortForm] = useState({
+        resort_id: ''
+    });
+
+
 
     const handleFormInputChange = (e) => {
         const { name, value } = e.target;
-        setCreateResortFormData(prev => ({ ...prev, [name]: value }));
+        setCreateResortForm(prev => ({
+            ...prev,
+            values: {
+                ...prev.values,
+                [name]: value
+            }
+        }));
     };
 
     const handleConfirm = () => {
 
         setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
+        setNotify({}); //reset ang notif ni ha
 
-        // Check where 
-        // Validation
+        setTimeout(async () => {
+            let result;
+            switch (modal.variant) {
+                case 'create':
+                    result = await createResort(createResortForm.values);
+                    break;
+                case 'update':
+                    result = await editResort(editResortForm.values);
+                    break;
+                case 'delete':
+                    result = await deleteResort(deleteResortForm.resort_id);
+                    break;
+                default:
+                    console.error('Unknown action mode');
+                    setModal(prev => ({ ...prev, loading: false }));
+                    return;
+            }
 
-        const timer = setTimeout(() => {//for delay rani
-            setModal(prev => ({ ...prev, loading: false }));//pang remove nga loading button
+            setModal(prev => ({ ...prev, loading: false }));
 
-            console.log("Form submitted:", createResortFormData);
-
-            setNotify({
-                open: true,
-                type: 'create',
-                message: 'Resort Successfully Created!'
-            });
+            if (result.success) {
+                setNotify({
+                    open: true,
+                    type: modal.variant,
+                    message: result.message
+                });
+            } else {
+                setNotify({
+                    open: true,
+                    type: 'error',
+                    message: result.message
+                });
+            }
             closeModal();
         }, 500);
 
-        setNotify({}); //reset ang notif ni ha
     };
 
     // Table Filters
@@ -147,7 +181,7 @@ const Resorts = () => {
     return (
         <div>
             <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
-            {notify && ( <ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification> )}
+            {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
             <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} add_title={'Add Resort'} />
 

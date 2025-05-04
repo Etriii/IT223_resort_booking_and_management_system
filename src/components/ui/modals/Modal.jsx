@@ -18,6 +18,7 @@ const Modal = ({
 
     if (!isOpen) return null;
 
+    //enable rani if mag peform na
     // useEffect(() => {
     //     const handleEscKeyPress = (event) => {
     //         if (event.key === 'Escape') {

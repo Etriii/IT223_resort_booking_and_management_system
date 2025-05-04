@@ -16,7 +16,7 @@ const ActionNotification = ({ children, variant = 'create', isOpen }) => {
             class: 'bg-red-100 text-red-800 border border-red-300',
             icon: <IoTrashOutline className="text-red-600 size-5 mr-2" />,
         },
-        put: {
+        update: {
             class: 'bg-yellow-100 text-yellow-800 border border-yellow-300',
             icon: <IoAlertCircleOutline className="text-yellow-600 size-5 mr-2" />,
         },
