@@ -168,7 +168,8 @@ class User
             $roleNames = array_map(function($id) {
                 switch ($id) {
                     case '1': return 'Super Admin';
-                    case '2': return 'Resort Admin';
+                    case '2': return 'Resort Super Admin';
+                    case '3': return 'Resort Admin';
                     case '4': return 'Guest';
                     default: return 'Unknown';
                 }

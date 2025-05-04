@@ -1,5 +1,7 @@
 import React from "react";
 
+import { PiWarningCircleBold } from "react-icons/pi";
+
 const InputField = ({
     id,
     label,
@@ -41,6 +43,12 @@ const InputField = ({
                 disabled={disabled}
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            <div className={`flex space-x-2 items-center p-1 border border-red-300 mt-1 text-xs rounded text-red-500 bg-red-100 ${error ? '' : 'hidden'}`}>
+                <PiWarningCircleBold />
+                <span>
+                    {error}
+                </span>
+            </div>
         </div>
     );
 };

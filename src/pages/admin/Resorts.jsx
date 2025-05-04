@@ -1,45 +1,27 @@
-import AdminLayout from "../../layouts/AdminLayout";
 import Table from '../../components/ui/table/Table';
 import TableData from '../../components/ui/table/TableData';
+import Pagination from '../../components/ui/table/Pagination';
+import FilterAndActions from '../../components/ui/table/FilterAndActions';
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
-import { FiFilter } from 'react-icons/fi';
-import { IoMdAdd } from "react-icons/io";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
+
+import ActionNotification from "../../components/ui/modals/ActionNotification";
+
+import { CreateResortModal, ReadResortModal, UpdateResortModal, DeleteResortModal, FilterModal } from "./modals";
+
+import { createResort, editResort, deleteResort } from '../../services';
 
 const Resorts = () => {
 
+    const containerRef = useRef(null);
+
     const [resorts, setResorts] = useState();
-    const [loading, setLoading] = useState(true);
-    const [notify, setNotify] = useState();
-
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalVariant, setModalVariant] = useState('create'); 
-
-    const openModal = (variant) => {
-        setModalVariant(variant);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => setIsModalOpen(false);
-
-    const handleConfirm = () => {
-        console.log("Action Confirmed");
-        closeModal();
-    };
-
-    const handleCancel = () => {
-        console.log("Action Canceled");
-        closeModal();
-    };
-
     useEffect(() => {
 
         document.title = "Resorts | Ocean View";
@@ -65,63 +47,147 @@ const Resorts = () => {
         fetchResorts();
     }, []);
 
+    const [loading, setLoading] = useState(true);
+    const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
+
+    const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
+
+    const openModal = (variant, resort) => {
+        let children;
+        let modal_title;
+
+        switch (variant) {
+            case 'create':
+                children = <CreateResortModal handleFormInputChange={handleFormInputChange} formData={createResortForm} />;
+                modal_title = 'Create Resort';
+                break;
+            case 'read':
+                children = <ReadResortModal />;
+                modal_title = 'View Resort';
+                break;
+            case 'update':
+                children = <UpdateResortModal />;
+                modal_title = 'Edit Resort';
+                break;
+            case 'delete':
+                children = <DeleteResortModal />;
+                modal_title = 'Delete Resort';
+                break;
+            case 'filter':
+                children = <FilterModal filters={filters} setFilters={setFilters} />;
+                modal_title = 'Filters';
+                break;
+            default:
+                children = <>Nahh wala</>;
+        }
+
+        setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
+    };
+
+    const closeModal = () => {
+        setModal(prev => ({ ...prev, isOpen: false }));
+    };
+
+    const [createResortForm, setCreateResortForm] = useState({
+        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+    });
+
+    const [editResortForm, setEditResortForm] = useState({
+        values: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+    });
+
+    const [deleteResortForm, setDeleteResortForm] = useState({
+        resort_id: ''
+    });
+
+
+    //i forgot e lahi man day dapat mi sila :> 
+    const handleFormInputChange = (e) => {
+        const { name, value } = e.target;
+        setCreateResortForm(prev => ({
+            ...prev,
+            values: {
+                ...prev.values,
+                [name]: value
+            }
+        }));
+    };
+
+    const handleConfirm = () => {
+
+        setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
+        setNotify({}); //reset ang notif ni ha
+
+        setTimeout(async () => {
+            let result;
+            switch (modal.variant) {
+                case 'create':
+                    result = await createResort(createResortForm.values);
+                    break;
+                case 'update':
+                    result = await editResort(editResortForm.values);
+                    break;
+                case 'delete':
+                    result = await deleteResort(deleteResortForm.resort_id);
+                    break;
+                default:
+                    console.error('Unknown action mode');
+                    setModal(prev => ({ ...prev, loading: false }));
+                    return;
+            }
+
+            setModal(prev => ({ ...prev, loading: false }));
+
+            if (result.success) {
+                setNotify({
+                    open: true,
+                    type: modal.variant,
+                    message: result.message
+                });
+            } else {
+                setNotify({
+                    open: true,
+                    type: 'error',
+                    message: result.message
+                });
+            }
+            closeModal();
+        }, 500);
+
+    };
+
+    // Table Filters
+
+    const [filters, setFilters] = useState({ paginate: 10, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
+
+    const filteredResorts = resorts?.filter(resort => {
+        const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
+        const statusMatch = !filters.status || resort.status?.toLowerCase() === filters.status.toLowerCase();
+        const taxRateMatch = !filters.tax_rate || Number(resort.tax_rate) === Number(filters.tax_rate);
+        const contactMatch = !filters.contact_details || resort.contact_details?.includes(filters.contact_details);
+
+        return nameMatch && statusMatch && taxRateMatch && contactMatch;
+    }) || [];
+
+    const totalPages = Math.ceil(filteredResorts.length / filters.paginate);
+    const paginatedResorts = filteredResorts.slice((filters.page - 1) * filters.paginate, filters.page * filters.paginate);
+
+    useEffect(() => {
+        setFilters((prev) => ({ ...prev, page: 1 }));
+    }, [filters.resort_name, filters.paginate]);
+
     return (
         <div>
-            <Modal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                variant={modalVariant}
-                title={
-                    modalVariant === 'create'
-                        ? 'Create Item'
-                        : modalVariant === 'read'
-                            ? 'View Item'
-                            : modalVariant === 'update'
-                                ? 'Edit Item'
-                                : modalVariant === 'delete'
-                                    ? 'Delete Item'
-                                    : modalVariant === 'confirmation'
-                                        ? 'Are you sure?'
-                                        : 'Information'
-                }
-                onConfirm={handleConfirm}
-                onCancel={handleCancel}
-            >
-                yes
-            </Modal>
-            {notify && (
-                <ActionNotification isOpen={true} variant={`${notify.type}`}>
-                    {notify.message}
-                </ActionNotification>
-            )}
-            <div className="flex items-center justify-between flex-wrap">
-                <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100">
-                        <FiFilter className="text-lg" />
-                        Filter
-                    </button>
+            <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
+            {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
-                    <select className="px-3 py-2 border rounded-md text-sm text-gray-700 focus: outline-green-600">
-                        {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>{i + 1} entries</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <div className="flex items-center space-x-2">
-                        <span>username:</span>
-                        <InputField />
-                    </div>
-                    <button className="px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap" onClick={() => openModal('create')}>
-                        <IoMdAdd /> <span>Add Resort</span>
-                    </button>
-                </div>
-            </div>
+            <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} add_title={'Add Resort'} />
 
-
-            <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading}>
-                {resorts && resorts.length > 0 ? (
-                    resorts.map((resort, index) => (
+            <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading} containerRef={containerRef} >
+                {filteredResorts.length > 0 ? (
+                    paginatedResorts.map((resort, index) => (
                         <TableData
                             key={resort.id || index}
                             columns={[
@@ -131,7 +197,7 @@ const Resorts = () => {
                                 resort.status || 'Active',
                                 resort.contact_details || '09633127462',
                                 resort.created_at || '2025-04-24',
-                                <ToggleDiv buttonText="Actions">
+                                <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                                     <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}> <LuEye className="size-5 mr-2" />View </div>
                                     <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
                                     <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
@@ -139,41 +205,12 @@ const Resorts = () => {
                             ]}
                         />
                     ))
-                ) : (<tr></tr>)}
+                ) : (
+                    <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No resorts found.</div></td></tr>
+                )}
             </Table>
 
-            <div className="flex md:justify-between md:items-center md:flex-row p-2 flex-wrap justify-center items-center flex-col-reverse space-y-2">
-                <div>
-                    <span>Showing n of n entries</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &laquo;
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &lt;
-                    </button>
-                    <button className="px-3 py-1 rounded-md bg-green-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-green-500">
-                        1
-                    </button>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        2
-                    </button>
-                    <button className="px-3 py-1 rounnded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        3
-                    </button>
-                    <span className="text-gray-400">...</span>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        10
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &gt;
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &raquo;
-                    </button>
-                </div>
-            </div>
+            <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredResorts} />
 
         </div>
     );

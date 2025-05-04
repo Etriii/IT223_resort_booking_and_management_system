@@ -5,3 +5,4 @@ export { default as ResortDetails } from './ResortDetails';
 export { default as ResortRoomList } from './ResortRoomList';
 export { default as ResortsList } from './ResortsList';
 export { default as TransactionsHistory } from './TransactionsHistory';
+export {default as ResortBuildings} from './ResortBuildings';

@@ -1,13 +1,14 @@
-import {  useNavigate, useMatch } from "react-router-dom";
+import { useNavigate, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { MdDashboard, MdOutlineQuestionMark, MdEvent } from "react-icons/md";
+import { MdDashboard, MdOutlineQuestionMark, MdEvent, MdOutlineManageHistory } from "react-icons/md";
 import { RiCalendarCheckLine } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
-import { TbBuildingPavilion, TbBuildingCircus, TbBuildingCommunity } from "react-icons/tb";
+import { TbBuildingPavilion, TbBuildingCircus, TbBuildingCommunity, TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineSetting } from "react-icons/ai";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
+import { CalendarRange } from 'lucide-react';
 
 const ResortAdminSideNav = ({ className, isOpen }) => {
 
@@ -105,21 +106,31 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                     <span className={`${lists_default_styles.span}`}>Reservations</span>
                 </li>
 
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/schedules/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/schedules')}>
+                    <CalendarRange className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Schedules</span>
+                </li>
+
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/events/*')
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/events')}>
                     <MdEvent className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Events</span>
                 </li>
 
+                <div className="px-1 pt-1 li_texts">
+                    Maintenance
+                </div>
+
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reportsandanalytics/*')
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reportsandanalytics')}>
-                    <MdOutlineQuestionMark className={`${lists_default_styles.icon}`} />
+                    <TbReportAnalytics className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Reports/Analytics</span>
                 </li>
 
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/logs/*')
-                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/logs')}>
-                    <MdOutlineQuestionMark className={`${lists_default_styles.icon}`} />
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/activitylogs/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/activitylogs')}>
+                    <MdOutlineManageHistory className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Logs</span>
                 </li>
             </ul>
