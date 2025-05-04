@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
@@ -13,6 +13,8 @@ import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
 const ManageBuildings = () => {
+  const containerRef = useRef(null);
+
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notify, setNotify] = useState(null);
@@ -37,12 +39,14 @@ const ManageBuildings = () => {
         name: building.name || "",
         floor_count: building.floor_count || "",
         room_per_floor: building.room_per_floor || "",
+        room_image: null,
       });
     } else {
       setBuildingFormData({
         name: "",
         floor_count: "",
         room_per_floor: "",
+        room_image: null,
       });
     }
 
@@ -63,32 +67,38 @@ const ManageBuildings = () => {
   };
 
   const handleImageChange = (e) => {
-    setRoomFormData({
-      ...roomFormData,
+    setBuildingFormData((prev) => ({
+      ...prev,
       room_image: e.target.files[0],
-    });
+    }));
   };
 
   const handleConfirm = async () => {
     try {
-      const headers = { "Content-Type": "application/json" };
-      let response;
-
       const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]?.resort_id;
 
-      if (modalVariant === "create") {
-        response = await fetch("http://localhost:8000/api.php?controller=Buildings&action=addBuilding", {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ ...buildingFormData, resort_id }),
-        });
-      } else if (modalVariant === "update" && selectedBuilding) {
+      let response;
+
+      if (modalVariant === "create" || modalVariant === "update") {
+        const formData = new FormData();
+        formData.append("name", buildingFormData.name);
+        formData.append("floor_count", buildingFormData.floor_count);
+        formData.append("room_per_floor", buildingFormData.room_per_floor);
+        formData.append("resort_id", resort_id);
+        if (buildingFormData.room_image) {
+          formData.append("room_image", buildingFormData.room_image);
+        }
+
+        const endpoint =
+          modalVariant === "create"
+            ? "addBuilding"
+            : `updateBuilding&id=${selectedBuilding.id}`;
+
         response = await fetch(
-          `http://localhost:8000/api.php?controller=Buildings&action=updateBuilding&id=${selectedBuilding.id}`,
+          `http://localhost:8000/api.php?controller=Buildings&action=${endpoint}`,
           {
-            method: "PUT",
-            headers,
-            body: JSON.stringify(buildingFormData),
+            method: modalVariant === "create" ? "POST" : "POST",
+            body: formData,
           }
         );
       } else if (modalVariant === "delete" && selectedBuilding) {
@@ -103,7 +113,7 @@ const ManageBuildings = () => {
       if (data.success) {
         setNotify({ type: "success", message: data.message || "Action successful" });
         closeModal();
-        fetchBuildings(); // Refresh list
+        fetchBuildings();
       } else {
         throw new Error(data.message || "Action failed");
       }
@@ -159,14 +169,15 @@ const ManageBuildings = () => {
         {(modalVariant === "create" || modalVariant === "update" || modalVariant === "read") && (
           <form className="space-y-4">
             <div>
-            <label className="block font-medium mb-1">Room Image</label>
-            <input
-              type="file"
-              name="room_image"
-              onChange={handleImageChange}
-              className="w-full border p-3 rounded-lg"
-            />
-          </div>
+              <label className="block font-medium mb-1">Room Image</label>
+              <input
+                type="file"
+                name="room_image"
+                onChange={handleImageChange}
+                className="w-full border p-3 rounded-lg"
+                disabled={modalVariant === "read"}
+              />
+            </div>
             <div>
               <label className="block mb-1 font-medium">Building Name</label>
               <input
@@ -239,7 +250,7 @@ const ManageBuildings = () => {
         </div>
       </div>
 
-      <Table theadings={["ID", "Name", "Floors", "Rooms", "Actions"]}>
+      <Table theadings={["ID", "Name", "Floors", "Rooms", "Actions"]} containerRef={containerRef}>
         {buildings.map((bld, index) => (
           <TableData
             key={bld.id || index}
@@ -248,7 +259,7 @@ const ManageBuildings = () => {
               bld.name,
               bld.floor_count,
               bld.room_per_floor,
-              <ToggleDiv buttonText="Actions">
+              <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                 <div
                   className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
                   onClick={() => openModal("read", bld)}
