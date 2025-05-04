@@ -1,12 +1,11 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import UserLayout from '../../layouts/UserLayout';
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
-import { useParams } from 'react-router-dom';
 import backgroundImage from '../../assets/images/home/backgroundaboutus.jpg';
-import { useState, useEffect } from 'react';
 import FilterCard from '../../components/ui/card/roomsfiltercard.jsx';
 import RoomDetailModal from '../../components/ui/modals/roomdetails.jsx';
 import RoomBookingModal from '../../components/ui/modals/roombooking.jsx';
-import { useNavigate } from 'react-router-dom';
 
 const ResortRoomList = () => {
     const { building_id } = useParams();
@@ -28,6 +27,7 @@ const ResortRoomList = () => {
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [isRoomDetailModalOpen, setIsRoomDetailModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [daysOfStay, setDaysOfStay] = useState(0);
 
     useEffect(() => {
         document.title = "Rooms in Building | Ocean View";
@@ -43,6 +43,7 @@ const ResortRoomList = () => {
     const getRoomsByBuildingId = async () => {
         try {
             setLoading(true);
+            setError(null);
 
             const { checkInDate, checkOutDate } = filters;
 
@@ -59,7 +60,6 @@ const ResortRoomList = () => {
             if (Array.isArray(data)) {
                 setAllRooms(data);
                 setFilteredRooms(data);
-                setError(null);
             } else {
                 setError("No rooms found or invalid format.");
             }
@@ -100,9 +100,19 @@ const ResortRoomList = () => {
             checkInDate: checkIn,
             checkOutDate: checkOut
         }));
+
+        if (checkIn && checkOut) {
+            const checkInDateObj = new Date(checkIn);
+            const checkOutDateObj = new Date(checkOut);
+            const diffInDays = Math.ceil((checkOutDateObj.getTime() - checkInDateObj.getTime()) / (1000 * 60 * 60 * 24));
+            setDaysOfStay(diffInDays);
+        } else {
+            setDaysOfStay(0);
+        }
     };
 
     const openRoomDetailModal = (room) => {
+        console.log("Selected Room: ", room); 
         setSelectedRoom(room);
         setIsRoomDetailModalOpen(true);
         setIsBookingModalOpen(false);
@@ -122,17 +132,61 @@ const ResortRoomList = () => {
         setIsBookingModalOpen(false);
     };
 
-const handleBookNow = (room) => {
-    if (localStorage.getItem('user_id')) {
-        console.log("Yes po")
-        openBookingModal(room);
-    } else {
-        const confirmLogin = window.confirm("You need to log in to book a room. Do you want to go to the login page?");
-        if (confirmLogin) {
-            navigate('/oceanview/login');
+    const handleBookNow = async (room) => {
+        const userId = localStorage.getItem('user_id');
+
+        if (!userId) {
+            const confirmLogin = window.confirm("You need to log in to book a room. Do you want to go to the login page?");
+            if (confirmLogin) {
+                navigate('/oceanview/login');
+            }
+            return;
         }
-    }
-};
+
+        try {
+            setLoading(true);
+
+            const response = await fetch(`http://localhost:8000/api.php?controller=GuestDetails&action=getGuestDetails&user_id=${userId}`);
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Guest details response:", data);
+
+            let guestArray = data;
+
+            if (!Array.isArray(data) && data.data && Array.isArray(data.data)) {
+                guestArray = data.data;
+            }
+
+            if (!Array.isArray(guestArray) && typeof guestArray === 'object') {
+                guestArray = [guestArray];
+            }
+
+            const userIdStr = String(userId);
+            const userHasGuestProfile = Array.isArray(guestArray) &&
+                guestArray.some(guest => String(guest.user_id) === userIdStr);
+
+            console.log("User has guest profile:", userHasGuestProfile);
+            console.log("Guest array:", guestArray);
+
+            if (!userHasGuestProfile) {
+                alert("You need to complete your guest profile before booking. Please update your profile information.");
+                return;
+            }
+
+            openBookingModal(room);
+
+        } catch (err) {
+            console.error("Error validating guest:", err);
+            alert("An error occurred while verifying your information. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <div className="px-40 min-h-screen">
@@ -150,7 +204,6 @@ const handleBookNow = (room) => {
                     <div className="flex-1" />
                 </div>
                 <div className="flex gap-8 pt-6">
-
                     {/* Left */}
                     <div className="w-2/6 sticky top-16 h-fit text-white p-4 rounded">
                         <FilterCard
@@ -164,7 +217,12 @@ const handleBookNow = (room) => {
                     {/* Right */}
                     <div className="w-4/6 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2" style={{ scrollbarWidth: 'none' }}>
 
-                        {error && <p className="text-red-500 text-center">{error}</p>}
+                        {error && (
+                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                                <strong className="font-bold">Error: </strong>
+                                <span className="block sm:inline">{error}</span>
+                            </div>
+                        )}
 
                         {loading && !error && (
                             <p className="text-gray-600 text-center">Loading rooms...</p>
@@ -177,43 +235,44 @@ const handleBookNow = (room) => {
                         {filteredRooms.length > 0 && (
                             <div>
                                 {filteredRooms.map((room) => (
-                                    <div key={room.id} className="bg-white rounded-xl border border-neutral-400 overflow-hidden mb-6 h-60">
+                                    <div key={room.id} className="bg-white rounded-xl border border-neutral-400 overflow-hidden mb-6 h-auto md:h-60">
                                         <div className="grid grid-cols-1 md:grid-cols-2">
                                             <img
                                                 src={room.main_image ? room.room_image : backgroundImage}
                                                 alt={room.room_name}
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-auto md:h-full object-cover"
                                             />
                                             <div className="p-4">
                                                 <h2 className="text-xl font-semibold text-gray-800">{room.room_name}</h2>
                                                 <hr className="w-full border-t border-neutral-400 my-2" />
-                                                <div className="flex w-full">
+                                                <div className="flex w-full flex-col md:flex-row">
                                                     {/* Left */}
-                                                    <div className="w-4/5 pr-4">
+                                                    <div className="w-full md:w-4/5 pr-4">
                                                         <p className="text-sm text-gray-600 mt-1">{room.description}</p>
 
                                                         <button
+                                                            className="text-blue-600 no-underline py-3 text-sm font-bold inline-block mt-2 hover:text-blue-900 px-0"
                                                             onClick={() => openRoomDetailModal(room)}
-                                                            className="text-blue-600 no-underline py-3 text-sm font-bold inline-block mt-2 hover:text-blue-900"
                                                         >
                                                             View Details
                                                         </button>
                                                     </div>
 
                                                     {/* Right */}
-                                                    <div className="w-1/4 text-end">
+                                                    <div className="w-full md:w-1/4 text-left md:text-end mt-4 md:mt-0">
                                                         <p className="text-xs text-black font-bold mt-2">{room.room_type_name}</p>
                                                         <hr className="w-full border-t border-neutral-400 my-2" />
                                                         <p className="text-xs text-black font-bold mt-2">₱ {room.price_per_night}</p>
                                                         <p className="text-xs text-black font-bold mt-2">Capacity: {room.room_type_capacity}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-end">
+                                                <div className="flex justify-end mt-4">
                                                     <button
-                                                        onClick={() => handleBookNow(room)}
-                                                        className="text-white px-8 rounded-lg bg-blue-600 no-underline py-3 text-xs hover:bg-blue-700 font-bold inline-block"
+                                                        onClick={() => handleBookNow(room)}  
+                                                        disabled={loading}
+                                                        className={`text-white px-8 rounded-lg ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} no-underline py-3 text-xs font-bold inline-block transition-all duration-300 ease-in-out`}
                                                     >
-                                                        Book Now
+                                                        {loading ? 'Checking...' : 'Book Now'}
                                                     </button>
                                                 </div>
                                             </div>
@@ -235,6 +294,14 @@ const handleBookNow = (room) => {
                                         room={selectedRoom}
                                         isOpen={isBookingModalOpen}
                                         onClose={closeBookingModal}
+                                        parentCheckInDate={filters.checkInDate}
+                                        parentCheckOutDate={filters.checkOutDate}
+                                        parentDaysOfStay={daysOfStay}
+                                        parentGuests={filters.guests}
+                                        parentRoomType={filters.roomType}
+                                        parentFilters={filters}
+                                        parentRoomName={selectedRoom.room_name}  
+                                        
                                     />
                                 )}
                             </div>
