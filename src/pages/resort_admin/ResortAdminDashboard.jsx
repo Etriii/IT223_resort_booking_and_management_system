@@ -21,12 +21,12 @@ const ResortAdminDashboard = () => {
         <DashboardCards title="Departures" value="37" bg="bg-red-500" />
       </div>
       <div className="grid grid-cols-12 gap-6">
-        <Linechart />
+        <Linechart height="h-[39lvh]"/>
         <div className="flex flex-col col-span-4 gap-4">
           <BalanceCard title="Bookings" />
           <BalanceCard title="Upcoming Balance"/>
         </div>
-        <Table theadings={["ID", "Name", "start_date", "end_date", "actions"]}>
+        <Table theadings={["Name", "Building No.", "Floo|Room No.", "Room Type", "No. of Nights","Payment Type","Amount"]}>
 
         </Table>
       </div>
