@@ -32,6 +32,7 @@ const Resorts = () => {
                 setResorts(data);
             } catch (error) {
                 setNotify({
+                    open: true,
                     type: 'error',
                     message: error.message || 'Something went wrong!',
                 });
@@ -122,20 +123,29 @@ const Resorts = () => {
 
         setTimeout(async () => {
             let result;
-            switch (modal.variant) {
-                case 'create':
-                    result = await createResort(createResortForm.values);
-                    break;
-                case 'update':
-                    result = await editResort(editResortForm.values);
-                    break;
-                case 'delete':
-                    result = await deleteResort(deleteResortForm.resort_id);
-                    break;
-                default:
-                    console.error('Unknown action mode');
-                    setModal(prev => ({ ...prev, loading: false }));
-                    return;
+
+            try {
+                switch (modal.variant) {
+                    case 'create':
+                        result = await createResort(createResortForm.values);
+                        break;
+                    case 'update':
+                        result = await editResort(editResortForm.values);
+                        break;
+                    case 'delete':
+                        result = await deleteResort(deleteResortForm.resort_id);
+                        break;
+                    default:
+                        throw new Error("Unknown action mode");
+                }
+            } catch (error) {
+                setModal(prev => ({ ...prev, loading: false }));
+                setNotify({
+                    open: true,
+                    type: 'error',
+                    message: error.message || 'Something went wrong!'
+                });
+                return;
             }
 
             setModal(prev => ({ ...prev, loading: false }));
@@ -146,16 +156,24 @@ const Resorts = () => {
                     type: modal.variant,
                     message: result.message
                 });
+                closeModal();
             } else {
                 setNotify({
                     open: true,
                     type: 'error',
                     message: result.message
                 });
-            }
-            closeModal();
-        }, 500);
 
+                // setCreateResortForm(prev => ({
+                //     ...prev,
+                //     error: {
+                //         ...prev.values,
+                //         [result]: value
+                //     }
+                // }));
+
+            }
+        }, 1000);
     };
 
     // Table Filters
@@ -183,7 +201,7 @@ const Resorts = () => {
             <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
             {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
-            <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} add_title={'Add Resort'} />
+            <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Resort Name', create_label: 'Add Resort' }} />
 
             <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading} containerRef={containerRef} >
                 {filteredResorts.length > 0 ? (

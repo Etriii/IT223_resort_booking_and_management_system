@@ -21,4 +21,14 @@ class Resorts
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getResortByName($name)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE name = :name");
+        $stmt->execute(['name' => $name]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function createResort($data) {
+        
+    }
 }

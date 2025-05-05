@@ -3,7 +3,7 @@ import { FiFilter } from 'react-icons/fi';
 import { IoMdAdd } from 'react-icons/io';
 import InputField from "../form/InputField";
 
-const FilterAndActions = ({ filters, setFilters, openModal, add_title }) => {
+const FilterAndActions = ({ filters, setFilters, openModal, input_filter }) => {
     return (
         <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-4">
@@ -36,12 +36,12 @@ const FilterAndActions = ({ filters, setFilters, openModal, add_title }) => {
             <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-2">
                     <InputField
-                        placeholder="Resort Name"
-                        value={filters.resort_name || ''}
+                        placeholder={input_filter.placeholder}
+                        value={filters[input_filter.key_to_filter] || ''}
                         onChange={(e) =>
                             setFilters((prev) => ({
                                 ...prev,
-                                resort_name: e.target.value,
+                                [input_filter.key_to_filter]: e.target.value,
                             }))
                         }
                     />
@@ -50,7 +50,7 @@ const FilterAndActions = ({ filters, setFilters, openModal, add_title }) => {
                     className="px-3 py-[7px] bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap"
                     onClick={() => openModal('create')}
                 >
-                    <IoMdAdd /> <span>{add_title}</span>
+                    <IoMdAdd /> <span>{input_filter.create_label}</span>
                 </button>
             </div>
         </div>

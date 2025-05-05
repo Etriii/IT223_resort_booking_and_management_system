@@ -6,6 +6,9 @@ const ManageRooms = () => {
 
   const { building_id } = useParams();
 
+  document.title = "Manage Rooms | Ocean View";
+
+
   // check first if naa ang id sa building.
   // getBuildingById siguro tas if false e reject niya then i butang sa page na PageNotFound
 

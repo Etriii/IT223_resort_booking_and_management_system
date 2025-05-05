@@ -158,29 +158,35 @@ class User
         FROM users
         LEFT JOIN user_roles ON users.id = user_roles.user_id
         GROUP BY users.id
-    ");
-    $stmt->execute();
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        ");
 
-    foreach ($users as &$user) {
-        if ($user['roles']) {
-            $roleIds = explode(',', $user['roles']);
-            $roleNames = array_map(function($id) {
-                switch ($id) {
-                    case '1': return 'Super Admin';
-                    case '2': return 'Resort Super Admin';
-                    case '3': return 'Resort Admin';
-                    case '4': return 'Guest';
-                    default: return 'Unknown';
-                }
-            }, $roleIds);
-            $user['role_names'] = $roleNames;
-        } else {
-            $user['role_names'] = ['No Role'];
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($users as &$user) {
+            if ($user['roles']) {
+                $roleIds = explode(',', $user['roles']);
+                $roleNames = array_map(function ($id) {
+                    switch ($id) {
+                        case '1':
+                            return 'Super Admin';
+                        case '2':
+                            return 'Resort Super Admin';
+                        case '3':
+                            return 'Resort Admin';
+                        case '4':
+                            return 'Guest';
+                        default:
+                            return 'Unknown';
+                    }
+                }, $roleIds);
+                $user['role_names'] = $roleNames;
+            } else {
+                $user['role_names'] = ['No Role'];
+            }
         }
-    }
 
-    return $users;
+        return $users;
     }
 
     public function getUserById($id)
@@ -212,30 +218,23 @@ class User
     {
         $conn = (new Database())->connect();
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    
+
         try {
-            $stmt = $conn->prepare("CALL createUser(:username, :email, :password)");
+            $stmt = $conn->prepare("CALL createUserWithRole(:username, :email, :password)");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $hashedPassword);
-    
+
             $stmt->execute();
-    
+
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
             return $result['user_id'];
-    
         } catch (PDOException $e) {
             error_log("Error creating user: " . $e->getMessage());
             return false;
         }
     }
-    
-    
-    
-    
-    
-    
 
     public function deleteUser($user_id)
     {

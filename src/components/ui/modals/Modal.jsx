@@ -142,7 +142,7 @@ const Modal = ({
     const { background, textColor, buttons } = getVariantStyles();
 
     return (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black bg-opacity-50">
             <div className={`w-[90%] sm:w-96 rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background} ${textColor}`}  >
                 <div className={`flex justify-between items-center mb-2 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
                     <h3 className="text-xl font-semibold">{title}</h3>
