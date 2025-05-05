@@ -1,23 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const Manage_Resort = () => {
-  const baseStyle =
-    "relative overflow-hidden lg:col-span-3 sm:col-span-6 text-center p-6 h-[40lvh] flex flex-col justify-end bg-gray-200 rounded-2xl";
+const Manage_Resort = ({title}) => {
+  const baseStyle = "col-span-1 sm:col-span-3 lg:col-span-3";
+  // "relative overflow-hidden lg:col-span-3 sm:col-span-6 text-center h-[40lvh] flex flex-col justify-end bg-gray-200 rounded-2xl";
+
+  const [imageUrl, setImageUrl] = useState("");
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "oceanview");
+    formData.append("folder", "oceanview_photos"); // replace with your preset
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dpa4l9gxw/image/upload", // replace with your cloud name
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      setImageUrl(data.secure_url); // Save the URL to show the uploaded image
+      console.log(data.public_id); // You can save public_id to your database!
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
       <div className={baseStyle}>
-        <button
-          className="absolute inset-0 flex items-center justify-center opacity-80 hover:opacity-30 transition-all"
-          onClick={() => console.log("Background clicked")}
-        >
-          <FaCloudUploadAlt className="text-[10rem] text-gray-400 pointer-events-none" />
-        </button>
-
-        <button className="relative z-10 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-          Main Image
-        </button>
+        <label class="title bold mb-2 text-lg tracking-wider font-medium text-gray-700">
+          {title}
+        </label>
+        {imageUrl ? (
+          <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg">
+          <img
+            src={imageUrl}
+            alt="Uploaded"
+            className="w-full h-full object-cover"
+          />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg p-6 ">
+            <label className="flex flex-col items-center justify-center text-center cursor-pointer w-full h-full gap-1">
+              <FaCloudUploadAlt className="text-[9rem] text-gray-400 pointer-events-none" />
+              <span className="font-bold text-lg z-0">Upload Image</span>
+              <span className="text-sm text-gray-600 z-0">
+                Drag file here to upload
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="absolute hidden"
+              />
+            </label>
+          </div>
+        )}
       </div>
     </>
   );
