@@ -33,3 +33,17 @@ class Building
     public function update() {}
     public function destroy() {}
 }
+// ("SELECT 
+//   b.id AS building_id,
+//   b.name,
+//   b.floor_count,
+//   COUNT(r.id) AS room_per_floor,
+//   GROUP_CONCAT(DISTINCT r.room_type_id SEPARATOR ', ') AS room_Type
+// FROM 
+//   buildings b
+// LEFT JOIN 
+//   rooms r ON r.building_id = b.id
+// WHERE 
+//   b.resort_id = :resort_id
+// GROUP BY 
+//   b.id, b.name, b.floor_count;");
