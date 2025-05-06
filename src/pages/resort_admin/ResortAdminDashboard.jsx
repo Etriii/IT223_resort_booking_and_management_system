@@ -1,17 +1,56 @@
-import { useEffect } from "react";
+import { useEffect,useState,useRef } from "react";
 import DashboardCards from "../../components/Resort_admin/dashboardCard";
 import Linechart from "../../components/Resort_admin/LineChart";
 import BalanceCard from "../../components/Resort_admin/BalanceCard";
 import AdminLayout from "../../layouts/ResortAdminLayout";
 import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
+import RoomsCard from "../../components/Resort_admin/RoomsCard";
 
 const ResortAdminDashboard = () => {
+  const containerRef = useRef(null);
+
+    const [buildings, setBuildings] = useState();
+    const [loading, setLoading] = useState(true);
+    const [notify, setNotify] = useState();
+
   const dashboardcard =
     "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4";
   useEffect(() => {
     document.title = "Dashboard | Ocean View";
   }, []);
+
+  //table
+  useEffect(() => {
+      document.title = "Buildings | Ocean View";
+      const fetchBuildings = async () => {
+        try {
+          const resort_id = localStorage.getItem("user_role")
+            ? JSON.parse(localStorage.getItem("user_role"))[0]["resort_id"]
+            : null;
+  
+          const response = await fetch(
+            `http://localhost:8000/api.php?controller=Buildings&action=getBuildingsByResortId&resort_id=${resort_id}`
+          );
+  
+          const data = await response.json();
+          setBuildings(data);
+        } catch (error) {
+          setNotify({
+            type: "error",
+            message: error.message || "Something went wrong!",
+          });
+        } finally {
+          const timer = setTimeout(() => {
+            setLoading(false);
+          }, 500);
+  
+          return () => clearTimeout(timer);
+        }
+      };
+  
+      fetchBuildings();
+    }, []);
   return (
     <>
       <div className={`${dashboardcard}`}>
@@ -26,9 +65,25 @@ const ResortAdminDashboard = () => {
           <BalanceCard title="Bookings" />
           <BalanceCard title="Upcoming Balance"/>
         </div>
-        <Table theadings={["Name", "Building No.", "Floo|Room No.", "Room Type", "No. of Nights","Payment Type","Amount"]}>
-
+        <div className="col-span-8 bg-gray-200 p-1 rounded-lg">
+        <Table theadings={["Name", "Building Name", "Floor|Room No.", "Room Type", "No. of Nights","Payment Type","Amount"]}>
+        {buildings && buildings.length > 0 ? (
+          buildings.map((building, index) => (
+            <TableData 
+            key={buildings.id || index}
+              columns={[
+                building.id,
+                building.name,
+                `${building.floor_count} | ${building.room_per_floor} `,
+              ]}
+            />
+          ))):(
+            <tr></tr>
+          )}
+        
         </Table>
+        </div>
+        <RoomsCard/>
       </div>
     </>
   );

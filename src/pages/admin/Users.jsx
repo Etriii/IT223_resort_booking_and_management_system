@@ -11,17 +11,23 @@ import { useState, useEffect, useRef } from "react";
 
 import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
+import ActionNotification from "../../components/ui/modals/ActionNotification";
 
 const Accounts = () => {
-
+    
     const containerRef = useRef(null);
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [notify, setNotify] = useState();
+    const [usernameFilter, setUsernameFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const [filters, setFilters] = useState({ paginate: 8, page: 1 });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalVariant, setModalVariant] = useState('create');
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     const openModal = (variant) => {
         setModalVariant(variant);
@@ -29,6 +35,8 @@ const Accounts = () => {
     };
 
     const closeModal = () => setIsModalOpen(false);
+    const openFilterModal = () => setIsFilterModalOpen(true);
+    const closeFilterModal = () => setIsFilterModalOpen(false);
 
     const handleConfirm = () => {
         console.log("Action Confirmed");
@@ -61,6 +69,25 @@ const Accounts = () => {
         fetchUsers();
     }, []);
 
+    const filteredUsers = users?.filter(user => {
+        const usernameMatch = user.username?.toLowerCase().includes(usernameFilter.toLowerCase());
+        const statusMatch =
+            statusFilter === 'all' ||
+            user.status?.toLowerCase() === statusFilter.toLowerCase();
+
+        return usernameMatch && statusMatch;
+    });
+
+    const totalPages = Math.ceil(filteredUsers.length / filters.paginate);
+    const paginatedUsers = filteredUsers.slice(
+        (filters.page - 1) * filters.paginate,
+        filters.page * filters.paginate
+    );
+
+    useEffect(() => {
+        setFilters(prev => ({ ...prev, page: 1 }));
+    }, [usernameFilter, statusFilter, filters.paginate]);
+
     return (
         <div>
             <Modal
@@ -85,62 +112,109 @@ const Accounts = () => {
             >
                 yes
             </Modal>
+
+            <Modal
+                isOpen={isFilterModalOpen}
+                onClose={closeFilterModal}
+                variant="filter"
+                title="Filter Users"
+                onConfirm={closeFilterModal}
+                onCancel={closeFilterModal}
+            >
+                <div className="space-y-4">
+                    <label className="block">
+                        <span className="text-sm font-medium text-gray-700">Status</span>
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-green-500"
+                        >
+                            <option value="all">All</option>
+                            <option value="active">Active</option>
+                            <option value="deactivated">Deactivated</option>
+                        </select>
+                    </label>
+                </div>
+            </Modal>
+
             {notify && (
                 <ActionNotification isOpen={true} variant={`${notify.type}`}>
                     {notify.message}
                 </ActionNotification>
             )}
+
             <div className="flex items-center justify-between flex-wrap">
                 <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100">
+                    <button
+                        className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={openFilterModal}
+                    >
                         <FiFilter className="text-lg" />
                         Filter
                     </button>
 
-                    <select className="px-3 py-2 border rounded-md text-sm text-gray-700 focus: outline-green-600">
-                        {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>{i + 1} entries</option>
+                    <select
+                        value={filters.paginate}
+                        onChange={(e) => setFilters(prev => ({ ...prev, paginate: parseInt(e.target.value) }))}
+                        className="px-3 py-2 border rounded-md text-sm text-gray-700 focus:outline-green-600"
+                    >
+                        {[10, 20, 30, 40, 50].map(num => (
+                            <option key={num} value={num}>{num} entries</option>
                         ))}
                     </select>
                 </div>
+
                 <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-2">
-                        <span>username:</span>
-                        <InputField />
+                        <InputField
+                        value={usernameFilter}
+                        onChange={(e) => setUsernameFilter(e.target.value)}
+                        placeholder="Search by Username"
+                        />
                     </div>
-                    <button className="px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap" onClick={() => openModal('create')}>
-                        <IoMdAdd /> <span>Add Resort</span>
+                    <button
+                        className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition"
+                        onClick={() => openModal('create')}
+                    >
+                        <IoMdAdd className="text-base" />
+                        <span>Add User</span>
                     </button>
-                </div>
+                 </div>
             </div>
 
-
             <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Role', 'Status', 'Action']} isLoading={loading} containerRef={containerRef}>
-                {users && users.length > 0 ? (
-                    users.map((user, index) => (
+                {paginatedUsers && paginatedUsers.length > 0 ? (
+                    paginatedUsers.map((user, index) => (
                         <TableData
                             key={user.id || index}
                             columns={[
                                 user.id,
                                 <div className="flex justify-center items-center">
                                     <img
-                                        src={user.profile_photo ? user.profile_photo : '/images/user_profiles/default_profile.png'}
+                                        src={user.profile_photo || '/images/user_profiles/default_profile.png'}
                                         alt="Profile"
-                                        className=" size-10 object-cover bg-center rounded-full border border-gray-200 shadow-lg"
-                                        onError={(e) => { e.target.src = defaultProfile; }} />
+                                        className="size-10 object-cover bg-center rounded-full border border-gray-200 shadow-lg"
+                                        onError={(e) => { e.target.src = '/images/user_profiles/default_profile.png'; }}
+                                    />
                                 </div>,
                                 user.username,
                                 user.email,
                                 user.role_names?.map((role, i) => (
-                                    <span key={i} className="mr-1  text-gray-600 px-2 py-1 rounded">
-                                        {role}
-                                    </span>
+                                    <span key={i} className="mr-1 text-gray-600 px-2 py-1 rounded">{role}</span>
                                 )),
-                                <span className={`${user.status == 'active' ? 'text-green-600' : 'text-red-600'} font-bold`} >  {user.status} </span>,
+                                <span className={`${user.status === 'active' ? 'text-green-600' : 'text-red-600'} font-bold`}>
+                                    {user.status}
+                                </span>,
                                 <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}> <LuEye className="size-5 mr-2" />View </div>
-                                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
-                                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
+                                    <div className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}>
+                                        <LuEye className="size-5 mr-2" /> View
+                                    </div>
+                                    <div className="px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}>
+                                        <BiSolidEditAlt className="size-5 mr-2" /> Edit
+                                    </div>
+                                    <div className="px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}>
+                                        <MdOutlineDeleteForever className="size-5 mr-2" /> Delete
+                                    </div>
                                 </ToggleDiv>
                             ]}
                         />
@@ -150,41 +224,38 @@ const Accounts = () => {
                 )}
             </Table>
 
-            <div className="flex md:justify-between md:items-center md:flex-row p-2 flex-wrap justify-center items-center flex-col-reverse space-y-2">
+            <div className="flex justify-between items-center mt-4 flex-wrap">
                 <div>
-                    <span>Showing n of n entries</span>
+                    <span>Showing {(filters.page - 1) * filters.paginate + 1} to {Math.min(filters.page * filters.paginate, filteredUsers.length)} of {filteredUsers.length} entries</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button
+                        disabled={filters.page === 1}
+                        onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
+                    >
                         &laquo;
                     </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &lt;
-                    </button>
-                    <button className="px-3 py-1 rounded-md bg-green-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-green-500">
-                        1
-                    </button>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        2
-                    </button>
-                    <button className="px-3 py-1 rounnded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        3
-                    </button>
-                    <span className="text-gray-400">...</span>
-                    <button className="px-3 py-1 rounded-md text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        10
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        &gt;
-                    </button>
-                    <button className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i + 1}
+                            className={`px-3 py-1 rounded-md ${filters.page === i + 1 ? 'bg-green-500 text-white' : 'text-green-500 hover:bg-green-100'}`}
+                            onClick={() => setFilters(prev => ({ ...prev, page: i + 1 }))}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                    <button
+                        disabled={filters.page === totalPages}
+                        onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+                        className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
+                    >
                         &raquo;
                     </button>
                 </div>
             </div>
-
         </div>
     );
-}
+};
 
 export default Accounts;

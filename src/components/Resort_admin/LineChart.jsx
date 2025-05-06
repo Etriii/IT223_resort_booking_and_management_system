@@ -56,7 +56,7 @@ const Linechart = ({ span , height }) => {
 
   return (
     <div
-      className={`col-span-8 ${span} bg-white dark:bg-gray-200 shadow-xs rounded-xl`}
+      className={`col-span-8 ${span} bg-gray-100 dark:bg-gray-200 shadow-xs rounded-xl`}
     >
       <div className="flex mb-2">
         <button
