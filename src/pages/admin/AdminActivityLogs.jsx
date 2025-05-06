@@ -4,7 +4,6 @@ const AdminActivityLogs = () => {
     document.title = "Activity Logs | Ocean View";
     
     return (
-        
         <div>AdminActivityLogs</div>
     )
 }
