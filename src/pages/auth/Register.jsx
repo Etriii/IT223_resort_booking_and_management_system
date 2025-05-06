@@ -7,7 +7,9 @@ import ErrorAlert from './ErrorAlert';
 import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { PiWarningCircleBold } from "react-icons/pi";
+import ActionNotification from '../../components/ui/modals/ActionNotification';
 
+ActionNotification
 const Register = () => {
     const navigate = useNavigate();
 
@@ -28,6 +30,8 @@ const Register = () => {
     const [errorEmail, setErrorEmail] = useState("");
     const [errorPassword, setErrorPassword] = useState("");
     const [errorConfirm, setErrorConfirm] = useState("");
+
+    const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
 
     const togglePassword = () => setShowPassword(!showPassword);
 
@@ -81,10 +85,18 @@ const Register = () => {
             const data = await response.json();
 
             console.log('API Response:', data);
-
+            setNotify({});
             setTimeout(() => {
                 if (data.success) {
-                    navigate('/oceanview/login');
+                    setNotify({
+                        open: true,
+                        type: 'create',
+                        message: 'Account Created Successfully',
+                    });
+                    setUsername('');
+                    setEmail('');
+                    setPassword('');
+                    setConfirmPassword('');
                 } else {
                     setError(data.message || "Registration failed.");
                 }
@@ -100,7 +112,7 @@ const Register = () => {
     return (
         <>
             <ErrorAlert error={error} clearError={() => setError('')} />
-
+            <ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>
             <div className='flex flex-col space-y-2 bg-white p-7 rounded-lg'>
                 <form onSubmit={handleRegister} className='space-y-2'>
                     <div className="w-80 mx-auto space-y-2 text-sm text-gray-700 font-medium">

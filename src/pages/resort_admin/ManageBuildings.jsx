@@ -4,123 +4,29 @@ import TableData from "../../components/ui/table/TableData";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 import Modal from "../../components/ui/modals/Modal";
-import InputField from "../../components/ui/form/InputField";
 
-import { FiFilter } from "react-icons/fi";
-import { IoMdAdd } from "react-icons/io";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
+import FilterAndActions from "../../components/ui/table/FilterAndActions";
+
+import Pagination from "../../components/ui/table/Pagination";
+
+import { CreateBuildingModal, ReadBuildingModal, UpdateBuildingModal, DeleteBuildingModal, FilterModal, } from "./modals";
+
 const ManageBuildings = () => {
+  const [notify, setNotify] = useState(null);
   const containerRef = useRef(null);
 
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notify, setNotify] = useState(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("create");
-  const [selectedBuilding, setSelectedBuilding] = useState(null);
 
-  const [buildingFormData, setBuildingFormData] = useState({
-    name: "",
-    floor_count: "",
-    room_per_floor: "",
-    room_image: null,
-  });
-
-  const openModal = (variant, building = null) => {
-    setModalVariant(variant);
-    setSelectedBuilding(building);
-
-    if (building) {
-      setBuildingFormData({
-        name: building.name || "",
-        floor_count: building.floor_count || "",
-        room_per_floor: building.room_per_floor || "",
-        room_image: null,
-      });
-    } else {
-      setBuildingFormData({
-        name: "",
-        floor_count: "",
-        room_per_floor: "",
-        room_image: null,
-      });
-    }
-
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedBuilding(null);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setBuildingFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    setBuildingFormData((prev) => ({
-      ...prev,
-      room_image: e.target.files[0],
-    }));
-  };
-
-  const handleConfirm = async () => {
-    try {
-      const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]?.resort_id;
-
-      let response;
-
-      if (modalVariant === "create" || modalVariant === "update") {
-        const formData = new FormData();
-        formData.append("name", buildingFormData.name);
-        formData.append("floor_count", buildingFormData.floor_count);
-        formData.append("room_per_floor", buildingFormData.room_per_floor);
-        formData.append("resort_id", resort_id);
-        if (buildingFormData.room_image) {
-          formData.append("room_image", buildingFormData.room_image);
-        }
-
-        const endpoint =
-          modalVariant === "create"
-            ? "addBuilding"
-            : `updateBuilding&id=${selectedBuilding.id}`;
-
-        response = await fetch(
-          `http://localhost:8000/api.php?controller=Buildings&action=${endpoint}`,
-          {
-            method: modalVariant === "create" ? "POST" : "POST",
-            body: formData,
-          }
-        );
-      } else if (modalVariant === "delete" && selectedBuilding) {
-        response = await fetch(
-          `http://localhost:8000/api.php?controller=Buildings&action=deleteBuilding&id=${selectedBuilding.id}`,
-          { method: "DELETE" }
-        );
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        setNotify({ type: "success", message: data.message || "Action successful" });
-        closeModal();
-        fetchBuildings();
-      } else {
-        throw new Error(data.message || "Action failed");
-      }
-    } catch (err) {
-      setNotify({ type: "error", message: err.message || "Something went wrong" });
-    }
-  };
+  useEffect(() => {
+    document.title = "Manage Buildings | Ocean View";
+    fetchBuildings();
+  }, []);
 
   const fetchBuildings = async () => {
     try {
@@ -132,90 +38,201 @@ const ManageBuildings = () => {
       const data = await res.json();
       setBuildings(data);
     } catch (err) {
-      setNotify({ type: "error", message: "Failed to fetch buildings" });
+      setNotify({
+        type: "error",
+        message: "Failed to fetch buildings",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const [modal, setModal] = useState({ isOpen: false, variant: "default", children: <div></div>, loading: false, title: "", });
+
+  const openModal = (variant, resort) => {
+    let children;
+    let modal_title;
+
+    switch (variant) {
+      case "create":
+        children = (
+          <CreateBuildingModal
+            handleCreateFormInputChange={handleCreateFormInputChange}
+            formData={createBuildingForm}
+          />
+        );
+        modal_title = "Create Resort";
+        break;
+      case "read":
+        children = <ReadBuildingModal />;
+        modal_title = "View Resort";
+        break;
+      case "update":
+        children = <UpdateBuildingModal />;
+        modal_title = "Edit Resort";
+        break;
+      case "delete":
+        children = <DeleteBuildingModal />;
+        modal_title = "Delete Resort";
+        break;
+      case "filter":
+        children = <FilterModal filters={filters} setFilters={setFilters} />;
+        modal_title = "Filters";
+        break;
+      default:
+        children = <>Nahh wala</>;
+    }
+
+    setModal({ isOpen: true, variant, children, loading: false, title: modal_title, });
+  };
+
+  const closeModal = () => {
+    setModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const [createBuildingForm, setCreateBuildingForm] = useState({
+    values: { name: "", image: "", floor_count: "", room_per_floor: "" },
+    errors: { name: "", image: "", floor_count: "", room_per_floor: "" },
+  });
+
+  const [editBuildingForm, setEditBuildingForm] = useState({
+    values: { id: "", name: "", image: "", floor_count: "", room_per_floor: "", },
+    errors: { id: "", name: "", image: "", floor_count: "", room_per_floor: "", },
+  });
+
+  const [deleteBuildingForm, setDeleteBuildingForm] = useState({
+    building_id: "",
+  });
+
+  const handleCreateFormInputChange = (e) => {
+    const { name, value } = e.target;
+    setCreateResortForm((prev) => ({
+      ...prev,
+      values: {
+        ...prev.values,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleConfirm = () => {
+    setModal((prev) => ({ ...prev, loading: true })); //pang loading rani sa button
+    setNotify({}); //reset ang notif ni ha
+
+    setTimeout(async () => {
+      let result;
+
+      try {
+        switch (modal.variant) {
+          case "create":
+            result = await createBuilding(createBuildingForm.values);
+            break;
+          case "update":
+            result = await editBuilding(editBuildingForm.values);
+            break;
+          case "delete":
+            result = await deleteBuilding(deleteBuildingForm.building_id);
+            break;
+          default:
+            throw new Error("Unknown action mode");
+        }
+      } catch (error) {
+        setModal((prev) => ({ ...prev, loading: false }));
+        setNotify({ open: true, type: "error", message: error.message || "Something went wrong!", });
+        return;
+      }
+
+      setModal((prev) => ({ ...prev, loading: false }));
+
+      if (result.success) {
+        setNotify({ open: true, type: modal.variant, message: result.message, });
+        closeModal();
+      } else {
+        setNotify({ open: true, type: "error", message: result.message, });
+      }
+    }, 1000);
+  };
+
+  const [filters, setFilters] = useState({ paginate: 10, page: 1, building_name: null, });
+
+  const filteredBuildings = buildings?.filter((building) => {
+    const nameMatch = !filters.building_name || building.name?.toLowerCase().includes(filters.building_name.toLowerCase());
+
+    return nameMatch;
+  }) || [];
+
+  const totalPages = Math.ceil(filteredBuildings.length / filters.paginate);
+  const paginatedBuildings = filteredBuildings.slice(
+    (filters.page - 1) * filters.paginate,
+    filters.page * filters.paginate
+  );
+
   useEffect(() => {
-    document.title = "Manage Buildings | Ocean View";
-    fetchBuildings();
-  }, []);
+    setFilters((prev) => ({ ...prev, page: 1 }));
+  }, [filters.building_name, filters.paginate]);
 
   return (
     <div>
       <Modal
-        isOpen={isModalOpen}
+        isOpen={modal.isOpen}
         onClose={closeModal}
-        variant={modalVariant}
-        title={
-          modalVariant === "create"
-            ? "Add Building"
-            : modalVariant === "update"
-            ? "Edit Building"
-            : modalVariant === "read"
-            ? "View Building"
-            : "Delete Building"
-        }
-        message={
-          modalVariant === "delete"
-            ? `Are you sure you want to delete "${selectedBuilding?.name}"?`
-            : undefined
-        }
+        variant={modal.variant}
+        title={modal.title}
+        loading={modal.loading}
+        children={modal.children}
+        onCancel={() => closeModal()}
         onConfirm={handleConfirm}
-        onCancel={closeModal}
       >
-        {(modalVariant === "create" || modalVariant === "update" || modalVariant === "read") && (
-          <form className="space-y-4">
-            <div>
-              <label className="block font-medium mb-1">Room Image</label>
-              <input
-                type="file"
-                name="room_image"
-                onChange={handleImageChange}
-                className="w-full border p-3 rounded-lg"
-                disabled={modalVariant === "read"}
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Building Name</label>
-              <input
-                type="text"
-                name="name"
-                value={buildingFormData.name}
-                onChange={handleInputChange}
-                disabled={modalVariant === "read"}
-                className="w-full border p-2 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Number of Floors</label>
-              <input
-                type="number"
-                name="floor_count"
-                value={buildingFormData.floor_count}
-                onChange={handleInputChange}
-                disabled={modalVariant === "read"}
-                className="w-full border p-2 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Rooms Per Floor</label>
-              <input
-                type="number"
-                name="room_per_floor"
-                value={buildingFormData.room_per_floor}
-                onChange={handleInputChange}
-                disabled={modalVariant === "read"}
-                className="w-full border p-2 rounded"
-                required
-              />
-            </div>
-          </form>
-        )}
+        {/* {(modalVariant === "create" || modalVariant === "update" || modalVariant === "read") && (
+                <form className="space-y-4">
+                  <div>
+                    <label className="block font-medium mb-1">Room Image</label>
+                    <input
+                      type="file"
+                      name="room_image"
+                      onChange={handleImageChange}
+                      className="w-full border p-3 rounded-lg"
+                      disabled={modalVariant === "read"}
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 font-medium">Building Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={buildingFormData.name}
+                      onChange={handleInputChange}
+                      disabled={modalVariant === "read"}
+                      className="w-full border p-2 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 font-medium">Number of Floors</label>
+                    <input
+                      type="number"
+                      name="floor_count"
+                      value={buildingFormData.floor_count}
+                      onChange={handleInputChange}
+                      disabled={modalVariant === "read"}
+                      className="w-full border p-2 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 font-medium">Rooms Per Floor</label>
+                    <input
+                      type="number"
+                      name="room_per_floor"
+                      value={buildingFormData.room_per_floor}
+                      onChange={handleInputChange}
+                      disabled={modalVariant === "read"}
+                      className="w-full border p-2 rounded"
+                      required
+                    />
+                  </div>
+                </form>
+              )} */}
       </Modal>
 
       {notify && (
@@ -224,67 +241,45 @@ const ManageBuildings = () => {
         </ActionNotification>
       )}
 
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-4">
-          <button className="flex items-center gap-2 border px-3 py-2 rounded-md text-sm hover:bg-gray-100">
-            <FiFilter />
-            Filter
-          </button>
-          <select className="px-3 py-2 border rounded-md text-sm">
-            {[...Array(10)].map((_, i) => (
-              <option key={i + 1}>{i + 1} entries</option>
-            ))}
-          </select>
-        </div>
+      <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: "building_name", placeholder: "Building Name", create_label: "Add Building", }} />
 
-        <div className="flex items-center gap-2">
-          <span>Search:</span>
-          <InputField />
-          <button
-            className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-nowrap"
-            onClick={() => openModal("create")}
-          >
-            <IoMdAdd />
-            Add Building
-          </button>
-        </div>
-      </div>
-
-      <Table theadings={["ID", "Name", "Floors", "Rooms", "Actions"]} containerRef={containerRef}>
-        {buildings.map((bld, index) => (
-          <TableData
-            key={bld.id || index}
-            columns={[
-              bld.id,
-              bld.name,
-              bld.floor_count,
-              bld.room_per_floor,
-              <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                <div
-                  className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
-                  onClick={() => openModal("read", bld)}
-                >
-                  <LuEye className="mr-2" /> View
-                </div>
-                <div
-                  className="px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => openModal("update", bld)}
-                >
-                  <BiSolidEditAlt className="mr-2" /> Edit
-                </div>
-                <div
-                  className="px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => openModal("delete", bld)}
-                >
-                  <MdOutlineDeleteForever className="mr-2" /> Delete
-                </div>
-              </ToggleDiv>,
-            ]}
-          />
-        ))}
+      <Table theadings={["ID", "Name", "Floors", "Rooms", "Actions"]} containerRef={containerRef} >
+        {filteredBuildings.length > 0 ? (
+          paginatedBuildings.map((bld, index) => (
+            <TableData
+              key={bld.id || index}
+              columns={[
+                bld.id,
+                bld.name,
+                bld.floor_count,
+                bld.room_per_floor,
+                <ToggleDiv buttonText="Actions" containerRef={containerRef}>
+                  <div className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal("read")} >
+                    <LuEye className="mr-2" /> View
+                  </div>
+                  <div className="px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal("update")} >
+                    <BiSolidEditAlt className="mr-2" /> Edit
+                  </div>
+                  <div className="px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal("delete")} >
+                    <MdOutlineDeleteForever className="mr-2" /> Delete
+                  </div>
+                </ToggleDiv>
+              ]}
+            />
+          ))
+        ) : (
+          <tr>
+            <td colSpan={7}>
+              <div className=" p-2 border border-gray-100">
+                No resorts found.
+              </div>
+            </td>
+          </tr>
+        )}
       </Table>
-    </div>
+
+      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredBuildings} />
+    </div >
   );
 };
-
 export default ManageBuildings;

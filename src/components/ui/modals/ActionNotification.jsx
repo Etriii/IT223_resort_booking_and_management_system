@@ -5,7 +5,7 @@ import { IoClose, IoCheckmarkCircleOutline, IoTrashOutline, IoWarningOutline, Io
 
 const ActionNotification = ({ children, variant = 'create', isOpen }) => {
 
-    const baseStyles = `absolute top-4 left-1/2 transform -translate-x-1/2  px-4 py-2 rounded shadow-md z-[601] flex  items-center   `;
+    const baseStyles = `absolute top-4 left-1/2 transform -translate-x-1/2  px-4 py-2 rounded shadow-md z-[501] flex  items-center   `;
 
     const variants = {
         create: {

@@ -142,10 +142,10 @@ const Modal = ({
     const { background, textColor, buttons } = getVariantStyles();
 
     return (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50">
-            <div className={`w-[90%] sm:w-96 rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background} ${textColor}`}  >
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black bg-opacity-50">
+            <div className={` rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background}`}  >
                 <div className={`flex justify-between items-center mb-2 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
-                    <h3 className="text-xl font-semibold">{title}</h3>
+                    <h3 className={`text-xl font-semibold  ${textColor}`}>{title}</h3>
                     <button onClick={onClose} className="text-gray-600 hover:text-gray-900" >
                         <IoClose className='size-7' />
                     </button>

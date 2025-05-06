@@ -21,4 +21,28 @@ class Resorts
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getResortByName($name)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE name = :name");
+        $stmt->execute(['name' => $name]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function createResort($data)
+    {
+        $stmt = $this->conn->prepare("
+        INSERT INTO {$this->table} 
+        (`name`, `location`, `location_coordinates`, `tax_rate`, `status`, `contact_details`) 
+        VALUES (:name, :location, :location_coordinates, :tax_rate, :status, :contact_details)
+        ");
+
+        return $stmt->execute([
+            ':name' => $data['name'],
+            ':location' => $data['location'],
+            ':location_coordinates' => $data['location_coordinates'],
+            ':tax_rate' => $data['tax_rate'],
+            ':status' => $data['status'],
+            ':contact_details' => $data['contact_details'],
+        ]);
+    }
 }

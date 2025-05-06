@@ -1,8 +1,8 @@
 import React from 'react'
 
-const DeleteResort = () => {
+const DeleteResort = ({ resort }) => {
   return (
-    <div>DeleteResort</div>
+    <div>DeleteResort with resort id of : {resort['id']}</div>
   )
 }
 

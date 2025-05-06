@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
@@ -6,7 +6,6 @@ import ToggleDiv from "../../components/ui/modals/ToggleDiv";
 
 import { FiFilter } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import { useState, useEffect } from "react";
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
@@ -15,15 +14,19 @@ import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 
 const Events = () => {
-
   const containerRef = useRef(null);
 
-  const [events, setEvents] = useState();
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notify, setNotify] = useState();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pageSize, setPageSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalVariant, setModalVariant] = useState("create");
+
   const openModal = (variant) => {
     setModalVariant(variant);
     setIsModalOpen(true);
@@ -61,16 +64,26 @@ const Events = () => {
           message: error.message || "Something went wrong!",
         });
       } finally {
-        const timer = setTimeout(() => {
-          setLoading(false);
-        }, 500);
-
-        return () => clearTimeout(timer);
+        setTimeout(() => setLoading(false), 500);
       }
     };
 
     fetchEvents();
   }, []);
+
+  const filteredEvents = events.filter((event) =>
+    event.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredEvents.length / pageSize);
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, pageSize]);
 
   return (
     <div>
@@ -87,51 +100,46 @@ const Events = () => {
             ? "Edit Item"
             : modalVariant === "delete"
             ? "Delete Item"
-            : modalVariant === "confirmation"
-            ? "Are you sure?"
             : "Information"
         }
-        message={
-          modalVariant === "create"
-            ? "Enter the details to create a new item."
-            : modalVariant === "read"
-            ? "Here are the details of the item."
-            : modalVariant === "update"
-            ? "Edit the details of the item."
-            : modalVariant === "delete"
-            ? "Are you sure you want to delete this item?"
-            : modalVariant === "confirmation"
-            ? "Please confirm your action."
-            : "This is some important information."
-        }
+        message="Please confirm your action."
         onConfirm={handleConfirm}
         onCancel={handleCancel}
-      ></Modal>
+      />
+
       {notify && (
         <ActionNotification isOpen={true} variant={`${notify.type}`}>
           {notify.message}
         </ActionNotification>
       )}
-      <div className="flex items-center justify-between flex-wrap">
+
+      <div className="flex items-center justify-between flex-wrap mb-4">
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100">
             <FiFilter className="text-lg" />
             Filter
           </button>
 
-          <select className="px-3 py-2 border rounded-md text-sm text-gray-700 focus: outline-green-600">
-            {[...Array(10)].map((_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {i + 1} entries
+          <select
+            className="px-3 py-2 border rounded-md text-sm text-gray-700 focus:outline-green-600"
+            value={pageSize}
+            onChange={(e) => setPageSize(parseInt(e.target.value))}
+          >
+            {[1, 2, 3, 4, 5, 6, 10].map((num) => (
+              <option key={num} value={num}>
+                {num} entries
               </option>
             ))}
           </select>
         </div>
+
         <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-2">
-            <span>Username:</span>
-            <InputField />
-          </div>
+          <InputField
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by Event Name"
+          />
+
           <button
             className="px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition flex space-x-1 items-center text-nowrap"
             onClick={() => openModal("create")}
@@ -140,9 +148,10 @@ const Events = () => {
           </button>
         </div>
       </div>
-      <Table theadings={["ID", "Name", "start_date", "end_date", "actions"]} containerRef={containerRef}>
-        {events && events.length > 0 ? (
-          events.map((event, index) => (
+
+      <Table theadings={["ID", "Name", "Start Date", "End Date", "Actions"]} isLoading={loading} containerRef={containerRef}>
+        {paginatedEvents && paginatedEvents.length > 0 ? (
+          paginatedEvents.map((event, index) => (
             <TableData
               key={event.id || index}
               columns={[
@@ -152,37 +161,80 @@ const Events = () => {
                 event.end_date || "2025-12-12",
                 <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                   <div
-                    className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
+                    className="px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer"
                     onClick={() => openModal("read")}
                   >
-                    {" "}
                     <LuEye className="size-5 mr-2" />
-                    View{" "}
+                    View
                   </div>
                   <div
-                    className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer"
+                    className="px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer"
                     onClick={() => openModal("update")}
                   >
-                    {" "}
                     <BiSolidEditAlt className="size-5 mr-2" />
-                    Edit{" "}
+                    Edit
                   </div>
                   <div
-                    className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer"
+                    className="px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer"
                     onClick={() => openModal("delete")}
                   >
-                    {" "}
                     <MdOutlineDeleteForever className="size-5 mr-2" />
-                    Delete{" "}
+                    Delete
                   </div>
                 </ToggleDiv>,
               ]}
             />
           ))
         ) : (
-          <tr></tr>
+          <tr>
+            <td colSpan={5} className="text-center py-4 text-gray-500">
+              No events found.
+            </td>
+          </tr>
         )}
       </Table>
+
+      <div className="flex justify-between items-center mt-4 flex-wrap">
+        <div>
+          <span>
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, filteredEvents.length)} of{" "}
+            {filteredEvents.length} entries
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
+          >
+            &laquo;
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i + 1}
+              className={`px-3 py-1 rounded-md ${
+                currentPage === i + 1
+                  ? "bg-green-500 text-white"
+                  : "text-green-500 hover:bg-green-100"
+              }`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
+          >
+            &raquo;
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

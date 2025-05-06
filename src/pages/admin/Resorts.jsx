@@ -22,28 +22,29 @@ const Resorts = () => {
     const containerRef = useRef(null);
 
     const [resorts, setResorts] = useState();
+
+    const fetchResorts = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getResorts`);
+            const data = await response.json();
+            setResorts(data);
+        } catch (error) {
+            setNotify({
+                open: true,
+                type: 'error',
+                message: error.message || 'Something went wrong!',
+            });
+        } finally {
+            const timer = setTimeout(() => {
+                setLoading(false);
+            }, 500);
+
+            return () => clearTimeout(timer);
+        }
+    };
+
     useEffect(() => {
-
         document.title = "Resorts | Ocean View";
-        const fetchResorts = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getResorts`);
-                const data = await response.json();
-                setResorts(data);
-            } catch (error) {
-                setNotify({
-                    type: 'error',
-                    message: error.message || 'Something went wrong!',
-                });
-            } finally {
-                const timer = setTimeout(() => {
-                    setLoading(false);
-                }, 500);
-
-                return () => clearTimeout(timer);
-            }
-        };
-
         fetchResorts();
     }, []);
 
@@ -58,19 +59,19 @@ const Resorts = () => {
 
         switch (variant) {
             case 'create':
-                children = <CreateResortModal handleFormInputChange={handleFormInputChange} formData={createResortForm} />;
+                children = <CreateResortModal handleCreateFormInputChange={handleCreateFormInputChange} formData={createResortForm} />;
                 modal_title = 'Create Resort';
                 break;
             case 'read':
-                children = <ReadResortModal />;
+                children = <ReadResortModal resort={resort} />;
                 modal_title = 'View Resort';
                 break;
             case 'update':
-                children = <UpdateResortModal />;
+                children = <UpdateResortModal resort={resort} />;
                 modal_title = 'Edit Resort';
                 break;
             case 'delete':
-                children = <DeleteResortModal />;
+                children = <DeleteResortModal resort={resort} />;
                 modal_title = 'Delete Resort';
                 break;
             case 'filter':
@@ -88,6 +89,8 @@ const Resorts = () => {
         setModal(prev => ({ ...prev, isOpen: false }));
     };
 
+
+    // Forms
     const [createResortForm, setCreateResortForm] = useState({
         values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
         errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
@@ -102,9 +105,8 @@ const Resorts = () => {
         resort_id: ''
     });
 
-
     //i forgot e lahi man day dapat mi sila :> 
-    const handleFormInputChange = (e) => {
+    const handleCreateFormInputChange = (e) => {
         const { name, value } = e.target;
         setCreateResortForm(prev => ({
             ...prev,
@@ -114,38 +116,50 @@ const Resorts = () => {
             }
         }));
     };
+    // END FORM
 
-    const handleConfirm = () => {
+    const handleConfirm = (resort) => {
 
         setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
         setNotify({}); //reset ang notif ni ha
 
         setTimeout(async () => {
             let result;
-            switch (modal.variant) {
-                case 'create':
-                    result = await createResort(createResortForm.values);
-                    break;
-                case 'update':
-                    result = await editResort(editResortForm.values);
-                    break;
-                case 'delete':
-                    result = await deleteResort(deleteResortForm.resort_id);
-                    break;
-                default:
-                    console.error('Unknown action mode');
-                    setModal(prev => ({ ...prev, loading: false }));
-                    return;
+
+            try {
+                switch (modal.variant) {
+                    case 'create':
+                        result = await createResort(createResortForm.values);
+                        break;
+                    case 'update':
+                        result = await editResort(editResortForm.values);
+                        break;
+                    case 'delete':
+                        result = await deleteResort(deleteResortForm.resort_id);
+                        break;
+                    default:
+                        throw new Error("Unknown action mode");
+                }
+            } catch (error) {
+                setModal(prev => ({ ...prev, loading: false }));
+                setNotify({
+                    open: true,
+                    type: 'error',
+                    message: error.message || 'Something went wrong!'
+                });
+                return;
             }
 
             setModal(prev => ({ ...prev, loading: false }));
 
             if (result.success) {
+                fetchResorts();
                 setNotify({
                     open: true,
                     type: modal.variant,
                     message: result.message
                 });
+                closeModal();
             } else {
                 setNotify({
                     open: true,
@@ -153,14 +167,12 @@ const Resorts = () => {
                     message: result.message
                 });
             }
-            closeModal();
-        }, 500);
-
+        }, 1000);
     };
 
     // Table Filters
 
-    const [filters, setFilters] = useState({ paginate: 10, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
+    const [filters, setFilters] = useState({ paginate: 1, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
 
     const filteredResorts = resorts?.filter(resort => {
         const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
@@ -183,7 +195,7 @@ const Resorts = () => {
             <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
             {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
-            <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} add_title={'Add Resort'} />
+            <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Resort Name', create_label: 'Add Resort' }} />
 
             <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading} containerRef={containerRef} >
                 {filteredResorts.length > 0 ? (
@@ -198,7 +210,7 @@ const Resorts = () => {
                                 resort.contact_details || '09633127462',
                                 resort.created_at || '2025-04-24',
                                 <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read')}> <LuEye className="size-5 mr-2" />View </div>
+                                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read', resort)}> <LuEye className="size-5 mr-2" />View </div>
                                     <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
                                     <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
                                 </ToggleDiv>

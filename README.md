@@ -145,7 +145,7 @@ Prerequisites:
 6. Access the application:
 
 ```bash
-   Open your browser and navigate to http://localhost:5173/?
+   Open your browser and navigate to http://localhost:5173/oceanview
 ```
 ## 📊 Project Analytics
 
@@ -154,11 +154,11 @@ Prerequisites:
 ## 🙏 Acknowledgments
 
 Developed by:
-- Patrica ? Cabelin
 - Jelou E. Capumpue
 - Alex, Jr. A. Aparece
 - Aldren Ross M. Luga
 - Micah Angela E. Floro
+- Patrica Marie H. Cabelin
 
 <div align="center">
 <img src="./src/assets/images/gif/dolphine.gif" alt="Ocean View Logo">
