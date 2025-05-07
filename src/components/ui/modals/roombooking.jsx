@@ -172,7 +172,7 @@ const RoomBookingModal = ({
                                         <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
                                             <Calendar className="h-5 w-5 text-gray-400" />
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                                 <div>
                                     <label htmlFor="days-of-stay" className="block text-gray-700 text-xs font-bold mb-2">DAYS OF STAY</label>
