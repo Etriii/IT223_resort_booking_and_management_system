@@ -68,4 +68,23 @@ class ResortsController
             ]);
         }
     }
+
+    public function destroyResort(Request $request)
+    {
+        if ($this->resortsModel->destroyResort($request->get('resort_id'))) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Resort Deleted Successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to delete Resort'
+            ]);
+        }
+    }
+    public function getResortAdminsByResortId(Request $request)
+    {
+        echo json_encode($this->resortsModel->getResortAdminsByResortId($request->get('resort_id')));
+    }
 }

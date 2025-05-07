@@ -24,4 +24,4 @@ const useFetchResorts = () => {
   return { resorts, loading, error };
 };
 
-export default useFetchResorts;
+export default useFetchResorts; 

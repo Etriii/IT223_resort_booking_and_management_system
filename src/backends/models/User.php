@@ -247,4 +247,15 @@ class User
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE email=" . $user_email);
         return $stmt->execute();
     }
+
+    public function logInUser($user_id)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO logged_in_users(`user_id`) VALUES (:user_id)");
+        $stmt->execute(['user_id' => $user_id]);
+    }
+    public function logOutUser($user_id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM logged_in_users WHERE user_id = :user_id");
+        $stmt->execute(['user_id' => $user_id]);
+    }
 }

@@ -156,11 +156,27 @@ class UserController
 
         $user_id = $this->userModel->createUser($username, $email, $password);
     }
-    
+
 
     public function deleteUser($request)
     {
         $user_id = $request->get('user_id');
         $result = $this->userModel->deleteUser($user_id);
+    }
+
+    public function setUserIDinDB(Request $request)
+    {
+        $_SESSION['user_id'] = $request->get('user_id');
+        echo json_encode(['user_id' => $request->get('user_id')]);
+    }
+
+    public function getSettedUserID()
+    {
+        echo json_encode(['user_id' => $_SESSION['user_id']]);
+    }
+
+    public function destroySettedUserID()
+    {
+        session_destroy();
     }
 }

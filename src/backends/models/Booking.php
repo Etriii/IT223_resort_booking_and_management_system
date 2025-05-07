@@ -24,19 +24,14 @@ class Booking
     {
     }
 
-    public function getBookingId($id)
-    {
-    }
-    public function getBookingByResortId($resort_id)
-    {
-    }
-    public function getBookingByRoomId($room_id)
-    {
+    public function getBookingId($id) {}
+    public function getBookingByResortId($resort_id) {
+       
     }
 
-    public function update()
-    {
-    }
+    public function getBookingByRoomId($room_id) {}
+    
+    public function update() {}
 
     public function destroy()
     {

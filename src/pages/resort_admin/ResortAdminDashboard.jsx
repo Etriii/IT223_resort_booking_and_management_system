@@ -66,7 +66,6 @@ const ResortAdminDashboard = () => {
           <BalanceCard title="Upcoming Balance"/>
         </div>
         <div className="col-span-8 bg-gray-200 p-1 rounded-lg">
-          <h1 className="text-2xl font-semibold p-2 tracking-wide">Latest Bookings</h1>
         <Table theadings={["Name", "Building Name", "Floor|Room No.", "Room Type", "No. of Nights","Payment Type","Amount"]}>
         {buildings && buildings.length > 0 ? (
           buildings.map((building, index) => (

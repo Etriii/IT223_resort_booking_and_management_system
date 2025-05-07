@@ -1,10 +1,29 @@
-const deleteResort = async (resortId) => {
-    console.log("Deleting resort with ID:", resortId);
+const deleteResort = async (resort_id) => {
+    try {
+        const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=destroyResort`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resort_id })
+        });
 
-    return {
-        success: true,
-        message: "Resort Successfully Deleted!"
-    };
+        const data = await response.json();
+
+        if (data.error) {
+            return {
+                success: false,
+                message: data.error
+            };
+        }
+        return {
+            success: data.success,
+            message: data.message
+        };
+    } catch (e) {
+        return {
+            success: false,
+            message: e.message
+        };
+    }
 };
 
 export default deleteResort;
