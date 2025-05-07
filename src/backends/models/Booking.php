@@ -20,7 +20,9 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create() {}
+    public function create()
+    {
+    }
 
     public function getBookingId($id) {}
     public function getBookingByResortId($resort_id) {
@@ -31,5 +33,7 @@ class Booking
     
     public function update() {}
 
-    public function destroy() {}
+    public function destroy()
+    {
+    }
 }
