@@ -98,6 +98,7 @@ const Login = () => {
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));
 
+                    // fetch(`http://localhost:8000/api.php?controller=User&action=setUserIDinDB&user_id=5`);
                     const role = await fetchUserRoles();
                     redirectLogIn(role[0]);
                 }

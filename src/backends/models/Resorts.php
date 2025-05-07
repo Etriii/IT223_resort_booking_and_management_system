@@ -45,4 +45,17 @@ class Resorts
             ':contact_details' => $data['contact_details'],
         ]);
     }
+
+    public function destroyResort($resort_id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM resorts WHERE id = :resort_id");
+        return $stmt->execute(['resort_id' => $resort_id]);
+    }
+
+    public function getResortAdminsByResortId($resort_id)
+    {
+        $stmt = $this->conn->prepare("SELECT users.username, users.id, roles.role FROM user_roles LEFT JOIN users ON users.id = user_id LEFT JOIN roles ON roles.id = role_id  WHERE resort_id = :resort_id");
+        $stmt->execute(['resort_id' => $resort_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

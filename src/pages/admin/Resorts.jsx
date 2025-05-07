@@ -22,6 +22,20 @@ const Resorts = () => {
     const containerRef = useRef(null);
 
     const [resorts, setResorts] = useState();
+    // Forms
+    const [createResortForm, setCreateResortForm] = useState({
+        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+    });
+
+    const [editResortForm, setEditResortForm] = useState({
+        values: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
+        errors: { id: '', name: 'ss', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
+    });
+
+    const [deleteResortForm, setDeleteResortForm] = useState({
+        resort_id: ''
+    });
 
     const fetchResorts = async () => {
         try {
@@ -67,11 +81,22 @@ const Resorts = () => {
                 modal_title = 'View Resort';
                 break;
             case 'update':
-                children = <UpdateResortModal resort={resort} />;
+                // setEditResortForm({
+                //     values: {
+                //         id: resort.id || '',
+                //         name: resort.name || '',
+                //         location: resort.location || '',
+                //         location_coordinates: resort.location_coordinates || '',
+                //         tax_rate: resort.tax_rate || '',
+                //         status: resort.status || '',
+                //         contact_details: resort.contact_details || '',
+                //     }
+                // });
+                children = <UpdateResortModal resort={resort} handleEditFormInputChange={handleEditFormInputChange} editResortForm={{ values: resort }} />;
                 modal_title = 'Edit Resort';
                 break;
             case 'delete':
-                children = <DeleteResortModal resort={resort} />;
+                children = <DeleteResortModal resort={resort} setDeleteResortForm={setDeleteResortForm} />;
                 modal_title = 'Delete Resort';
                 break;
             case 'filter':
@@ -81,29 +106,37 @@ const Resorts = () => {
             default:
                 children = <>Nahh wala</>;
         }
-
         setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
     };
+
+    // useEffect(() => {
+    //     if (modal.variant === 'update' && Object.keys(editResortForm.values).some(key => editResortForm.values[key] !== '')) {
+    //         setModal({
+    //             isOpen: true,
+    //             variant: 'update',
+    //             children: <UpdateResortModal handleEditFormInputChange={handleEditFormInputChange} editResortForm={editResortForm} />,
+    //             loading: false,
+    //             title: 'Edit Resort'
+    //         });
+    //     }
+    // }, [modal.variant, editResortForm]);
+
+    // Modal rendering:
+    // {
+    //     modal.isOpen && (
+    //         modal.variant === 'update' ? (
+    //             isOpeningUpdateModal ? (
+    //                 <UpdateResortModal handleEditFormInputChange={handleEditFormInputChange} editResortForm={editResortForm} />
+    //             ) : null // Or a loading state if needed
+    //         ) : (
+    //             modal.children
+    //         )
+    //     )
+    // }
 
     const closeModal = () => {
         setModal(prev => ({ ...prev, isOpen: false }));
     };
-
-
-    // Forms
-    const [createResortForm, setCreateResortForm] = useState({
-        values: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
-        errors: { name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
-    });
-
-    const [editResortForm, setEditResortForm] = useState({
-        values: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', contact_details: '' },
-        errors: { id: '', name: '', location: '', location_coordinates: '', tax_rate: '', status: '', email: '', contact_details: '' }
-    });
-
-    const [deleteResortForm, setDeleteResortForm] = useState({
-        resort_id: ''
-    });
 
     //i forgot e lahi man day dapat mi sila :> 
     const handleCreateFormInputChange = (e) => {
@@ -116,9 +149,26 @@ const Resorts = () => {
             }
         }));
     };
+
+    // const handleEditFormInputChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setEditResortForm(prev => ({
+    //         ...prev,
+    //         values: {
+    //             ...prev.values,
+    //             [name]: value
+    //         }
+    //     }));
+    // };
+    const handleEditFormInputChange = (allValues) => {
+        setEditResortForm(prev => ({
+            ...prev,
+            values: allValues
+        }));
+    };
     // END FORM
 
-    const handleConfirm = (resort) => {
+    const handleConfirm = () => {
 
         setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
         setNotify({}); //reset ang notif ni ha
@@ -132,6 +182,7 @@ const Resorts = () => {
                         result = await createResort(createResortForm.values);
                         break;
                     case 'update':
+                        // console.log(editResortForm.values);
                         result = await editResort(editResortForm.values);
                         break;
                     case 'delete':
@@ -172,7 +223,7 @@ const Resorts = () => {
 
     // Table Filters
 
-    const [filters, setFilters] = useState({ paginate: 1, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
+    const [filters, setFilters] = useState({ paginate: 10, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
 
     const filteredResorts = resorts?.filter(resort => {
         const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
@@ -210,9 +261,9 @@ const Resorts = () => {
                                 resort.contact_details || '09633127462',
                                 resort.created_at || '2025-04-24',
                                 <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => openModal('read', resort)}> <LuEye className="size-5 mr-2" />View </div>
-                                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('update')}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
-                                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => openModal('delete')}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
+                                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', resort) }}> <LuEye className="size-5 mr-2" />View </div>
+                                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', resort) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
+                                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', resort) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
                                 </ToggleDiv>
                             ]}
                         />

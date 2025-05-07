@@ -36,7 +36,7 @@ const Modal = ({
     const initial_heading_theme = {
         create: 'bg-teal-50 text-teal-800',
         read: 'bg-blue-50 text-blue-800',
-        update: 'bg-yellow-50 text-yellow-800',
+        update: 'bg-gray-50 text-yellow-800',
         delete: 'bg-red-50 text-red-800',
     };
 
@@ -69,7 +69,7 @@ const Modal = ({
                 };
             case 'update':
                 return {
-                    background: 'bg-yellow-50',
+                    background: 'bg-gray-50',
                     textColor: 'text-yellow-800',
                     buttons: (
                         <>
@@ -143,8 +143,8 @@ const Modal = ({
 
     return (
         <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black bg-opacity-50">
-            <div className={` rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background}`}  >
-                <div className={`flex justify-between items-center mb-2 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
+            <div className={` max-w-[90%] rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background}`}  >
+                <div className={`flex justify-between items-center mb-2 z-10 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
                     <h3 className={`text-xl font-semibold  ${textColor}`}>{title}</h3>
                     <button onClick={onClose} className="text-gray-600 hover:text-gray-900" >
                         <IoClose className='size-7' />

@@ -76,7 +76,7 @@ import { Routes, Route } from "react-router-dom";
 import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layouts';
 
 //Admin Page 
-import { AdminDashboard, Resorts, Users, AdminMyAccount, AdminActivityLogs } from "./pages/admin";
+import { AdminDashboard, Resorts, Users, AdminMyAccount, AdminActivityLogs, FullScreenMap } from "./pages/admin";
 
 //Resort Admin Page
 import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount, ReportAndAnalytics, ResortActivityLogs, ResortSchedules } from './pages/resort_admin';
@@ -170,6 +170,7 @@ const App = () => {
 
       {/* Catch-all Route for 404 Page */}
       <Route path="*" element={<PageNotFound />} />
+      <Route path='full-map' element={<FullScreenMap />} />
     </Routes>
   );
 };

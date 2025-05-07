@@ -82,8 +82,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
                     <div className="relative">
                         <div className=" p-1 bg-gray-100 hover:bg-gray-200 rounded-full relative">
                             <div className=" cursor-pointer size-8 text-gray-700" onClick={() => handleOpenProfile()} >
-                                {userProfile ? <img src={`/images/user_profiles/${userProfile}`} className="w-full h-full rounded-full" alt="User Profile" /> : <FaRegUserCircle className="w-full h-full" />
-                                }
+                                <img src={userProfile ? `${userProfile}` : '/images/user_profiles/default_profile.png'} className="w-full h-full rounded-full" alt="User Profile" />
                             </div>
                             <div className=" flex justify-center items-center size-4 border-2 border-white rounded-full absolute bottom-0 right-0 bg-gray-100 pointer-events-none">
                                 <IoIosArrowDown className={` duration-75 ${isOpenProfile ? 'rotate-180' : ''}`} />

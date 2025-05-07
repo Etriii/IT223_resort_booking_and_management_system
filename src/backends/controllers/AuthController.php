@@ -43,42 +43,44 @@ class AuthController
             return;
         }
 
+        $this->userModel->logInUser($user['id']);
+
         echo json_encode(["message" => "Login successful", "user" => $user]);
     }
 
     public function register(Request $request)
     {
         $data = json_decode(file_get_contents('php://input'), true);
-    
+
         $name = $data['username'] ?? null;
         $email = $data['email'] ?? null;
         $password = $data['password'] ?? null;
-    
+
         if (!$name || !$email || !$password) {
             echo json_encode(["success" => false, "message" => "All fields are required"]);
             return;
         }
-    
+
         if ($this->userModel->getUserByUsername($name)) {
             echo json_encode(["success" => false, "message" => "Username already exists"]);
             return;
         }
-    
+
         if ($this->userModel->getUserByEmail($email)) {
             echo json_encode(["success" => false, "message" => "Email already exists"]);
             return;
         }
-    
-         $success = $this->userModel->createUser($name, $email, $password);
-    
+
+        $success = $this->userModel->createUser($name, $email, $password);
+
         if ($success) {
             echo json_encode(["success" => true, "message" => "User registered successfully"]);
         } else {
             echo json_encode(["success" => false, "message" => "Failed to register"]);
         }
     }
-    
-    
+
+
     // public function getUser()
     // {
     //     session_start();
@@ -91,10 +93,11 @@ class AuthController
     //     echo json_encode($this->userModel->getUserById($_SESSION['user_id']));
     // }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session_start();
-        session_destroy();
+        $this->userModel->logOutUser($request->get('user_id'));
+        // session_start();
+        // session_destroy();
         echo json_encode(['message' => 'Logged out successfully']);
     }
 }
