@@ -5,15 +5,22 @@ require_once __DIR__ . '/../core/Request.php';
 
 class BookingsController
 {
-    private $eventsModel;
+    private $bookingsModel;
 
     public function __construct()
     {
-        $this->eventsModel = new Booking();
+        $this->bookingsModel = new Booking();
     }
 
     public function getBookings()
     {
-        echo json_encode($this->eventsModel->getBookings());
+        echo json_encode($this->bookingsModel->getBookings());
+
     }
+    public function getBookingsByResortId(Request $request)
+{
+    $resort_id = $request->get('resort_id');
+    echo json_encode($this->bookingsModel->getBookingByResortId($resort_id));
 }
+}
+

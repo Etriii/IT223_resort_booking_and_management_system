@@ -20,16 +20,25 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create() {}
-
-    public function getBookingId($id) {}
-    public function getBookingByResortId($resort_id) {
-       
+    public function create()
+    {
     }
 
-    public function getBookingByRoomId($room_id) {}
-    
-    public function update() {}
+    public function getBookingId($id)
+    {
+    }
+    public function getBookingByResortId($resort_id)
+    {
+    }
+    public function getBookingByRoomId($room_id)
+    {
+    }
 
-    public function destroy() {}
+    public function update()
+    {
+    }
+
+    public function destroy()
+    {
+    }
 }

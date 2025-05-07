@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const CarouselImageCard = ({ label, title }) => {
-  const parentStyle = "col-span-1 sm:col-span-3 lg:col-span-2";
+const CarouselImageCard = ({ title,styles }) => {
 
   const [imageUrl, setImageUrl] = useState("");
 
@@ -34,7 +33,7 @@ const CarouselImageCard = ({ label, title }) => {
 
   return (
     <>
-      <div className={parentStyle}>
+      <div className={`${styles}`}>
         <label class="title bold mb-2 text-lg tracking-wider font-medium text-gray-700">
           {title}
         </label>
