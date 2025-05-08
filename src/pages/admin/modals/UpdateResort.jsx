@@ -27,11 +27,22 @@
 
 // export default UpdateResort
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import InputField from '../../../components/ui/form/InputField';
 
+
+import Table from '../../../components/ui/table/Table';
+import TableData from '../../../components/ui/table/TableData';
+
+import { useFetchUsersWithRoles } from '../../../hooks';
+
+
 const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => {
+  const containerRef = useRef();
+
   const [localFormValues, setLocalFormValues] = useState({ ...editResortForm.values });
+
+  const { admins, loading, error } = useFetchUsersWithRoles(resort.id);
 
   useEffect(() => {
     setLocalFormValues({ ...editResortForm.values });
@@ -66,7 +77,7 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
                 onChange={handleLocalInputChange}
                 name={'name'}
                 required={true}
-              />  
+              />
               <InputField
                 type="text"
                 label={'Location'}
@@ -95,8 +106,24 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
           </div>
         </div>
       </div>
-      <div className='h-lvh'>
-        tables ni here for mga admins. witch searching
+      <div className=''>
+        <div className='p-1 flex justify-between items-center'><div>Resort Admins</div><div className='p-2 bg-green-600 text-white size-7 flex justify-center items-center rounded-full hover:cursor-pointer'>+</div></div>
+        <Table theadings={['user_id', 'Username', 'Role']} isLoading={loading} containerRef={containerRef} >
+          {admins.length > 0 ? (
+            admins.map((admin, index) => (
+              <TableData
+                key={index}
+                columns={[
+                  admin.id,
+                  admin.username || 'Unknown',
+                  admin.role || "Secret"
+                ]}
+              />
+            ))
+          ) : (
+            <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Admins found.</div></td></tr>
+          )}
+        </Table>
       </div>
     </div>
   );

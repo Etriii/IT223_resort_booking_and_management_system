@@ -6,6 +6,7 @@ import TableData from '../../../components/ui/table/TableData';
 
 import { useFetchUsersWithRoles } from '../../../hooks';
 
+
 const ReadResortModal = ({ resort }) => {
 
   // if (!resort) return null;

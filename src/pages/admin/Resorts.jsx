@@ -223,7 +223,7 @@ const Resorts = () => {
 
     // Table Filters
 
-    const [filters, setFilters] = useState({ paginate: 1, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
+    const [filters, setFilters] = useState({ paginate: 10, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
 
     const filteredResorts = resorts?.filter(resort => {
         const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());

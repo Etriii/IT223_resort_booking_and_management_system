@@ -258,4 +258,11 @@ class User
         $stmt = $this->conn->prepare("DELETE FROM logged_in_users WHERE user_id = :user_id");
         $stmt->execute(['user_id' => $user_id]);
     }
+
+    public function yes()
+    {
+        $stmt = $this->conn->prepare("SELECT @user_id AS user_id;");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

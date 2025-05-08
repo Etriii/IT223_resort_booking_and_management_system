@@ -28,9 +28,9 @@ class Database
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-                session_start();
-                if (isset($_SESSION['user_id'])) {
-                    $userId = (int) $_SESSION['user_id'];
+                // session_start();
+                if (isset($_COOKIE['user_id'])) {
+                    $userId = (int) $_COOKIE['user_id'];
                     $stmt = $this->conn->prepare("SET @user_id = :user_id");
                     $stmt->execute(['user_id' => $userId]);
                 }
