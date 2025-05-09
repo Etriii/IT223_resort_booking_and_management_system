@@ -96,12 +96,12 @@ const Login = () => {
                     }
                 } else {
 
-                    
+
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));
 
                     const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString();
-                    document.cookie = `user_id=${data.user['id']}; expires=${expires};` + "; path=/ ; Secure=true; SameSite=Strict";
+                    document.cookie = `user_id=${data.user['id']}; expires=${expires};` + "; path=/ ;";
 
                     // fetch(`http://localhost:8000/api.php?controller=User&action=setUserIDinDB&user_id=5`);
 

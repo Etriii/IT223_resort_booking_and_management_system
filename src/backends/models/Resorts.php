@@ -30,6 +30,7 @@ class Resorts
 
     public function createResort($data)
     {
+
         $stmt = $this->conn->prepare("
         INSERT INTO {$this->table} 
         (`name`, `location`, `location_coordinates`, `tax_rate`, `status`, `contact_details`) 

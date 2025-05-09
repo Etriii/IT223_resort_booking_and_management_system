@@ -33,7 +33,10 @@ class Database
                     $userId = (int) $_COOKIE['user_id'];
                     $stmt = $this->conn->prepare("SET @user_id = :user_id");
                     $stmt->execute(['user_id' => $userId]);
-                }
+                } 
+                // else { this is the error
+                //     $this->conn->exec("SET @user_id = 2");
+                // }
             } catch (PDOException $e) {
                 die(json_encode(["error" => "Database Connection Failed: " . $e->getMessage()]));
             }
