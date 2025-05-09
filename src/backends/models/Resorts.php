@@ -47,6 +47,36 @@ class Resorts
         ]);
     }
 
+    public function updateResort($id, $data)
+    {
+        try {
+            $setParts = [];
+            $params = [];
+
+            foreach ($data as $key => $value) {
+                $setParts[] = "`$key` = :$key";
+                $params[":$key"] = $value;
+            }
+
+            if (empty($setParts)) {
+                return false;
+            }
+
+            $setClause = implode(', ', $setParts);
+            $sql = "UPDATE {$this->table} SET $setClause WHERE id = :id";
+            $params[':id'] = $id;
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+
+
     public function destroyResort($resort_id)
     {
         $stmt = $this->conn->prepare("DELETE FROM resorts WHERE id = :resort_id");

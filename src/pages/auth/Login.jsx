@@ -8,6 +8,8 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { PiWarningCircleBold } from "react-icons/pi";
 
+import { apiFetch } from '../../utils/apiFetch';
+
 const Login = () => {
     const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ const Login = () => {
     const [errorPassword, setErrorPassword] = useState("");
 
     const fetchUserRoles = async () => {
-        const response = await fetch(`http://localhost:8000/api.php?controller=UserRoles&action=getUserRoles&user_id=${localStorage.getItem('user_id')}`);
+        const response = await apiFetch(`controller=UserRoles&action=getUserRoles&user_id=${localStorage.getItem('user_id')}`);
 
         if (!response.ok) {
             throw new Error(`Http Error! Status: ${response.status} `);
@@ -69,7 +71,7 @@ const Login = () => {
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         try {
-            const response = await fetch(`http://localhost:8000/api.php?controller=Auth&action=login`, {
+            const response = await apiFetch(`controller=Auth&action=login`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -95,7 +97,6 @@ const Login = () => {
                         }
                     }
                 } else {
-
 
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));

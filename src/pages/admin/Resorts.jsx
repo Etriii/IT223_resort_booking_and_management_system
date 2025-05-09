@@ -16,6 +16,7 @@ import ActionNotification from "../../components/ui/modals/ActionNotification";
 import { CreateResortModal, ReadResortModal, UpdateResortModal, DeleteResortModal, FilterModal } from "./modals";
 
 import { createResort, editResort, deleteResort } from '../../services';
+import { apiFetch } from '../../utils/apiFetch';
 
 const Resorts = () => {
 
@@ -39,7 +40,7 @@ const Resorts = () => {
 
     const fetchResorts = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getResorts`);
+            const response = await apiFetch(`controller=Resorts&action=getResorts`);
             const data = await response.json();
             setResorts(data);
         } catch (error) {

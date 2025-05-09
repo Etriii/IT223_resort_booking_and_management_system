@@ -35,6 +35,7 @@ import Table from '../../../components/ui/table/Table';
 import TableData from '../../../components/ui/table/TableData';
 
 import { useFetchUsersWithRoles } from '../../../hooks';
+import SelectField from '../../../components/ui/form/SelectField';
 
 
 const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => {
@@ -46,17 +47,22 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
 
   useEffect(() => {
     setLocalFormValues({ ...editResortForm.values });
+
+    if (handleEditFormInputChange) {
+      handleEditFormInputChange({ ...editResortForm.values });
+    }
   }, [editResortForm]);
 
   const handleLocalInputChange = (e) => {
     const { name, value } = e.target;
-    setLocalFormValues(prev => ({
-      ...prev,
+    const updatedFormValues = {
+      ...localFormValues,
       [name]: value,
-    }));
-    // Send the entire localFormValues to the parent on every change
+    };
+    setLocalFormValues(updatedFormValues);
+
     if (handleEditFormInputChange) {
-      handleEditFormInputChange(localFormValues);
+      handleEditFormInputChange(updatedFormValues);
     }
   };
 
@@ -102,6 +108,11 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
                 name={'tax_rate'}
                 required={true}
               />
+              <SelectField label={'status'} name={'status'} value={localFormValues.status} options={[
+                { value: '', label: 'All' },
+                { value: "active", label: "Active" },
+                { value: "deactivated", label: "Deactivate" },
+              ]} onChange={handleLocalInputChange} />
             </div>
           </div>
         </div>
