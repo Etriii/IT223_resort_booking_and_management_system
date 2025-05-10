@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../config/Database.php';
-
+// NEXT TIME NALANG KITA E USE :< HENDE PALA FWEDE
 class Model
 {
     protected $conn;

@@ -154,9 +154,11 @@ class User
         $stmt = $this->conn->prepare("
         SELECT 
             users.*, 
-            GROUP_CONCAT(user_roles.role_id) AS roles
+            GROUP_CONCAT(user_roles.role_id) AS roles, 
+            resorts.name as resort_name
         FROM users
         LEFT JOIN user_roles ON users.id = user_roles.user_id
+        LEFT JOIN resorts ON resorts.id = user_roles.resort_id
         GROUP BY users.id
         ");
 

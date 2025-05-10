@@ -44,7 +44,7 @@ import { DeleteUserRoleModal, CreateUserRoleModal } from './';
 
 import ActionNotification from '../../../components/ui/modals/ActionNotification';
 
-import { deleteUserRoleOfAdmin } from '../../../services';
+import { deleteUserRoleOfAdmin, createUserRoleOfAdmin } from '../../../services';
 
 const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => {
   const containerRef = useRef();
@@ -76,13 +76,14 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
 
 
 
-  const [createUserRoleForm, setCreateUserRoleForm] = useState({});
-  const [deleteUserRoleForm, setDeleteUserRoleForm] = useState({ user_role_id: '' });
 
-  const handleCreateResortRoleFormChange = (e) => {
-    const { name, value } = e.target;
-    setCreateUserRoleForm(prev => ({...prev, [name]: value}));
-  }
+
+  const [createUserRoleForm, setCreateUserRoleForm] = useState({
+    user_id: '',
+    role_id: 3,
+    resort_id: resort.id,
+  });
+  const [deleteUserRoleForm, setDeleteUserRoleForm] = useState({ user_role_id: '' });
 
 
   const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
@@ -94,8 +95,8 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
 
     switch (variant) {
       case 'create':
-        children = <CreateUserRoleModal handleCreateResortRoleFormChange={handleCreateResortRoleFormChange} formData={createUserRoleForm} />;
-        modal_title = 'Add Admin';
+        children = <CreateUserRoleModal setCreateUserRoleForm={setCreateUserRoleForm} />;
+        modal_title = 'Add Role on Admin';
         break;
       case 'delete':
         // alert(JSON.stringify(userRole));
@@ -127,7 +128,8 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
       try {
         switch (modal.variant) {
           case 'create':
-            // result = await createResort(createResortForm.values);
+            // console.log(JSON.stringify(createUserRoleForm));
+            result = await createUserRoleOfAdmin(createUserRoleForm);
             break;
           case 'delete':
             result = await deleteUserRoleOfAdmin(deleteUserRoleForm.user_role_id);
@@ -222,23 +224,25 @@ const UpdateResort = ({ handleEditFormInputChange, editResortForm, resort }) => 
         <div className=''>
           <div className={` sticky top-[3.5rem]`}>
             <div className='p-1 flex justify-between items-center'><div>Resort Admins</div><div className='p-2 bg-green-600 text-white size-7 flex justify-center items-center rounded-full hover:cursor-pointer' onClick={() => { openModal('create') }}>+</div></div>
-            <Table theadings={['user_id', 'Username', 'Role', 'action']} isLoading={loading} containerRef={containerRef} >
-              {admins.length > 0 ? (
-                admins.map((admin, index) => (
-                  <TableData
-                    key={index}
-                    columns={[
-                      admin.user_id,
-                      admin.username || 'Unknown',
-                      admin.role || "Secret",
-                      <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', admin) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Remove </div>
-                    ]}
-                  />
-                ))
-              ) : (
-                <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Admins found.</div></td></tr>
-              )}
-            </Table>
+            <div className={`max-h-96 overflow-y-auto`}>
+              <Table theadings={['user_id', 'Username', 'Role', 'action']} isLoading={loading} containerRef={containerRef} >
+                {admins.length > 0 ? (
+                  admins.map((admin, index) => (
+                    <TableData
+                      key={index}
+                      columns={[
+                        admin.user_id,
+                        admin.username || 'Unknown',
+                        admin.role || "Secret",
+                        <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', admin) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Remove </div>
+                      ]}
+                    />
+                  ))
+                ) : (
+                  <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Admins found.</div></td></tr>
+                )}
+              </Table>
+            </div>
           </div>
         </div>
       </div>

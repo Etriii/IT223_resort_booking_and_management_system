@@ -1,32 +1,32 @@
 import { useState, useEffect } from "react";
 
-const useFetchUsersWithRoles = (resort_id) => {
+const useFetchUsers = () => {
 
-    const [admins, setAdmins] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchAdmins = async () => {
+    const fetchUsers = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getResortAdminsByResortId&resort_id=${resort_id}`);
+            const response = await fetch(`http://localhost:8000/api.php?controller=User&action=getAllUsers`);
             const data = await response.json();
-            setAdmins(data);
+            setUsers(data);
         } catch (err) {
             setError(err.message || "Something went wrong!");
         } finally {
             const timer = setTimeout(() => {
                 setLoading(false);
-            }, 0);
+            }, 500);
 
             return () => clearTimeout(timer);
         }
     };
 
     useEffect(() => {
-        fetchAdmins();
+        fetchUsers();
     }, []);
 
-    return { admins, loading, error, fetchAdmins };
+    return { users, loading, error, fetchUsers };
 };
 
-export default useFetchUsersWithRoles; 
+export default useFetchUsers; 

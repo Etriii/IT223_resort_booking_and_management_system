@@ -1,24 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 
 import InputField from "../../../components/ui/form/InputField";
 import SelectField from "../../../components/ui/form/SelectField";
-const CreateUserRoleModal = ({ handleCreateResortRoleFormChange, formData }) => {
+import { useFetchUser } from "../../../hooks";
+import { CgNpm } from "react-icons/cg";
 
+const CreateUserRoleModal = ({ setCreateUserRoleForm }) => {
 
+    const { users, loading, error, fetchUsers } = useFetchUser();
+
+    const options = users.filter(user => user.roles == null) //tanggalon raing filter if gusto ipa see ang mga users
+        .map(user => ({
+            value: user.id,
+            label: user.username
+        }));
+
+    // const [selectedUser, setSelectedUser] = useState(null);
+    // const [selectedRole, setSelectedRole] = useState(null);
+
+    // const [optionError, setOptionError] = useState(false);
+    // console.log(JSON.stringify(users));
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         if (optionError) {
+    //             setOptionError(!optionError);
+    //         }
+    //     }, 5000);
+    // }, [optionError]);
+
+    const handleSelectUser = (option) => {
+        // setSelectedUser(option);
+        setCreateUserRoleForm(prev => ({ ...prev, user_id: option.value }));
+    }
+
+    const handleSelectUserRole = (e) => {
+        // const value = e.target.value;
+        // setSelectedRole(value);
+        setCreateUserRoleForm(prev => ({ ...prev, role_id: e.target.value }));
+    }
 
     return (
         <div className="space-y-2 w-80" >
-            <InputField type="text" label={'Resort Name'} onChange={handleCreateResortRoleFormChange} name={'name'} required={true} />
-            <InputField type="text" label={'Location'} onChange={handleCreateResortRoleFormChange} name={'location'} required={true} />
-            <InputField type="text" label={'Location Coordinates'} onChange={handleCreateResortRoleFormChange} name={'location_coordinates'} required={true} />
-            <InputField type="number" label={'Tax Rate'} onChange={handleCreateResortRoleFormChange} name={'tax_rate'} required={true} />
-            {/* <SelectField label="Status" name="status" onChange={handleFormInputChange}
+            {/* <InputField type="text" label={'Username'} onChange={handleCreateResortRoleFormChange} name={'name'} required={true} /> */}
+
+            <Select options={options} onChange={(option) => handleSelectUser(option)} />
+
+            {/* {optionError &&
+                <div className={`text-red-600`}>This user is already an admin on a resort</div>
+            } */}
+
+            <SelectField label="Role Type" name="role_id" onChange={handleSelectUserRole}
                 options={[
-                    { value: "active", label: "Active" },
-                    { value: "deactivated", label: "Deactivate" },
+                    { value: 3, label: "Resort Admin" },
+                    { value: 2, label: "Resort Super Admin" },
                 ]} required
-            /> */}
-            <InputField type="number" label={'Contact Details'} onChange={handleCreateResortRoleFormChange} name={'contact_details'} required={true} />
+            />
+
+            {/* {selectedUser && (
+                <p>Selected User: {selectedUser.label}</p>
+            )}
+
+            {selectedRole && (
+                <p>Selected Role ID: {selectedRole}</p>
+            )}
+
+
+            {createUserRoleForm &&
+                <div>
+                    user_id: {createUserRoleForm.user_id} <br />
+                    role_id: {createUserRoleForm.role_id}
+                </div>
+            } */}
         </div>
     );
 }
