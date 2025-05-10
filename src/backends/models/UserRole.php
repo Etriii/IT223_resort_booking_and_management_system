@@ -22,6 +22,9 @@ class UserRole
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    
-    
+    public function deleteUserRole($user_role_id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id = :id");
+        return $stmt->execute(['id' => $user_role_id]);
+    }
 }

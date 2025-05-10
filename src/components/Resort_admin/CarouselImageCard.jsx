@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-const CarouselImageCard = ({ title,styles }) => {
+const CarouselImageCard = ({ title, styles }) => {
 
   const [imageUrl, setImageUrl] = useState("");
 
@@ -32,21 +32,20 @@ const CarouselImageCard = ({ title,styles }) => {
   };
 
   return (
-    <>
-      <div className={`${styles}`}>
-        <label class="title bold mb-2 text-lg tracking-wider font-medium text-gray-700">
-          {title}
-        </label>
-        {imageUrl ?(
-          <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg">
+    <div className={`${styles}`}>
+      <label className="title bold mb-2 text-lg tracking-wider font-medium text-gray-700">
+        {title}
+      </label>
+      {imageUrl ? (
+        <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg">
           <img
             src={imageUrl}
             alt="Uploaded"
             className="w-full h-full object-cover"
           />
-          </div>
-        ) : (
-          <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg p-6 ">
+        </div>
+      ) : (
+        <div className="flex flex-col items-center h-[40lvh] justify-center border bg-gray-200 rounded-lg p-6 ">
           <label className="flex flex-col items-center justify-center cursor-pointer text-center w-full h-full gap-1">
             <FaCloudUploadAlt className="text-[7rem] text-gray-400" />
             <span className="font-bold z-0">Upload Image</span>
@@ -61,9 +60,8 @@ const CarouselImageCard = ({ title,styles }) => {
             />
           </label>
         </div>
-        )} 
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 

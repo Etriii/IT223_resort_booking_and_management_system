@@ -25,7 +25,14 @@ class Resorts
     {
         $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE name = :name");
         $stmt->execute(['name' => $name]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getResortByContactDetails($contact_details)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE contact_details = :contact_details");
+        $stmt->execute(['contact_details' => $contact_details]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function createResort($data)
@@ -85,7 +92,7 @@ class Resorts
 
     public function getResortAdminsByResortId($resort_id)
     {
-        $stmt = $this->conn->prepare("SELECT users.username, users.id, roles.role FROM user_roles LEFT JOIN users ON users.id = user_id LEFT JOIN roles ON roles.id = role_id  WHERE resort_id = :resort_id");
+        $stmt = $this->conn->prepare("SELECT user_roles.id, users.username, users.id as user_id, roles.role, resorts.name as resort_name FROM user_roles LEFT JOIN users ON users.id = user_id LEFT JOIN roles ON roles.id = role_id LEFT JOIN resorts ON resorts.id = user_roles.resort_id  WHERE resort_id = :resort_id");
         $stmt->execute(['resort_id' => $resort_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

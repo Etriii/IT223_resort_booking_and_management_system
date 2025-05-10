@@ -120,11 +120,12 @@ const App = () => {
             {/* I think mag add dri og mga incoming reservations */}
             <Route path="reservations" element={<Reservations />} />
             <Route path="schedules" element={<ResortSchedules />} />
-            <Route path="events" element={<Events />} />
-            <Route path="reportsandanalytics" element={<ReportAndAnalytics />} />
-            <Route path="activitylogs" element={<ResortActivityLogs />} />
 
-
+            <Route element={<ProtectedRoute allowedRoles={['resort_super_admin']} />}>
+              <Route path="events" element={<Events />} />
+              <Route path="reportsandanalytics" element={<ReportAndAnalytics />} />
+              <Route path="activitylogs" element={<ResortActivityLogs />} />
+            </Route>
 
             <Route path="myaccount" element={<RAMyAccount />} />
           </Route>

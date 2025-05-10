@@ -112,29 +112,31 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                     <span className={`${lists_default_styles.span}`}>Schedules</span>
                 </li>
 
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/events/*')
-                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/events')}>
-                    <MdEvent className={`${lists_default_styles.icon}`} />
-                    <span className={`${lists_default_styles.span}`}>Events</span>
-                </li>
+                <div className={`${JSON.parse(localStorage.getItem('user_role') || '[]')[0]?.role == 'resort_super_admin' ? '' : 'hidden'} space-y-1`}>
+                    < div className="px-1 pt-1 li_texts">
+                        Maintenance
+                    </div>
 
-                <div className="px-1 pt-1 li_texts">
-                    Maintenance
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/events/*')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/events')}>
+                        <MdEvent className={`${lists_default_styles.icon}`} />
+                        <span className={`${lists_default_styles.span}`}>Events</span>
+                    </li>
+
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reportsandanalytics/*')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reportsandanalytics')}>
+                        <TbReportAnalytics className={`${lists_default_styles.icon}`} />
+                        <span className={`${lists_default_styles.span}`}>Reports/Analytics</span>
+                    </li>
+
+                    <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/activitylogs/*')
+                        ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/activitylogs')}>
+                        <MdOutlineManageHistory className={`${lists_default_styles.icon}`} />
+                        <span className={`${lists_default_styles.span}`}>Activity Logs</span>
+                    </li>
                 </div>
-
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/reportsandanalytics/*')
-                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reportsandanalytics')}>
-                    <TbReportAnalytics className={`${lists_default_styles.icon}`} />
-                    <span className={`${lists_default_styles.span}`}>Reports/Analytics</span>
-                </li>
-
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/activitylogs/*')
-                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/activitylogs')}>
-                    <MdOutlineManageHistory className={`${lists_default_styles.icon}`} />
-                    <span className={`${lists_default_styles.span}`}>Logs</span>
-                </li>
-            </ul>
-        </aside>
+            </ul >
+        </aside >
     );
 }
 

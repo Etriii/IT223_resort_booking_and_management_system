@@ -40,9 +40,15 @@ class ResortsController
 
         $name_exist = $this->resortsModel->getResortByName($name);
 
-
         if ($name_exist) {
             echo json_encode(["error" => "Resort Name Already Taken"]);
+            return;
+        }
+
+        $contact_exist = $this->resortsModel->getResortByContactDetails($contact_details);
+
+        if ($contact_exist) {
+            echo json_encode(["error" => "Contact detail Already Taken"]);
             return;
         }
 

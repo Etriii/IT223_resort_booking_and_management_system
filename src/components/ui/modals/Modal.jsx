@@ -34,7 +34,7 @@ const Modal = ({
     // }, [onClose]); 
 
     const initial_heading_theme = {
-        create: 'bg-teal-50 text-teal-800',
+        create: 'bg-gray-50 text-teal-800',
         read: 'bg-blue-50 text-blue-800',
         update: 'bg-gray-50 text-yellow-800',
         delete: 'bg-red-50 text-red-800',
@@ -44,7 +44,7 @@ const Modal = ({
         switch (variant) {
             case 'create':
                 return {
-                    background: 'bg-teal-50',
+                    background: 'bg-gray-50',
                     textColor: 'text-teal-800',
                     buttons: (
                         <>
@@ -142,7 +142,7 @@ const Modal = ({
     const { background, textColor, buttons } = getVariantStyles();
 
     return (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black bg-opacity-50 max-w-">
             <div className={` max-w-[90%] rounded-lg shadow-lg max-h-[90%] overflow-y-auto ${background}`}  >
                 <div className={`flex justify-between items-center mb-2 z-10 sticky top-0 px-5 pt-5 pb-2 ${initial_heading_theme[`${variant}`]}`}>
                     <h3 className={`text-xl font-semibold  ${textColor}`}>{title}</h3>

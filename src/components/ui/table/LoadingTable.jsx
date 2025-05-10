@@ -5,7 +5,7 @@ const LoadingTable = ({ row_count = 1, col_count = 1 }) => {
 
     return (
         <div className="w-full border overflow-hidden animate-pulse ">
-            <table className="min-w-full border-separate border-spacing-1">
+            <table className="min-w-full border-separate ">
                 <thead>
                     <tr>
                         {columns.map((_, colIndex) => (
