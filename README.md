@@ -129,20 +129,25 @@ Prerequisites:
   cd IT223_resort_booking_and_management_system
 ```
 
-2. Install dependencies:
+2. Default DB
+```bash
+  drive link: https://drive.google.com/drive/folders/1uhimHSQF2dt9a6dmdkHBY5xHtcSnhSyZ?usp=drive_link
+```
+
+3. Install dependencies:
 
 ```bash
   npm install
 ```
 
-3. run the application:
+4. run the application:
 
 ```bash
   npm run dev
   php -S localhost:8000 -t src/backends
 ```
 
-6. Access the application:
+5. Access the application:
 
 ```bash
    Open your browser and navigate to http://localhost:5173/oceanview
