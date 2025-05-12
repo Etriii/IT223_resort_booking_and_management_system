@@ -1,9 +1,13 @@
+import { useEffect } from "react";
+import { DiAws } from "react-icons/di";
+
 import { apiFetch } from "../../../utils/apiFetch";
 
-const editResort = async (input_data) => {
+const CreateUserRoleOfAdmin = async (input_data) => {
+
     try {
-        // console.log('yes', input_data);
-        const response = await apiFetch(`controller=Resorts&action=updateResort`, {
+        console.log(input_data);
+        const response = await apiFetch(`controller=UserRoles&action=createUserWithRole`, {
             method: "POST",
             body: JSON.stringify({ input_data })
         });
@@ -28,4 +32,4 @@ const editResort = async (input_data) => {
     }
 };
 
-export default editResort;
+export default CreateUserRoleOfAdmin;

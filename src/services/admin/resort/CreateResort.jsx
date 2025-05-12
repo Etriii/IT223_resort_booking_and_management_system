@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { DiAws } from "react-icons/di";
 
+import { apiFetch } from "../../../utils/apiFetch";
+
 const createResort = async (input_data) => {
 
     try {
-        const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=createResort`, {
+        const response = await apiFetch(`controller=Resorts&action=createResort`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ input_data })
         });
 

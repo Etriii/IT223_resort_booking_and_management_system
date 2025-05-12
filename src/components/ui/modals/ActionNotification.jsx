@@ -24,6 +24,10 @@ const ActionNotification = ({ children, variant = 'create', isOpen }) => {
             class: 'bg-orange-100 text-orange-800 border border-orange-300',
             icon: <IoWarningOutline className="text-orange-600 size-5 mr-2" />,
         },
+        success: {
+            class: 'bg-green-200 text-green-900 border border-rose-400',
+            icon: <IoAlertCircleOutline className="text-green-700 size-5 mr-2" />,
+        },
         error: {
             class: 'bg-rose-200 text-rose-900 border border-rose-400',
             icon: <IoAlertCircleOutline className="text-rose-700 size-5 mr-2" />,

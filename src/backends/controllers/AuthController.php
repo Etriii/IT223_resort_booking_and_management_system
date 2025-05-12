@@ -5,7 +5,6 @@ require_once __DIR__ . '/../core/Request.php';
 class AuthController
 {
     private $userModel;
-
     public function __construct()
     {
         $this->userModel = new User();
@@ -93,11 +92,26 @@ class AuthController
     //     echo json_encode($this->userModel->getUserById($_SESSION['user_id']));
     // }
 
+    public function getLoggedInUser()
+    {
+        if (isset($_COOKIE['user_id'])) {
+            $token = $_COOKIE['user_id'];
+            echo json_encode(["success" => true, "message" => "User id: " . htmlspecialchars($token)]);
+            return;
+        }
+        echo json_encode(["success" => false, "message" => 'No User Currently Logged In']);
+    }
+
     public function logout(Request $request)
     {
         $this->userModel->logOutUser($request->get('user_id'));
         // session_start();
         // session_destroy();
+
         echo json_encode(['message' => 'Logged out successfully']);
+    }
+    public function yes()
+    {
+        echo json_encode(['yes' => $this->userModel->yes()]);
     }
 }

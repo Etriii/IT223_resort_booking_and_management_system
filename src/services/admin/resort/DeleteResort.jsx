@@ -1,6 +1,8 @@
+import { apiFetch } from "../../../utils/apiFetch";
+
 const deleteResort = async (resort_id) => {
     try {
-        const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=destroyResort`, {
+        const response = await apiFetch(`controller=Resorts&action=destroyResort`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ resort_id })

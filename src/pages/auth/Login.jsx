@@ -8,6 +8,8 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { PiWarningCircleBold } from "react-icons/pi";
 
+import { apiFetch } from '../../utils/apiFetch';
+
 const Login = () => {
     const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ const Login = () => {
     const [errorPassword, setErrorPassword] = useState("");
 
     const fetchUserRoles = async () => {
-        const response = await fetch(`http://localhost:8000/api.php?controller=UserRoles&action=getUserRoles&user_id=${localStorage.getItem('user_id')}`);
+        const response = await apiFetch(`controller=UserRoles&action=getUserRoles&user_id=${localStorage.getItem('user_id')}`);
 
         if (!response.ok) {
             throw new Error(`Http Error! Status: ${response.status} `);
@@ -69,7 +71,7 @@ const Login = () => {
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         try {
-            const response = await fetch(`http://localhost:8000/api.php?controller=Auth&action=login`, {
+            const response = await apiFetch(`controller=Auth&action=login`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -81,7 +83,6 @@ const Login = () => {
             clearTimeout(timeoutId);
 
             setTimeout(async () => {
-                setLoading(false);
                 if (data.error) {
                     if (typeof data.error === "string") {
                         setError(data.error);
@@ -94,11 +95,17 @@ const Login = () => {
                             setErrorPassword(data.error.password);
                         }
                     }
+                    setLoading(false);
                 } else {
+
                     // alert("Login successful!");
                     localStorage.setItem("user_id", JSON.stringify(data.user['id']));
 
+                    const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString();
+                    document.cookie = `user_id=${data.user['id']}; expires=${expires};` + "; path=/ ;";
+
                     // fetch(`http://localhost:8000/api.php?controller=User&action=setUserIDinDB&user_id=5`);
+
                     const role = await fetchUserRoles();
                     redirectLogIn(role[0]);
                 }

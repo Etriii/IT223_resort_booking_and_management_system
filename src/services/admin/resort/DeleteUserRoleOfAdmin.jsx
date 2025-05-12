@@ -1,11 +1,11 @@
 import { apiFetch } from "../../../utils/apiFetch";
 
-const editResort = async (input_data) => {
+const deleteUserRoleOfAdmin = async (user_role_id) => {
     try {
-        // console.log('yes', input_data);
-        const response = await apiFetch(`controller=Resorts&action=updateResort`, {
+        const response = await apiFetch(`controller=UserRoles&action=deleteUserRole`, {
             method: "POST",
-            body: JSON.stringify({ input_data })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_role_id })
         });
 
         const data = await response.json();
@@ -28,4 +28,4 @@ const editResort = async (input_data) => {
     }
 };
 
-export default editResort;
+export default deleteUserRoleOfAdmin;

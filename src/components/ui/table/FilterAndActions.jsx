@@ -25,9 +25,9 @@ const FilterAndActions = ({ filters, setFilters, openModal, input_filter }) => {
                     }
                     className="bg-gray-100 rounded p-1 focus:outline-green-500"
                 >
-                    {[...Array(5)].map((_, i) => (
-                        <option key={i + 1} value={(i + 1) * 10}>
-                            {(i + 1) * 10} entries
+                    {[...Array(10)].map((_, i) => (
+                        <option key={i + 1} value={(i + 1) * 5}>
+                            {(i + 1) * 5} entries
                         </option>
                     ))}
                 </select>

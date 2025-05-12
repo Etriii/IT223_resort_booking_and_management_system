@@ -12,6 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
+import { apiFetch } from '../../utils/apiFetch';
 
 const Accounts = () => {
     
@@ -53,7 +54,7 @@ const Accounts = () => {
 
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api.php?controller=User&action=getAllUsers');
+                const response = await apiFetch('controller=User&action=getAllUsers');
                 const data = await response.json();
                 setUsers(data);
             } catch (error) {

@@ -41,10 +41,15 @@ class ResortsController
 
         $name_exist = $this->resortsModel->getResortByName($name);
 
-
-
         if ($name_exist) {
             echo json_encode(["error" => "Resort Name Already Taken"]);
+            return;
+        }
+
+        $contact_exist = $this->resortsModel->getResortByContactDetails($contact_details);
+
+        if ($contact_exist) {
+            echo json_encode(["error" => "Contact detail Already Taken"]);
             return;
         }
 
@@ -69,6 +74,34 @@ class ResortsController
             ]);
         }
     }
+    public function updateResort(Request $request)
+    {
+        $result = $this->resortsModel->updateResort($request->get('input_data')['id'], [
+            'name' => $request->get('input_data')['name'],
+            'location' => $request->get('input_data')['location'],
+            'location_coordinates' => $request->get('input_data')['location_coordinates'],
+            'tax_rate' =>  $request->get('input_data')['tax_rate'],
+            'status' =>  $request->get('input_data')['status'],
+        ]);
+
+        if (is_array($result) && isset($result['error'])) {
+            echo json_encode([
+                'success' => false,
+                'error' => 'Database error: ' . $result['error']
+            ]);
+        } elseif ($result === true) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Resort Updated Successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'error' => 'No changes were made to the resort.'
+            ]);
+        }
+    }
+
 
     public function getResortById(Request $request)
     {
