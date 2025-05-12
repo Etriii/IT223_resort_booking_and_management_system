@@ -52,6 +52,7 @@ import logout from "../../../../utils/logout";
 import { FaUserCog, FaSignOutAlt, FaBell } from "react-icons/fa";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
+import { IoIosArrowDown } from "react-icons/io";
 
 const UserHeading = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -117,7 +118,7 @@ const UserHeading = () => {
     }, []);
 
     return (
-        <header className="border-b w-full sticky top-0 bg-white z-10 px-6 py-2 shadow-sm">
+        <header className="border-b w-full sticky top-0 bg-white z-10 px-6 py-1 shadow-lg">
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-10">
                     <div className="flex items-center space-x-2">
@@ -143,18 +144,21 @@ const UserHeading = () => {
                                 <FaBell className="text-gray-600 text-xl" />
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">15</span>
                             </div>
-                            <div>
+                            <div className={``}>
                                 {userName ?? 'Username'}
                             </div>
                             <button onClick={toggleMenu} className="relative focus:outline-none">
-                                <div className={`size-10`}>
+                                <div className={`size-10 p-[0.2rem] rounded-full bg-gray-100 hover:bg-gray-200 relative`}>
                                     <img src={userProfile ? `${userProfile}` : '/images/user_profiles/default_profile.png'} className="w-full h-full rounded-full" alt="User Profile" />
+                                    <div className=" flex justify-center items-center size-4 border-2 border-white rounded-full absolute bottom-0 right-0 bg-gray-100 pointer-events-none">
+                                        <IoIosArrowDown className={` duration-75 ${menuOpen ? 'rotate-180' : ''}`} />
+                                    </div>
                                 </div>
                             </button>
                         </div>
 
                         {menuOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50 border border-gray-200">
+                            <div className="absolute right-0 mt-1 w-48 bg-white rounded shadow-lg py-2 z-50 border border-gray-200">
                                 <button
                                     onClick={() => navigate("/oceanview/account")}
                                     className="w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100"

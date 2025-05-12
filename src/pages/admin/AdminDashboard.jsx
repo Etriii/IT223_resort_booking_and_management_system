@@ -7,7 +7,7 @@ import RecentProfitCard from "../../components/Main_admin/RecentProfitCard";
 
 const Dashboard = () => {
   const dashboardcard =
-    "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-10 md:grid-cols-10 gap-4 p-4 bg-gray-200";
+    "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-10 md:grid-cols-10 gap-4 p-4 bg-gray-100";
   useEffect(() => {
     
     document.title = "Admin Dashboard | Ocean View";
@@ -20,7 +20,7 @@ const Dashboard = () => {
         <DashboardCards title="Profit for the Last 30 Days" value="37" bg="bg-green-500 md:col-span-4 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>
         <DashboardCards title="Total Number of Contributors" value="37" bg="bg-yellow-500 md:col-span-3 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>       
       </div>
-      <div className="grid lg:grid-cols-12 sm:grid-cols-4 md:grid-cols-8 space-y-10 gap-5 p-4 bg-gray-200">
+      <div className="grid lg:grid-cols-12 sm:grid-cols-4 md:grid-cols-8 space-y-10 gap-5 p-4 bg-gray-100">
         <Linechart span="col-span-full h-[60lvh]" height="h-[55lvh]"/>
         <div className="lg:col-span-5 md:col-span-full sm:col-span-full">
         <ResortRankingCard/>

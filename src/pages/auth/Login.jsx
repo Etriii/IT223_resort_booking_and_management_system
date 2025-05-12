@@ -83,7 +83,6 @@ const Login = () => {
             clearTimeout(timeoutId);
 
             setTimeout(async () => {
-                setLoading(false);
                 if (data.error) {
                     if (typeof data.error === "string") {
                         setError(data.error);
@@ -96,6 +95,7 @@ const Login = () => {
                             setErrorPassword(data.error.password);
                         }
                     }
+                    setLoading(false);
                 } else {
 
                     // alert("Login successful!");

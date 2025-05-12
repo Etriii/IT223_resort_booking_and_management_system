@@ -2,7 +2,7 @@ import React from "react";
 import { Chart as ChartJS, DoughnutController } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-const Linechart = ({ span , height }) => {
+const Linechart = ({ span, height }) => {
   const [filter, setFilter] = React.useState("monthly");
 
   const Labels = [
@@ -56,22 +56,20 @@ const Linechart = ({ span , height }) => {
 
   return (
     <div
-      className={`col-span-8 ${span} bg-gray-100 dark:bg-gray-200 shadow-xs rounded-xl`}
+      className={`col-span-8 ${span} bg-gray-50 dark:bg-gray-100 shadow-xs rounded-xl`}
     >
-      <div className="flex mb-2">
+      <div className="flex mb-2 space-x-1">
         <button
           onClick={() => setFilter("monthly")}
-          className={`px-4 py-2 rounded ${
-            filter === "monthly" ? "bg-blue-600 text-white" : "bg-gray-400"
-          }`}
+          className={`px-4 py-2 rounded ${filter === "monthly" ? "bg-blue-600 text-white" : "bg-gray-200"
+            }`}
         >
           Monthly
         </button>
         <button
           onClick={() => setFilter("30days")}
-          className={`px-4 py-2 rounded ${
-            filter === "30days" ? "bg-blue-600 text-white" : "bg-gray-400"
-          }`}
+          className={`px-4 py-2 rounded ${filter === "30days" ? "bg-blue-600 text-white" : "bg-gray-200"
+            }`}
         >
           Last 30 Days
         </button>
