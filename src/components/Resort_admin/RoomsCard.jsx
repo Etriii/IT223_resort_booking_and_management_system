@@ -1,6 +1,6 @@
 import React from "react";
 
-const RoomsCard = () => {
+const RoomsCard = ({value}) => {
   const roomTypes = [
     { label: "King Room", count: 3 },
     { label: "Queen Room", count: 4 },
@@ -14,7 +14,7 @@ const RoomsCard = () => {
       <div>
         <h2 className="text-lg font-semibold">
           Total Rooms:{" "}
-          <span className="text-blue-600 text-2xl font-bold">27</span>
+          <span className="text-blue-600 text-2xl font-bold">{value}</span>
         </h2>
       </div>
       <div>
