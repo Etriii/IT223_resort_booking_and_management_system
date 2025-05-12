@@ -6,6 +6,7 @@ import backgroundImage from '../../assets/images/home/backgroundaboutus.jpg';
 import FilterCard from '../../components/ui/card/roomsfiltercard.jsx';
 import RoomDetailModal from '../../components/ui/modals/roomdetails.jsx';
 import RoomBookingModal from '../../components/ui/modals/roombooking.jsx';
+import GuestProfileModal from '../../components/ui/modals/guest_info.jsx';
 
 const ResortRoomList = () => {
     const { building_id } = useParams();
@@ -28,6 +29,8 @@ const ResortRoomList = () => {
     const [isRoomDetailModalOpen, setIsRoomDetailModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [daysOfStay, setDaysOfStay] = useState(0);
+    const [guestDetails, setGuestDetails] = useState(null);
+    const [isGuestInfoModalOpen, setIsGuestInfoModalOpen] = useState(false);
 
     useEffect(() => {
         document.title = "Rooms in Building | Ocean View";
@@ -112,7 +115,7 @@ const ResortRoomList = () => {
     };
 
     const openRoomDetailModal = (room) => {
-        console.log("Selected Room: ", room); 
+        console.log("Selected Room: ", room);
         setSelectedRoom(room);
         setIsRoomDetailModalOpen(true);
         setIsBookingModalOpen(false);
@@ -132,6 +135,16 @@ const ResortRoomList = () => {
         setIsBookingModalOpen(false);
     };
 
+    const handleCloseGuestInfoModal = () => {
+        setIsGuestInfoModalOpen(false);
+    };
+
+    const handleSaveGuestInfo = (formData) => {
+        console.log('Save guest details', formData);
+        setIsGuestInfoModalOpen(false);
+        openBookingModal(selectedRoom);
+    };
+
     const handleBookNow = async (room) => {
         const userId = localStorage.getItem('user_id');
 
@@ -140,6 +153,11 @@ const ResortRoomList = () => {
             if (confirmLogin) {
                 navigate('/oceanview/login');
             }
+            return;
+        }
+
+        if (!filters.checkInDate && !filters.checkOutDate) {
+            alert("Please select the check-in and check-out dates before booking.");
             return;
         }
 
@@ -155,25 +173,19 @@ const ResortRoomList = () => {
             const data = await response.json();
             console.log("Guest details response:", data);
 
-            let guestArray = data;
+            let guestArray = Array.isArray(data) ? data : (data.data && Array.isArray(data.data) ? data.data : (typeof data === 'object' && data !== null ? [data] : []));
 
-            if (!Array.isArray(data) && data.data && Array.isArray(data.data)) {
-                guestArray = data.data;
-            }
-
-            if (!Array.isArray(guestArray) && typeof guestArray === 'object') {
-                guestArray = [guestArray];
-            }
-
-            const userIdStr = String(userId);
-            const userHasGuestProfile = Array.isArray(guestArray) &&
-                guestArray.some(guest => String(guest.user_id) === userIdStr);
+            const userHasGuestProfile = guestArray.some(guest => String(guest.user_id) === String(userId) && parseInt(guest.status) === 1);
 
             console.log("User has guest profile:", userHasGuestProfile);
             console.log("Guest array:", guestArray);
 
             if (!userHasGuestProfile) {
-                alert("You need to complete your guest profile before booking. Please update your profile information.");
+                const confirmGuestInfo = window.confirm("You need to complete your information to book a room. Do you want to proceed?");
+                if (confirmGuestInfo) {
+                    setIsGuestInfoModalOpen(true);
+
+                }
                 return;
             }
 
@@ -200,7 +212,25 @@ const ResortRoomList = () => {
                         <h1 className="text-lg font-medium">
                             Available Rooms ({filteredRooms.length})
                         </h1>
+
+                        <span className="text-sm font-normal">
+                            {filters.checkInDate && filters.checkOutDate ? (
+                                <p>
+                                    {new Date(filters.checkInDate).toLocaleDateString('en-US', {
+                                        month: 'long',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                    })} - {new Date(filters.checkOutDate).toLocaleDateString('en-US', {
+                                        month: 'long',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                    })}
+                                </p>
+                            ) : null}
+                        </span>
+
                     </div>
+
                     <div className="flex-1" />
                 </div>
                 <div className="flex gap-8 pt-6">
@@ -268,7 +298,7 @@ const ResortRoomList = () => {
                                                 </div>
                                                 <div className="flex justify-end mt-4">
                                                     <button
-                                                        onClick={() => handleBookNow(room)}  
+                                                        onClick={() => handleBookNow(room)}
                                                         disabled={loading}
                                                         className={`text-white px-8 rounded-lg ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} no-underline py-3 text-xs font-bold inline-block transition-all duration-300 ease-in-out`}
                                                     >
@@ -280,12 +310,23 @@ const ResortRoomList = () => {
                                     </div>
                                 ))}
 
+                                {isGuestInfoModalOpen && (
+                                    <GuestProfileModal
+                                        isOpen={isGuestInfoModalOpen}
+                                        onClose={handleCloseGuestInfoModal}
+                                        onSave={handleSaveGuestInfo}
+                                    />
+                                )}
+
                                 {isRoomDetailModalOpen && (
                                     <RoomDetailModal
                                         room={selectedRoom}
                                         isOpen={isRoomDetailModalOpen}
                                         onClose={closeRoomDetailModal}
                                         onBookNow={openBookingModal}
+                                        filters={filters}
+                                        setIsGuestInfoModalOpen={setIsGuestInfoModalOpen}
+                                        openBookingModal={openBookingModal}
                                     />
                                 )}
 
@@ -300,8 +341,7 @@ const ResortRoomList = () => {
                                         parentGuests={filters.guests}
                                         parentRoomType={filters.roomType}
                                         parentFilters={filters}
-                                        parentRoomName={selectedRoom.room_name}  
-                                        
+                                        parentRoomName={selectedRoom.room_name}
                                     />
                                 )}
                             </div>

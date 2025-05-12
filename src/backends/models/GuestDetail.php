@@ -20,4 +20,13 @@ class GuestDetail
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getConnection()
+    {
+        return $this->conn;
+    }
+
+    public function getTable()
+    {
+        return $this->table;
+    }
 }

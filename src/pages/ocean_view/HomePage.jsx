@@ -6,16 +6,55 @@ import fridayImage from '../../assets/images/home/friday.jpeg';
 import fridayssImage from '../../assets/images/home/fridayss.jpeg';
 import UserFooter from '../../components/ui/layout/footers/UserFooter.jsx';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import GuestProfileModal from '../../components/ui/modals/guest_info.jsx';
+
 const HomePage = () => {
+  const [setGuestDetails] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     document.title = "Home | Ocean View";
-    if (localStorage.getItem('user_id')){console.log("Yes po")}
-    else{
-        console.log("awww")
+
+    const userId = localStorage.getItem('user_id');
+    if (userId) {
+      console.log("Yes po");
+      fetchGuestDetails(Number(userId));
+    } else {
+      console.log("awww");
     }
   }, []);
+
+  const fetchGuestDetails = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api.php?controller=GuestDetails&action=getGuestDetails&user_id=${userId}`);
+      const data = await response.json();
+
+      console.log('Fetched data:', data);
+
+      const user = data.find(guest => guest.user_id === userId);
+
+      if (user) {
+        console.log('User status:', user.status);
+
+        if (user.status === 0) {
+          setIsModalOpen(true);
+        } else {
+          setIsModalOpen(false);
+        }
+      } else {
+        console.log('No guest found with this user_id');
+      }
+
+      setGuestDetails(data);
+    } catch (error) {
+      console.error('Error fetching guest details:', error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
 
@@ -149,6 +188,13 @@ const HomePage = () => {
         </div>
       </div>
       <UserFooter />
+      {isModalOpen && (
+        <GuestProfileModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={(formData) => console.log('Save guest details', formData)}
+        />
+      )}
     </div>
 
 
