@@ -1,9 +1,35 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Chart as ChartJS, DoughnutController } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
 const Linechart = ({ span, height }) => {
   const [filter, setFilter] = React.useState("monthly");
+  
+    useEffect(() => {
+      const fetchBookings = async () => {
+        try {
+          const resort_id = localStorage.getItem("user_role")
+            ? JSON.parse(localStorage.getItem("user_role"))[0]["resort_id"]
+            : null;
+  
+          const response = await fetch(
+            `http://localhost:8000/api.php?controller=Bookings&action=getTotalBookingsByResortId&resort_id=${resort_id}`
+          );
+  
+          const data = await response.json();
+          setBookings(data);
+        } catch (error) {
+          setNotify({
+            type: "error",
+            message: error.message || "Something went wrong!",
+          });
+        } finally {
+          setTimeout(() => setLoading(false), 500);
+        }
+      };
+  
+      fetchBookings();
+    }, []);
 
   const Labels = [
     { label: "Jan", cost: 32652 },

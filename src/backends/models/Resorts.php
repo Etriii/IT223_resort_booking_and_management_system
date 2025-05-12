@@ -34,6 +34,33 @@ class Resorts
         $stmt->execute(['contact_details' => $contact_details]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getDetailsByResortId($resort_id)
+    {
+        $stmt = $this->conn->prepare("SELECT r.id, r.location_coordinates, r.resort_description, r.room_description,
+        GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities FROM resorts r LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
+        WHERE r.id = :resort_id GROUP BY r.id; ");
+        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateResortDetails($resort_id, $location, $resort_description, $room_description)
+    {
+        $stmt = $this->conn->prepare("
+        UPDATE " . $this->table . " 
+        SET location_coordinates = :location, resort_description = :resort_description, room_description = :room_description 
+        WHERE id = :resort_id
+    ");
+
+        $stmt->bindParam(':location', $location);
+        $stmt->bindParam(':resort_description', $resort_description);
+        $stmt->bindParam(':room_description', $room_description);
+        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
 
     public function createResort($data)
     {
@@ -82,6 +109,30 @@ class Resorts
         }
     }
 
+
+
+    public function getResortById($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM resorts WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function uploadResortImageById($id, $imageField, $image)
+    {
+
+        $allowedFields = ['image1', 'image1_2', 'image1_3', 'main_image', 'image2', 'image3', 'room_image_1', 'room_image_2', 'room_image3'];
+        if (!in_array($imageField, $allowedFields)) {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare("
+        UPDATE " . $this->table . " SET `$imageField` = :image WHERE id = :id");
+
+        return $stmt->execute([
+            ':image' => $image,
+            ':id' => $id,
+        ]);
+    }
 
 
     public function destroyResort($resort_id)
