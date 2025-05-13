@@ -3,14 +3,14 @@ import backgroundImage from '../../../assets/images/home/backgroundaboutus.jpg';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../ui/modals/Modal';
 
-const RoomDetailModal = ({ room, isOpen, onClose, onBookNow }) => {
+const RoomDetailModal = ({ room, isOpen, onClose, onBookNow, filters, setIsGuestInfoModalOpen, openBookingModal }) => {
     const navigate = useNavigate();
     const [showGuestModal, setShowGuestModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleBookNow = async (room) => {
+    const handleBookNow = async (selectedRoom) => {
         const userId = localStorage.getItem('user_id');
-        
+
         if (!userId) {
             const confirmLogin = window.confirm("You need to log in to book a room. Do you want to go to the login page?");
             if (confirmLogin) {
@@ -18,45 +18,41 @@ const RoomDetailModal = ({ room, isOpen, onClose, onBookNow }) => {
             }
             return;
         }
-        
+
+        if (!filters?.checkInDate || !filters?.checkOutDate) {
+            alert("Please select the check-in and check-out dates before booking.");
+            return;
+        }
+
         try {
             setLoading(true);
-            
+
             const response = await fetch(`http://localhost:8000/api.php?controller=GuestDetails&action=getGuestDetails&user_id=${userId}`);
-            
+
             if (!response.ok) {
                 throw new Error(`Server responded with status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             console.log("Guest details response:", data);
-            
-            let guestArray = data;
-            
-            if (!Array.isArray(data) && data.data && Array.isArray(data.data)) {
-                guestArray = data.data;
-            }
-            
-            if (!Array.isArray(guestArray) && typeof guestArray === 'object') {
-                guestArray = [guestArray];
-            }
-        
-            const userIdStr = String(userId);
-            const userHasGuestProfile = Array.isArray(guestArray) && 
-                guestArray.some(guest => String(guest.user_id) === userIdStr);
-            
+
+            let guestArray = Array.isArray(data) ? data : (data.data && Array.isArray(data.data) ? data.data : (typeof data === 'object' && data !== null ? [data] : []));
+
+            const userHasGuestProfile = guestArray.some(guest => String(guest.user_id) === String(userId) && parseInt(guest.status) === 1);
+
             console.log("User has guest profile:", userHasGuestProfile);
             console.log("Guest array:", guestArray);
-            
+
             if (!userHasGuestProfile) {
-                alert("You need to complete your guest profile before booking. Please update your profile information.");
-                // navigate('/oceanview/profile');
+                const confirmGuestInfo = window.confirm("You need to complete your information to book a room. Do you want to proceed?");
+                if (confirmGuestInfo) {
+                    setIsGuestInfoModalOpen(true);
+                }
                 return;
             }
-            
-            onBookNow(room);
-            onClose();
-            
+
+            openBookingModal(selectedRoom);
+
         } catch (err) {
             console.error("Error validating guest:", err);
             alert("An error occurred while verifying your information. Please try again later.");
@@ -64,7 +60,7 @@ const RoomDetailModal = ({ room, isOpen, onClose, onBookNow }) => {
             setLoading(false);
         }
     };
-    
+
     return (
         <div
             className={`fixed inset-0 z-50 flex items-center justify-center ${isOpen ? 'block' : 'hidden'} bg-black/50`}
