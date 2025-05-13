@@ -36,7 +36,6 @@ const ResortSchedules = ({ }) => {
   const [filters, setFilters] = useState({ paginate: 5, page: 1 });
 
 
-
   // 
   const days = Array.from({ length: 15 }, (_, i) => i + 12); // Days 12 to 26
   const availability = Array(15).fill(0); // Assuming 0 means available (green)

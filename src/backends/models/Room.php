@@ -96,6 +96,11 @@ class Room
         return [];
     }
 
+    public function getOverlappingReservations($resort_id, $parsedCheckIn, $parsedCheckOut) {
+        //para mawa ang error sakoa
+        return [];
+    }
+
     public function update() {}
     public function destroy() {}
 }
