@@ -4,6 +4,10 @@ export {default as useFetchUsersWithRoles} from './admin/useFetchUsersWithRoles'
 
 //Resort Admin
 export {default as useFetchBuildings} from './resort_admin/useFetchBuilding';
-
+export {default as useFetchReservations} from './resort_admin/reservations/useFetchReservations';
 
 // Users
+
+
+//Others
+export {default as useFetchUserRoleWithResortId} from './utils/useFetchUserRoleWithResortId';

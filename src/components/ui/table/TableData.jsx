@@ -4,7 +4,7 @@ import Row from '../../../components/ui/table/Row';
 const TableData = ({ children, columns }) => {
 
     const td_style = `border border-black`;
-
+    
     return (
         <Row>
             {columns.map((column, index) => (

@@ -12,8 +12,6 @@ const Table = ({ children, theadings, isLoading = false, containerRef }) => {
         col: '',
     };
 
-
-
     if (!theadings.length > 0) {
         return (
             <div className='p-4 text-red-400'>
@@ -22,13 +20,24 @@ const Table = ({ children, theadings, isLoading = false, containerRef }) => {
         );
     }
 
+    // const [internalLoading, setInternalLoading] = useState(isLoading);
+
+    // useEffect(() => {
+    //     if (isLoading) {
+    //         const timeout = setTimeout(() => {
+    //             setInternalLoading(false);
+    //         }, 5000);
+    //         return () => clearTimeout(timeout);
+    //     }
+    // }, [isLoading]);
+
     if (isLoading) {
         return (
-            <LoadingTable row_count={11} col_count={theadings.length} />
+            <LoadingTable row_count={5} col_count={theadings.length} />
         );
     }
 
-    const [showDiv, setShowDiv] = useState(false);
+    // const [showDiv, setShowDiv] = useState(false);
 
 
     // enable ni if mag perform na apil ang div nga e retun nga nakacomment
