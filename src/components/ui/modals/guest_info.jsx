@@ -52,18 +52,19 @@ const GuestProfileModal = ({ isOpen, onClose, onSave }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+            <div className="max-w-2xl h-[85vh] w-full bg-white rounded-lg shadow-lg px-10 pb-8 pt-7 overflow-y-auto"  style={{ scrollbarWidth: 'none' }}>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold">Guest Profile Information</h3>
-                    <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
+                    <button onClick={onClose} className="text-gray-600 hover:text-gray-900 font-bold">
                         X
                     </button>
                 </div>
                 <div className="space-y-4">
+                <hr className="w-full border-t border-black my-2" />
                     {Object.entries(formData).map(([key, value]) =>
                         key !== 'status' ? (
                             <div key={key} className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 capitalize">
+                                <label className="text-sm font-medium text-black capitalize">
                                     {key.split('_').join(' ')}
                                 </label>
                                 <input

@@ -13,6 +13,22 @@ const FilterCard = ({
   const [roomType, setRoomType] = useState('All');
   const [guests, setGuests] = useState('');
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
   const handleBudgetChange = useCallback((index, value) => {
     const newBudget = [...budget];
     newBudget[index] = Number(value);
@@ -28,10 +44,28 @@ const FilterCard = ({
   }, [budget, checkInDate, checkOutDate, roomType, guests, onBudgetChange, onFiltersChange]);
 
   const handleFilterChange = (key, value) => {
+    let updatedCheckOutDate = checkOutDate;
+    let updatedCheckInDate = checkInDate;
+
+    if (key === 'checkInDate') {
+      updatedCheckInDate = value;
+      if (checkOutDate && new Date(value) > new Date(checkOutDate)) {
+        updatedCheckOutDate = value;
+        setCheckOutDate(value);
+      }
+    } else if (key === 'checkOutDate') {
+      updatedCheckOutDate = value;
+      if (checkInDate && new Date(value) < new Date(checkInDate)) {
+        updatedCheckOutDate = updatedCheckInDate;
+        setCheckOutDate(updatedCheckInDate);
+      }
+    }
+
+
     const updatedFilters = {
       budget,
-      checkInDate,
-      checkOutDate,
+      checkInDate: updatedCheckInDate,
+      checkOutDate: updatedCheckOutDate,
       roomType,
       guests,
       [key]: value,
@@ -39,12 +73,12 @@ const FilterCard = ({
 
     switch (key) {
       case 'checkInDate':
-        setCheckInDate(value);
-        onDateChange?.(value, checkOutDate);
+        setCheckInDate(updatedCheckInDate);
+        onDateChange?.(updatedCheckInDate, updatedCheckOutDate);
         break;
       case 'checkOutDate':
-        setCheckOutDate(value);
-        onDateChange?.(checkInDate, value);
+        setCheckOutDate(updatedCheckOutDate);
+        onDateChange?.(updatedCheckInDate, updatedCheckOutDate);
         break;
       case 'roomType':
         setRoomType(value);
@@ -58,6 +92,15 @@ const FilterCard = ({
 
     onFiltersChange?.(updatedFilters);
   };
+
+  const getMinCheckInDate = () => {
+    if (checkOutDate) {
+      const checkoutDateObj = new Date(checkOutDate);
+      return checkoutDateObj.toISOString().split('T')[0];
+    }
+    return getTodayDate();
+  };
+
 
   return (
     <div className="w-full sticky h-fit text-black px-6 rounded-xl border border-white/20">
@@ -103,8 +146,9 @@ const FilterCard = ({
         <input
           type="date"
           value={checkInDate}
-          onChange={(e) => handleFilterChange('checkInDate', e.target.value)}
+          onChange={(e) => setCheckInDate(e.target.value)}
           className="w-full p-2 rounded-md text-black border border-black/20"
+          min={getTodayDate()}
         />
       </div>
 
@@ -116,6 +160,7 @@ const FilterCard = ({
           value={checkOutDate}
           onChange={(e) => handleFilterChange('checkOutDate', e.target.value)}
           className="w-full p-2 rounded-md text-black border border-black/20"
+          min={checkInDate ? checkInDate : getTodayDate()}
         />
       </div>
 
@@ -128,7 +173,7 @@ const FilterCard = ({
           onChange={(e) => handleFilterChange('roomType', e.target.value)}
         >
           {[
-            'All', 'King Size', 'Queen Size', 'Twin Bed', 
+            'All', 'King Size', 'Queen Size', 'Twin Bed',
             'Deluxe Suite', 'Family Room', 'Penthouse Suite', 'Bungalow Villa',
           ].map((type) => (
             <option key={type} value={type}>{type}</option>
@@ -157,3 +202,4 @@ const FilterCard = ({
 };
 
 export default FilterCard;
+
