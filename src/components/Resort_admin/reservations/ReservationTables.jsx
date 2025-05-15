@@ -144,7 +144,7 @@ const ReservationTables = () => {
 
       <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Username', create_label: 'New' }} />
 
-      <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading} containerRef={containerRef} >
+      <Table theadings={['id', 'room_id', 'check_in', 'check_out', 'total_amount', 'status', 'actions']} isLoading={loading} containerRef={containerRef} >
         {filteredReservation.length > 0 ? (
           paginatedReservation.map((reservation, index) => (
             <TableData

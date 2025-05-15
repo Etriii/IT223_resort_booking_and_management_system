@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { apiFetch } from '../../../utils/apiFetch';
 
-const useFetchReservations = ({ resort_id }) => {
+const useFetchReservations = ({ resort_id, start_date, end_date }) => {
 
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,15 +11,9 @@ const useFetchReservations = ({ resort_id }) => {
     const fetchReservations = async () => {
         try {
             const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]?.resort_id;
-            const res = await apiFetch(`controller=Bookings&action=getBookingsInRangeOf`
-            );
+            const res = await apiFetch(`controller=Bookings&action=getBookingsInRangeOf&resort_id=${resort_id}&start_date=${start_date}&end_date=${end_date}`);
             const data = await res.json();
-            setBuildings(data);
-            if (data.length > 0) {
-                setSelectedBuilding(data[0]);
-                setRoomFormData((prev) => ({ ...prev, building_id: data[0].id }));
-                fetchRooms(data[0].id);
-            }
+            setReservations(data);
         } catch {
             setNotify({ type: "error", message: "Failed to fetch Reservations" });
         } finally {

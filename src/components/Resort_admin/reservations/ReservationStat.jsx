@@ -5,8 +5,24 @@ import { FaRegCircleCheck } from "react-icons/fa6";
 
 import StatCard from './StatCard';
 
+
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 const ReservationStat = () => {
 
+  const data = {
+    labels: ['Completed', 'Confirmed', 'Pending', 'Cancelled'],
+    datasets: [
+      {
+        data: [30, 20, 10, 5],
+        backgroundColor: ['#22c55e', '#3b82f6', '#facc15', '#ef4444'],
+        borderWidth: 0,
+      },
+    ],
+  };
 
   const [filters, setFilters] = useState({
     time: 'day',
@@ -35,14 +51,8 @@ const ReservationStat = () => {
 
       <div className="mb-6">
         <div className="bg-white rounded-lg p-4 shadow flex flex-col items-center">
-          <div className="h-40 w-40 bg-gray-100 rounded-full mb-4 flex items-center justify-center text-gray-400">
-            Pie Chart Placeholder
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
-            <div><span className="inline-block w-3 h-3 bg-green-500 mr-2 rounded-full"></span>Completed</div>
-            <div><span className="inline-block w-3 h-3 bg-blue-500 mr-2 rounded-full"></span>Confirmed</div>
-            <div><span className="inline-block w-3 h-3 bg-yellow-400 mr-2 rounded-full"></span>Pending</div>
-            <div><span className="inline-block w-3 h-3 bg-red-500 mr-2 rounded-full"></span>Cancelled</div>
+          <div className="mb-4">
+            <Doughnut data={data} />
           </div>
         </div>
       </div>
