@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { MdDashboard, MdHistory } from "react-icons/md";
 import { TbBuildingPavilion } from "react-icons/tb";
 import { FaUsersCog } from "react-icons/fa";
+import { RxUpdate } from "react-icons/rx";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
 
@@ -89,10 +90,16 @@ const AdminSideNav = ({ className, isOpen }) => {
                     <span className={`${lists_default_styles.span}`}>Manage Users</span>
                 </li>
 
-                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/admin/activitylogs')
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/admin/activitylogs/*')
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/admin/activitylogs')}>
                     <MdHistory className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Activity Logs</span>
+                </li>
+
+                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/admin/updatedatabase/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/admin/updatedatabase')}>
+                    <RxUpdate className={`${lists_default_styles.icon} size-4`} />
+                    <span className={`${lists_default_styles.span}`}>Update Database</span>
                 </li>
             </ul>
         </aside>

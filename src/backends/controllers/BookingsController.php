@@ -32,10 +32,10 @@ class BookingsController
         // $resort_id = $request->get('resort_id') ?? null;
 
         // if (is_null($resort_id)) {
-        //     echo json_encode([
-        //         'success' => false,
-        //         'error' => 'Resort ID is required.'
-        //     ]);
+        // echo json_encode([
+        //     'success' => false,
+        //     'error' => 'Resort ID is required.'
+        // ]);
         //     return;
         // };
 
@@ -44,5 +44,10 @@ class BookingsController
         // $end_date = $request->get('start_date') ?? $today;
 
         // echo json_encode(['start_date' => $start_date, 'end_date' => $end_date, 'resort_id' => $resort_id]);
+    }
+
+    public function getBookingStats()
+    {
+        echo json_encode($this->bookingsModel->getBookingStats());
     }
 }

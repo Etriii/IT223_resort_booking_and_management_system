@@ -74,4 +74,11 @@ class Booking
     public function update() {}
 
     public function destroy() {}
+
+    public function getBookingStats()
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM booking_stats_view");
+        $stmt->execute();
+        return  $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

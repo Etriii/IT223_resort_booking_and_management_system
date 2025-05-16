@@ -23,6 +23,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
         if (path.includes('/oceanview/admin/users')) return 'Manage Users';
         if (path.includes('/oceanview/admin/myaccount')) return 'My Account';
         if (path.includes('/oceanview/admin/activitylogs')) return 'Activity Logs';
+        if (path.includes('/oceanview/admin/updatedatabase')) return 'Update Database';
         return 'Admin Page';
     };
 
