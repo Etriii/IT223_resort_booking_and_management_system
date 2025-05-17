@@ -5,3 +5,4 @@ export { default as Users } from "./Users";
 export { default as AdminMyAccount } from "./MyAccount";
 export {default as AdminActivityLogs} from "./AdminActivityLogs";
 export {default as FullScreenMap} from './FullScreenMap';
+export {default as UpdateDatabase} from './UpdateDatabase';

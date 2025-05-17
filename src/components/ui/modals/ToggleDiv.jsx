@@ -101,8 +101,8 @@ const ToggleDiv = ({ buttonText = "Actions", children, containerRef }) => {
     return (
         <div className="w-full relative" ref={dropdownRef}>
             <div ref={buttonRef} onClick={() => setIsOpen(!isOpen)}
-                className="cursor-pointer bg-blue-500 text-white rounded  text-center hover:bg-blue-600 transition flex items-center justify-between px-2 py-1" >
-                {buttonText} <IoIosArrowDown className={`${isOpen ? ' rotate-180' : ''}  duration-200`} />
+                className="cursor-pointer bg-blue-500 text-white rounded  text-center hover:bg-blue-600 transition flex items-center justify-between px-2 py-1 space-x-1" >
+                <span>{buttonText}</span> <IoIosArrowDown className={`${isOpen ? ' rotate-180' : ''}  duration-200`} />
             </div>
 
             {isOpen &&

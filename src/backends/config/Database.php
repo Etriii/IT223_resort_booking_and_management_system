@@ -33,6 +33,8 @@ class Database
                     $stmt = $this->conn->prepare("SET @user_id = :user_id");
                     $stmt->execute(['user_id' => $userId]);
                 }
+
+                date_default_timezone_set('Asia/Manila');
             } catch (PDOException $e) {
                 die(json_encode(["error" => "Database Connection Failed: " . $e->getMessage()]));
             }

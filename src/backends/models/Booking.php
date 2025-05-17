@@ -15,18 +15,14 @@ class Booking
 
     public function getBookings()
     {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
+        $stmt = $this->conn->prepare("SELECT * FROM booking_full_summarry WHERE resort");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-    public function getBookingId($id)
-    {
-    }
+    public function getBookingId($id) {}
     public function getBookingByResortId($resort_id)
     {
         $stmt = $this->conn->prepare("
@@ -55,7 +51,7 @@ class Booking
     {
         $stmt = $this->conn->prepare("SELECT 
         FORMAT(SUM(bk.total_amount), 0) AS Total_Amount
-        FROM ".$this->table ." bk
+        FROM " . $this->table . " bk
         JOIN rooms r ON bk.room_id = r.id
         JOIN buildings b ON r.building_id = b.id
         JOIN resorts res ON b.resort_id = res.id
@@ -65,16 +61,38 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getBookingByRoomId($room_id)
+    public function getBookingByRoomId($room_id) {}
+
+
+    public function update() {}
+
+    public function destroy() {}
+
+    public function getBookingsInRangeOf($data)
     {
+        $query = "SELECT * FROM booking_full_summarry WHERE resort_id = :resort_id";
+
+        if (!empty($data['check_in']) && !empty($data['check_out'])) {
+            $query .= " AND check_in <= :check_out AND check_out >= :check_in";
+        }
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':resort_id', $data['resort_id']);
+
+        if (!empty($data['check_in']) && !empty($data['check_out'])) {
+            $stmt->bindParam(':check_in', $data['check_in']);
+            $stmt->bindParam(':check_out', $data['check_out']);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-    public function update()
+    public function getBookingStats()
     {
-    }
-
-    public function destroy()
-    {
+        $stmt = $this->conn->prepare("SELECT * FROM booking_stats_view");
+        $stmt->execute();
+        return  $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
