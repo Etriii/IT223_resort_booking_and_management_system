@@ -20,7 +20,7 @@ const ResortsList = () => {
               }}
             >
               Reserve your favorite spot on the beach
-            </h1>
+            </h1> 
           </div>
 
           <div className="mt-5 flex items-center px-44 pb-6">

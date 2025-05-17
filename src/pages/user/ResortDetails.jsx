@@ -6,6 +6,7 @@ import ControlledCarousel from "../../components/ui/carousel/resortdetailscarous
 import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
 
+
 const ResortDetails = ({ initialBookmarkStatus }) => {
   const { id } = useParams();
   const [resort, setResort] = useState(null);
@@ -19,6 +20,8 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const [newReview, setNewReview] = useState(""); // New review text
   const [formRating, setFormRating] = useState(0); // Rating for new review
   const [guestReview, setGuestReview] = useState(null); // Guest's own review
+ 
+  
 
   useEffect(() => {
     document.title = "Resort Details | Ocean View";
@@ -53,7 +56,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const fetchReviews = async () => {
     // Fetch reviews from API or mock data
     const fetchedReviews = []; // Replace with actual API fetch call
-    const average = 4.5; // Placeholder rating
+    const average = 4.5; 
     setReviews(fetchedReviews);
     setReviewsAverage(average);
     setReviewsCount(fetchedReviews.length);
@@ -107,11 +110,11 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
   return (
     <div>
-      <div id="body" className="px-40">
+      <div id="body" className="px-40">   
         <div
           className="bg-cover bg-no-repeat bg-center h-[45vh] relative rounded-xl"
           style={{
-            backgroundImage: `url(${resort.main_image || backgroundImage})`,
+            backgroundImage: `url(${ backgroundImage})`,
           }}
         >
           <div className="absolute inset-y-20 inset-x-96 flex items-center justify-center text-center bg-black/60 rounded-xl">
@@ -124,6 +127,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </h3>
             </div>
           </div>
+          
         </div>
 
         <div className="py-4">
@@ -175,6 +179,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
             {/* Left */}
             <div className="w-2/3 pr-8    ">
               <ControlledCarousel id={id} />
+              {/* images */}
               <div className="grid grid-cols-2 gap-6 mt-1">
                 <img
                   src={`/images/resort_images/${
@@ -194,7 +199,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 />
               </div>
 
-              <div className="mt-8 text-sm" style={{ letterSpacing: "1px" }}>
+              <div className="mt-8 text-sm tracking-wider">
                 <p>{resort.resort_description}</p>
               </div>
 
@@ -225,6 +230,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
             </div>
 
+
             {/* Right */}
             <div className="w-2/6 pl-4">
               <h1 className="beachname text-xl font-bold">Location</h1>
@@ -247,14 +253,14 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               <h3 className="text-xl font-bold mt-8">Rooms</h3>
               <RoomControlledCarousel id={id} />
               <div
-                className="mt-6 pl-1 text-sm"
-                style={{ letterSpacing: "1px" }}
+                className="mt-6 pl-1 text-sm tracking-wider"
+                
               >
                 <p className="text-black py-2 mb-8">
                   {resort.room_description}
                 </p>
               </div>
-
+                  
               <NavLink
                 to={`/oceanview/resortbuildings/${resort.id}`}
                 className="text-black border-2 border-black hover:text-white hover:bg-blue-500 hover:border-none no-underline font-bold p-4 flex justify-center rounded-full"
@@ -299,13 +305,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
             </div>
           </div>
 
-
-
-
-
-
-
-
           <div className="mt-32 mb-40">
             <NavLink
               to={`/oceanview/resortbuildings/${resort.id}`}
@@ -314,15 +313,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               Book Now
             </NavLink>
           </div>
-
-
-
-
-
-
-
-
-
 
           <hr className="w-full border-t border-black my-2" />
           <h3 className="text-2xl font-bold pb-4">Reviews</h3>

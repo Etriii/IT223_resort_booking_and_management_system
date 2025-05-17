@@ -21,7 +21,7 @@ import { apiFetch } from '../../utils/apiFetch';
 const Resorts = () => {
 
     const containerRef = useRef(null);
-
+ 
     const [resorts, setResorts] = useState();
     // Forms
     const [createResortForm, setCreateResortForm] = useState({
@@ -160,7 +160,7 @@ const Resorts = () => {
     //             [name]: value
     //         }
     //     }));
-    // };
+    // }; 
     const handleEditFormInputChange = (allValues) => {
         setEditResortForm(prev => ({
             ...prev,

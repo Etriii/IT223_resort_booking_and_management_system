@@ -36,7 +36,7 @@ class Resorts
     }
     public function getDetailsByResortId($resort_id)
     {
-        $stmt = $this->conn->prepare("SELECT r.id, r.location_coordinates, r.resort_description, r.room_description,
+        $stmt = $this->conn->prepare("SELECT r.id, r.resort_description, r.room_description,
         GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities FROM resorts r LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
         WHERE r.id = :resort_id GROUP BY r.id; ");
         $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
@@ -45,15 +45,14 @@ class Resorts
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateResortDetails($resort_id, $location, $resort_description, $room_description)
+    public function updateResortDetails($resort_id, $resort_description, $room_description)
     {
         $stmt = $this->conn->prepare("
         UPDATE " . $this->table . " 
-        SET location_coordinates = :location, resort_description = :resort_description, room_description = :room_description 
+        SET resort_description = :resort_description, room_description = :room_description 
         WHERE id = :resort_id
     ");
 
-        $stmt->bindParam(':location', $location);
         $stmt->bindParam(':resort_description', $resort_description);
         $stmt->bindParam(':room_description', $room_description);
         $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
@@ -120,7 +119,7 @@ class Resorts
     public function uploadResortImageById($id, $imageField, $image)
     {
 
-        $allowedFields = ['image1', 'image1_2', 'image1_3', 'main_image', 'image2', 'image3', 'room_image_1', 'room_image_2', 'room_image3'];
+        $allowedFields = ['image1', 'image1_2', 'image1_3', 'main_image', 'image2', 'image3', 'room_image_1', 'room_image_2', 'room_image_3'];
         if (!in_array($imageField, $allowedFields)) {
             return false;
         }
