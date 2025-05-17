@@ -29,21 +29,20 @@ class BookingsController
 
     public function getBookingsInRangeOf(Request $request)
     {
-        // $resort_id = $request->get('resort_id') ?? null;
+        $resort_id = $request->get('resort_id') ?? null;
 
-        // if (is_null($resort_id)) {
-        // echo json_encode([
-        //     'success' => false,
-        //     'error' => 'Resort ID is required.'
-        // ]);
-        //     return;
-        // };
+        if (is_null($resort_id)) {
+            // echo json_encode([
+            //     'success' => false,
+            //     'error' => 'Resort ID is required.'
+            // ]);
+            return;
+        };
 
-        // $today =  (new DateTime())->format('Y-m-d');
-        // $start_date = $request->get('start_date') ?? $today;
-        // $end_date = $request->get('start_date') ?? $today;
+        $start_date = $request->get('start_date') ??  (new DateTime())->format('Y-m-d');
+        $end_date = $request->get('end_date') ?? (new DateTime($start_date))->modify('+1 day')->format('Y-m-d');
 
-        // echo json_encode(['start_date' => $start_date, 'end_date' => $end_date, 'resort_id' => $resort_id]);
+        echo json_encode($this->bookingsModel->getBookingsInRangeOf(['check_in' => $start_date, 'check_out' => $end_date, 'resort_id' => $resort_id]));
     }
 
     public function getBookingStats()

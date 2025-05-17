@@ -10,6 +10,10 @@ import ActionNotification from '../../../components/ui/modals/ActionNotification
 import { ReservationsFilterModal } from '../../../pages/resort_admin/modals'
 import { useFetchReservations, useFetchUserRoleWithResortId } from '../../../hooks'
 
+import { MdOutlineDeleteForever } from 'react-icons/md'
+import { BiSolidEditAlt } from 'react-icons/bi'
+import { LuEye } from 'react-icons/lu'
+
 const ReservationTables = () => {
 
   const containerRef = useRef(null);
@@ -38,7 +42,7 @@ const ReservationTables = () => {
     setModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  const openModal = (variant, resort) => {
+  const openModal = (variant, reservation) => {
     let children;
     let modal_title;
 
@@ -122,7 +126,7 @@ const ReservationTables = () => {
 
   // Table Filters
 
-  const [filters, setFilters] = useState({ paginate: 5, page: 1 });
+  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: '02-2-2024', end_date: null });
 
   const filteredReservation = reservations?.filter(resort => {
     return true;
@@ -135,41 +139,42 @@ const ReservationTables = () => {
     setFilters((prev) => ({ ...prev, page: 1 }));
   }, [filters.paginate]);
 
-
   return (
     <div className={`bg-gray-50 lg:order-1 p-4`}>
 
       <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
       {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
-      <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Username', create_label: 'New' }} />
+      <div className={`sticky top-[4.5rem]`}>
+        <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Username', create_label: 'New' }} />
+        <Table theadings={['b_id', 'username', 'room_id', 'check_in', 'check_out', 'total_amount', 'status', 'actions']} isLoading={loading} containerRef={containerRef} >
+          {filteredReservation.length > 0 ? (
+            paginatedReservation.map((reservation, index) => (
+              <TableData
+                key={reservation.booking_id || index}
+                columns={[
+                  reservation.booking_id,
+                  reservation.user_name,
+                  reservation.room_id,
+                  reservation.check_in,
+                  reservation.check_out,
+                  reservation.total_amount,
+                  reservation.status,
+                  <ToggleDiv buttonText="Actions" containerRef={containerRef}>
+                    <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', reservation) }}> <LuEye className="size-5 mr-2" />View </div>
+                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', reservation) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
+                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', reservation) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
+                  </ToggleDiv>
+                ]}
+              />
+            ))
+          ) : (
+            <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Reservation found.</div></td></tr>
+          )}
+        </Table>
 
-      <Table theadings={['user_id', 'room_id', 'check_in', 'check_out', 'total_amount', 'status', 'actions']} isLoading={loading} containerRef={containerRef} >
-        {filteredReservation.length > 0 ? (
-          paginatedReservation.map((reservation, index) => (
-            <TableData
-              key={reservation.id || index}
-              columns={[
-                reservation.id,
-                // // resort.name || 'Resort Name',
-                // // (resort.tax_rate ?? '12') + '%',
-                // // resort.status || 'Active',
-                // // resort.contact_details || '09633127462',
-                // // resort.created_at || '2025-04-24',
-                // <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                //   <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', resort) }}> <LuEye className="size-5 mr-2" />View </div>
-                //   <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', resort) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
-                //   <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', resort) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
-                // </ToggleDiv>
-              ]}
-            />
-          ))
-        ) : (
-          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Reservation found.</div></td></tr>
-        )}
-      </Table>
-
-      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredReservation} />
+        <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredReservation} />
+      </div>
     </div>
   )
 }

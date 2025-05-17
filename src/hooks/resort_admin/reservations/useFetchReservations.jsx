@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import { apiFetch } from '../../../utils/apiFetch';
 
-const useFetchReservations = ({ resort_id, start_date, end_date }) => {
+// const useFetchReservations = ({ resort_id, start_date = , end_date =  }) => {
+const useFetchReservations = ({ resort_id, start_date = new Date(Date.now() + 86400000).toISOString().split('T')[0], end_date = new Date(Date.now() + 86400000).toISOString().split('T')[0] }) => {
 
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);

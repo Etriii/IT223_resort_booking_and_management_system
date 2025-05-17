@@ -8,7 +8,7 @@ const ManageResort = () => {
         document.title = "Reservations | Ocean View";
     }, []);
     return (
-        <div className={`grid lg:grid-cols-[1fr_400px] gap-2`}>
+        <div className={`grid lg:grid-cols-[1fr_300px] gap-2`}>
             <ReservationStat />
             <ReservationTables />
         </div>
