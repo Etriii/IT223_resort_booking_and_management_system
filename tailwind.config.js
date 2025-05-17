@@ -5,8 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        caladea: ['Caladea', 'serif'],
+        cantarell: ['Cantarell', 'sans-serif'],
+        allerta: ['"Allerta Stencil"', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
-

@@ -4,6 +4,7 @@ import { Line } from "react-chartjs-2";
 
 const Linechart = ({ span, height }) => {
   const [filter, setFilter] = React.useState("monthly");
+  const [notify, setNotify] = useState();
   
     useEffect(() => {
       const fetchBookings = async () => {

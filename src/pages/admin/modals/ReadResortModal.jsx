@@ -51,7 +51,7 @@ const ReadResortModal = ({ resort }) => {
             admins.map((admin, index) => (
               <TableData
                 key={index}
-                columns={[
+                columns={[ 
                   admin.id,
                   admin.username || 'Unknown',
                   admin.role || "Secret"

@@ -1,12 +1,12 @@
-import UserLayout from '../../layouts/UserLayout';
-import backgroundImage from '../../assets/images/home/backgroundaboutus.jpg';
-import ambot from '../../assets/images/home/ambot.jpg';
-import gal1 from '../../assets/images/home/gal1.jpg';
-import fridayImage from '../../assets/images/home/friday.jpeg';
-import fridayssImage from '../../assets/images/home/fridayss.jpeg';
-import UserFooter from '../../components/ui/layout/footers/UserFooter.jsx';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import UserLayout from "../../layouts/UserLayout";
+import backgroundImage from "../../assets/images/home/backgroundaboutus.jpg";
+import ambot from "../../assets/images/home/ambot.jpg";
+import gal1 from "../../assets/images/home/gal1.jpg";
+import fridayImage from "../../assets/images/home/friday.jpeg";
+import fridayssImage from "../../assets/images/home/fridayss.jpeg";
+import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import GuestProfileModal from '../../components/ui/modals/guest_info.jsx';
 
 const HomePage = () => {
@@ -15,7 +15,11 @@ const HomePage = () => {
 
   useEffect(() => {
     document.title = "Home | Ocean View";
-
+    if (localStorage.getItem("user_id")) {
+      console.log("Yes po");
+    } else {
+      console.log("awww");
+    }
     const userId = localStorage.getItem('user_id');
     if (userId) {
       console.log("Yes po");
@@ -57,136 +61,129 @@ const HomePage = () => {
   };
 
   return (
-
-    <div>
-      <div id='body' className='px-40'>
-        <section style={{ height: "350px", position: 'relative', borderRadius: '1rem' }}>
+    <>
+      <div id="body" className="h-[90vh] mb-10">
+        <section className="relative h-full">
           <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: `url(${backgroundImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'brightness(70%)',
-              borderRadius: '1rem',
-              zIndex: -1,
-            }}
+            className="absolute top-0 left-0 w-full h-full bg-cover bg-center brightness-[70%] -z-10"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
           />
-          <div style={{ position: 'relative', zIndex: 1, color: 'white', textAlign: 'center' }}>
-            <h1 style={{
-              fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '50px',
-              textShadow: '12px 12px 80px #000000',
-              paddingTop: '5.5rem',
-            }}>
-              Ocean View
-            </h1>
-            <p style={{
-              fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '18px',
-              textShadow: '12px 12px 80px #000000',
-              paddingTop: '1.25rem',
-              width: '65rem',
-              margin: '0 auto',
-            }}>
-              Join us for an unparalleled beach day, luxuriating in the premium services that complement the natural beauty surrounding you. Book your daybed or table now to ensure your spot in this tropical oasis.
-            </p>
+
+          <div className="relative flex items-center justify-center h-full text-center text-white">
+            <div className="max-w-[65rem]">
+              <h1
+                className="font-allerta text-[10vh] tracking-wider"              
+              >
+                Ocean View
+              </h1>
+              <p
+                className="font-allerta pt-5 text-xl tracking-wide text-shadow"
+              >
+                Join us for an unparalleled beach day, luxuriating in the
+                premium services that complement the natural beauty surrounding
+                you. Book your daybed or table now to ensure your spot in this
+                tropical oasis.
+              </p>
+            </div>
           </div>
         </section>
+      </div>
+      {/* top done */}
 
-
-
-
-
-        <div className="flex mt-24 max-w-full">
-          <div className="w-1/3">
+      <div className="sm:mx-8 md:mx-8 lg:mx-15 xl:mx-20">
+        <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5 gap-5 bg-white px-6 py-10 items-stretch">
+          {/* Left */}
+          <div className="md:col-span-2 lg:col-span-2 h-full">
             <img
               src={ambot}
-              alt="..."
-              className="w-full h-full object-cover rounded-[1rem]"
+              alt="Beach Club"
+              className="rounded-2xl w-full object-cover"
             />
           </div>
-          <div className="w-2/3 p-4 flex flex-col justify-center">
-            <div className="card-body pl-8">
-              <h4 className="font-caladea tracking-widest text-[#812C2C] text-[35px]">
-                Seamlessly blending luxury with nature.
-              </h4>
-              <p className="tracking-widest font-cantarell text-[15px]">
-                A place to connect while the sun sails from east to west. Walls are not compulsory, organic shapes & composition at every sight. Natural material and earthy tones are dominant. Opening onto gorgeous iconic landscapes and majestic coastlines, welcoming you to a rendition of “Little Bali”.
-              </p>
-              <span className="border border-black rounded-[20px] px-4 py-2 inline-block mt-[2.5rem]">
-                <a href="/about-us" className="no-underline text-[1.2rem]">
-                  About Us
-                </a>
-              </span>
-            </div>
+
+          {/* Right */}
+          <div className="md:col-span-3 lg:col-span-3 text-left max-w-5xl self-start mx-auto">
+            <h2 className="font-caladea tracking-wider text-3xl sm:text2xl md:text-4xl lg:text-5xl font-semibold text-[#7b3f3f] leading-snug">
+              Seamlessly blending luxury with nature.
+            </h2>
+            <p className="tracking-wider md:text-sm lg:text-xl text-gray-700 mt-4 text-base leading-relaxed">
+              A place to connect while the sun sails from east to west. Walls
+              are not compulsory, organic shapes & composition at every sight.
+              Natural material and earthy tones are dominant. Opening onto
+              gorgeous iconic landscapes and majestic coastlines, welcoming you
+              to a rendition of “Little Bali”.
+            </p>
+            <button className="mt-6 px-6 py-2 border border-black rounded-full hover:bg-black hover:text-white transition">
+              About Us
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-200 p-5">
+        <div className="grid sm:mx-8 md:mx-8 lg:mx-15 xl:mx-20">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-0 mt-10">
+            <h3 className="font-caladea tracking-wider text-3xl sm:text2xl md:text-4xl lg:text-5xl font-semibold text-[#812C2C] mb-3">
+              Experience a warm welcome at Ocean View
+            </h3>
+            <h5 className="font-cantarell tracking-wider md:text-xl lg:text-xl text-gray-700 mt-4 text-base leading-relaxed">
+              Choose & secure your perfect spot or enjoy panoramic ocean views
+              or relish a captivating sunset. Dive into an ambiance where every
+              detail uplifts your spirit.
+            </h5>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            {[
+              {
+                title: "Hof Gorei Beach",
+                image: gal1,
+                desc: "Hof Gorei Beach Resort is a charming beachfront resort in Samal Island, offering a serene escape with its natural beauty.",
+              },
+              {
+                title: "Friday Beach Resort",
+                image: fridayImage,
+                desc: "Fridays Boracay Beach Resort is a tropical paradise located on the white sandy shores of Boracay.",
+              },
+              {
+                title: "Punta Verde Resort",
+                image: fridayssImage,
+                desc: "Punta Verde Resort is a beachfront resort with white sandy beaches, clear waters, and cozy amenities.",
+              },
+            ].map((resort, idx) => (
+              <div className="card h-full" key={idx}>
+                <img
+                  src={resort.image}
+                  className="card-img-top rounded-[1rem] h-[20rem]"
+                  alt="..."
+                />
+                <div className="card-body">
+                  <h5 className="font-caladea tracking-widest text-[#812C2C] text-[25px] mt-4">
+                    {resort.title}
+                  </h5>
+                  <p className="tracking-widest font-cantarell text-[1.3rem] mt-2">
+                    {resort.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-
-
-
-
-
-        <div className="w-[70rem] mb-0 mt-24">
-          <h3 className="font-caladea tracking-widest text-[#812C2C] text-[35px] w-full">
-            Experience a warm welcome at Ocean View.
-          </h3>
-          <h5 className=" tracking-widest font-cantarell  text-[15px]">
-            Choose & secure your perfect spot or enjoy panoramic ocean views or relish a captivating sunset. Dive into an ambiance where every detail uplifts your spirit.
-          </h5>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          {[
-            {
-              title: "Hof Gorei Beach",
-              image: gal1,
-              desc:
-                "Hof Gorei Beach Resort is a charming beachfront resort in Samal Island, offering a serene escape with its natural beauty.",
-            },
-            {
-              title: "Friday Beach Resort",
-              image: fridayImage,
-              desc:
-                "Fridays Boracay Beach Resort is a tropical paradise located on the white sandy shores of Boracay.",
-            },
-            {
-              title: "Punta Verde Resort",
-              image: fridayssImage,
-              desc:
-                "Punta Verde Resort is a beachfront resort with white sandy beaches, clear waters, and cozy amenities.",
-            },
-          ].map((resort, idx) => (
-            <div className="card h-full" key={idx}>
-              <img src={resort.image} className="card-img-top rounded-[1rem] h-[20rem]" alt="..." />
-              <div className="card-body">
-                <h5 className="font-caladea tracking-widest text-[#812C2C] text-[25px] mt-4">
-                  {resort.title}
-                </h5>
-                <p className="tracking-widest font-cantarell text-[1.3rem] mt-2">{resort.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-
-        <div className="mt-12 mx-5">
+        <div className="mt-5">
           <div className="text-center mb-5 mt-32">
             <span className="me-5 p-3 border border-black rounded-[50px] text-[1.5rem]">
-
-              <Link to="/oceanview/resortslist" className="no-underline tracking-wide">
+              <Link
+                to="/oceanview/resortslist"
+                className="no-underline tracking-wide"
+              >
                 View All Resorts
               </Link>
-
             </span>
           </div>
         </div>
       </div>
+
       <UserFooter />
       {isModalOpen && (
         <GuestProfileModal
@@ -195,16 +192,10 @@ const HomePage = () => {
           onSave={(formData) => console.log('Save guest details', formData)}
         />
       )}
-    </div>
-
-
-
-
+    </>
   );
 
 
 }
-
-
 
 export default HomePage;

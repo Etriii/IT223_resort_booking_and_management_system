@@ -21,7 +21,7 @@ class ResortsController
     public function createResort(Request $request)
     {
 
-        $requiredFields = ['name', 'location', 'location_coordinates', 'tax_rate', 'contact_details'];
+        $requiredFields = ['name', 'location_coordinates', 'tax_rate', 'contact_details'];
 
         foreach ($requiredFields as $field) {
             if (empty($request->get('input_data')[$field])) {
@@ -136,11 +136,11 @@ class ResortsController
 
         $resort = $this->resortsModel->getDetailsByResortId($id);
 
-        // if ($resort) {
-        //     echo json_encode(["success" => true, "resort" => $resort]);
-        // } else {
-        //     echo json_encode(["success" => false, "message" => "Resort not found"]);
-        // }
+        if ($resort) {
+            echo json_encode(["success" => true, "resort" => $resort]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Resort not found"]);
+        }
     }
 
     public function updateResortDetails()
@@ -148,22 +148,21 @@ class ResortsController
         $input = json_decode(file_get_contents('php://input'), true);
 
         $id = $input['id'] ?? null;
-        $location = $input['location'] ?? '';
         $resort_description = $input['resort_description'] ?? '';
         $room_description = $input['room_description'] ?? '';
 
-        // if (!$id) {
-        //     echo json_encode(["success" => false, "message" => "Missing resort ID"]);
-        //     return;
-        // }
+        if (!$id) {
+            echo json_encode(["success" => false, "message" => "Missing resort ID"]);
+            return;
+        }
 
-        $updated = $this->resortsModel->updateResortDetails($id, $location, $resort_description, $room_description);
+        $updated = $this->resortsModel->updateResortDetails($id, $resort_description, $room_description);
 
-        // if ($updated) {
-        //     echo json_encode(["success" => true]);
-        // } else {
-        //     echo json_encode(["success" => false, "message" => "Update failed"]);
-        // }
+        if ($updated) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Update failed"]);
+        }
     }
 
 
@@ -173,7 +172,7 @@ class ResortsController
         $image = $request->get('image');
         $imageField = $request->get('imageField');
 
-        $allowedFields = ['image1', 'image1_2', 'image1_3', 'main_image', 'image2', 'image3', 'room_image_1', 'room_image_2', 'room_image3'];
+        $allowedFields = ['image1', 'image1_2', 'image1_3', 'main_image', 'image2', 'image3', 'room_image_1', 'room_image_2', 'room_image_3'];
 
         if (empty($resort_id) || empty($imageField) || empty($image) || !in_array($imageField, $allowedFields)) {
             echo json_encode([

@@ -52,7 +52,7 @@ const GuestProfileModal = ({ isOpen, onClose, onSave }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="max-w-2xl h-[85vh] w-full bg-white rounded-lg shadow-lg px-10 pb-8 pt-7 overflow-y-auto"  style={{ scrollbarWidth: 'none' }}>
+            <div className="max-w-2xl h-[85vh] w-full max-h-[90%] overflow-y-auto bg-white rounded-lg shadow-lg px-10 pb-8 pt-7 overflow-y-auto"  style={{ scrollbarWidth: 'none' }}>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold">Guest Profile Information</h3>
                     <button onClick={onClose} className="text-gray-600 hover:text-gray-900 font-bold">

@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { getResortById, uploadResortImageById } from "../../utils/cloudinaryapi";
+import fetchImages from "../../hooks/cloudinary/useFetchImages";
+import { uploadResortImageById } from "../../utils/cloudinaryapi";
 
 const CLOUD_NAME = "dpa4l9gxw";
 
 const CarouselImageCard = ({ title, styles, imageField }) => {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl , setImageUrl] = fetchImages(imageField);
 
-  useEffect(() => {
-    const resort_id = localStorage.getItem("user_role")
-      ? JSON.parse(localStorage.getItem("user_role"))[0]["resort_id"]
-      : null;
+  // useEffect(() => {
+  //   const resort_id = localStorage.getItem("user_role")
+  //     ? JSON.parse(localStorage.getItem("user_role"))[0]["resort_id"]
+  //     : null;
 
-    if (!resort_id) return;
+  //   if (!resort_id) return;
 
-    const fetchImage = async () => {
-      const data = await getResortById(resort_id);
+  //   const fetchImage = async () => {
+  //     const data = await getResortById(resort_id);
 
-      if (data?.success && data.resort?.[imageField]) {
-        const publicId = data.resort[imageField];
-        const constructedUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${publicId}`;
-        setImageUrl(constructedUrl);
-      }
-    };
+  //     if (data?.success && data.resort?.[imageField]) {
+  //       const publicId = data.resort[imageField];
+  //       const constructedUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${publicId}`;
+  //       setImageUrl(constructedUrl);
+  //     }
+  //   };
 
-    fetchImage();
-  }, [imageField]);
+  //   fetchImage();
+  // }, [imageField]);
 
   const handleImageUpload = async (event) => {
     const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]

@@ -3,7 +3,6 @@ import AdminLayout from "../../layouts/ResortAdminLayout";
 import CarouselImageCard from "../../components/Resort_admin/CarouselImageCard";
 
 const ManageResort = () => {
-    const [location, setLocation] = useState("");
   const [resortDescription, setResortDescription] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
   const [amenities, setAmenities] = useState("");
@@ -20,7 +19,6 @@ const ManageResort = () => {
         const data = await response.json();
 
         if (data?.success && data.resort) {
-          setLocation(data.resort.location_coordinates || "");
           setResortDescription(data.resort.resort_description || "");
           setRoomDescription(data.resort.room_description || "");
           setAmenities((data.resort.amenities || ""));
@@ -47,10 +45,9 @@ const ManageResort = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: resort_id,
-          location,
           resort_description: resortDescription,
           room_description: roomDescription,
-          amenities: amenities,
+          amenities:amenities,
         }),
       }
     );
@@ -80,20 +77,9 @@ const ManageResort = () => {
         <CarouselImageCard styles="col-span-2 sm:col-span-3 lg:col-span-2" title="Image 5" imageField="image3"/>
         <CarouselImageCard styles="col-span-2 sm:col-span-3 lg:col-span-3" title="Room Image 1" imageField="room_image_1"/>
         <CarouselImageCard styles="col-span-2 sm:col-span-3 lg:col-span-2" title="Room Image 2" imageField="room_image_2"/>
-    
         <CarouselImageCard styles="col-span-2 sm:col-span-3 lg:col-span-2" title="Room Image 3" imageField="room_image_3"/>
 
         <div className="col-span-7 tracking-wider text-lg">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Location
-          </label>
-          <input
-            type="text"
-            placeholder="Type here..."
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Resort Description
           </label>
