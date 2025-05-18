@@ -61,7 +61,8 @@ const Table = ({ children, theadings, isLoading = false, containerRef }) => {
     // }, [children]);
 
     return (
-        // <div className={`${showDiv ? 'overflow-x-auto' : ''}`}>
+        // showDiv
+        // <div className={`${true ? 'overflow-x-auto overflow-y-visible' : ''}`}>
         <table ref={containerRef} className={`${styles.table}`} >
             <thead className={`${styles.theading}`}>
                 <tr>

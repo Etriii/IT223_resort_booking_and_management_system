@@ -47,17 +47,19 @@
 // export default UserHeading;
 
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useMatch } from "react-router-dom";
 import logout from "../../../../utils/logout";
-import { FaUserCog, FaSignOutAlt, FaBell } from "react-icons/fa";
+import { FaUserCog, FaSignOutAlt, FaBell, FaRegBookmark, FaClipboardList, FaHistory } from "react-icons/fa";
 
 import logo from '../../../../assets/images/logo/ov_logo.png';
 import { IoIosArrowDown } from "react-icons/io";
+
 
 const UserHeading = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+
     const dropdownRef = useRef(null);
 
     const navigateToLogInPage = () => {
@@ -117,8 +119,23 @@ const UserHeading = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const link_styles = {
+        active: 'bg-green-600 text-white pointer-events-none',
+        passive: 'bg-white cursor-pointer',
+    };
+
+    const myAccountmatch = useMatch('/oceanview/myaccount/*');
+    const bookmarkmatch = useMatch('/oceanview/bookmarks/*');
+    const myreservationsmatch = useMatch('/oceanview/myreservations/*');
+    const transactionshistorymatch = useMatch('/oceanview/transactionshistory/*');
+
+    const homeMatch = useMatch("/oceanview");
+    const aboutMatch = useMatch("/oceanview/about");
+    const termsMatch = useMatch("/oceanview/termsandprivacy");
+    const resortsMatch = useMatch("/oceanview/resortslist");
+
     return (
-        <header className="border-b w-full sticky top-0 bg-white z-10 px-6 py-1 shadow-lg">
+        <header className="border-b w-full sticky top-0 bg-white z-10 px-6 py-[5px] shadow-lg">
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-10">
                     <div className="flex items-center space-x-2">
@@ -129,11 +146,40 @@ const UserHeading = () => {
                         />
                         <h1 className="text-xl font-semibold text-gray-600">Ocean View</h1>
                     </div>
-                    <nav className="space-x-4 text-sm text-gray-600">
-                        <a href="">Home</a>
-                        <a href="">About Us</a>
-                        <a href="">Terms & Privacy</a>
-                        <a href="">Resorts</a>
+                    <nav className="space-x-1 text-sm text-gray-600">
+                        <div className="flex space-x-2">
+                            <button
+                                className={`hover:bg-gray-200 p-2 ${homeMatch ? "text-green-700 font-semibold" : "text-gray-700"
+                                    }`}
+                                onClick={() => navigate("/oceanview")}
+                            >
+                                Home
+                            </button>
+
+                            <button
+                                className={`hover:bg-gray-200 p-2 ${aboutMatch ? "text-green-700 font-semibold" : "text-gray-700"
+                                    }`}
+                                onClick={() => navigate("/oceanview/about")}
+                            >
+                                About Us
+                            </button>
+
+                            <button
+                                className={`hover:bg-gray-200 p-2 ${termsMatch ? "text-green-700 font-semibold" : "text-gray-700"
+                                    }`}
+                                onClick={() => navigate("/oceanview/termsandprivacy")}
+                            >
+                                Terms & Privacy
+                            </button>
+
+                            <button
+                                className={`hover:bg-gray-200 p-2 ${resortsMatch ? "text-green-700 font-semibold" : "text-gray-700"
+                                    }`}
+                                onClick={() => navigate("/oceanview/resortslist")}
+                            >
+                                Resorts
+                            </button>
+                        </div>
                     </nav>
                 </div>
 
@@ -144,7 +190,7 @@ const UserHeading = () => {
                                 <FaBell className="text-gray-600 text-xl" />
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">15</span>
                             </div>
-                            <div className={``}>
+                            <div className={`text-sm`}>
                                 {userName ?? 'Username'}
                             </div>
                             <button onClick={toggleMenu} className="relative focus:outline-none">
@@ -158,21 +204,52 @@ const UserHeading = () => {
                         </div>
 
                         {menuOpen && (
-                            <div className="absolute right-0 mt-1 w-48 bg-white rounded shadow-lg py-2 z-50 border border-gray-200">
-                                <button
-                                    onClick={() => navigate("/oceanview/account")}
-                                    className="w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100"
-                                >
-                                    <FaUserCog />
-                                    <span>My Account</span>
-                                </button>
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full px-4 py-2 flex items-center space-x-2 text-red-600 hover:bg-red-100"
-                                >
-                                    <FaSignOutAlt />
-                                    <span>Logout</span>
-                                </button>
+                            <div className="absolute right-0 w-48 bg-white rounded shadow-lg py-1 z-50 border border-gray-200">
+                                <div className="absolute right-0 w-48 bg-white rounded shadow-lg py-1 z-50 border border-gray-200">
+                                    <button
+                                        onClick={() => navigate("/oceanview/myaccount")}
+                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                        ${myAccountmatch ? link_styles.active : link_styles.passive}`}
+                                    >
+                                        <FaUserCog />
+                                        <span>Account</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => navigate("/oceanview/bookmarks")}
+                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                         ${bookmarkmatch ? link_styles.active : link_styles.passive}`}
+                                    >
+                                        <FaRegBookmark />
+                                        <span>Bookmarks</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => navigate("/oceanview/myreservations")}
+                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                        ${myreservationsmatch ? link_styles.active : link_styles.passive}`}
+                                    >
+                                        <FaClipboardList />
+                                        <span>Reservation</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => navigate("/oceanview/transactionshistory")}
+                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                        ${transactionshistorymatch ? link_styles.active : link_styles.passive}`}
+                                    >
+                                        <FaHistory />
+                                        <span>Transactions</span>
+                                    </button>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full px-4 py-2 flex items-center space-x-2 text-red-600 hover:bg-red-100"
+                                    >
+                                        <FaSignOutAlt />
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>
