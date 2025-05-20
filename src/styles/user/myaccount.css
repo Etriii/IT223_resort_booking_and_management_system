@@ -1,0 +1,18 @@
+.floating-label {
+  position: relative;
+  width: 100%;
+}
+
+.floating-label input,
+.floating-label textarea {
+  @apply w-full px-4 pt-5 pb-2 text-base border border-gray-300 rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400;
+}
+
+.floating-label label {
+  @apply absolute left-4 top-2.5 text-gray-400 text-sm transition-all pointer-events-none;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  @apply top-0 text-xs text-yellow-500;
+}
