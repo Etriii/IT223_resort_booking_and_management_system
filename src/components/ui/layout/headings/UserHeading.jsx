@@ -205,51 +205,49 @@ const UserHeading = () => {
 
                         {menuOpen && (
                             <div className="absolute right-0 w-48 bg-white rounded shadow-lg py-1 z-50 border border-gray-200">
-                                <div className="absolute right-0 w-48 bg-white rounded shadow-lg py-1 z-50 border border-gray-200">
-                                    <button
-                                        onClick={() => navigate("/oceanview/myaccount")}
-                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                <button
+                                    onClick={() => navigate("/oceanview/myaccount")}
+                                    className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
                                         ${myAccountmatch ? link_styles.active : link_styles.passive}`}
-                                    >
-                                        <FaUserCog />
-                                        <span>Account</span>
-                                    </button>
+                                >
+                                    <FaUserCog />
+                                    <span>Account</span>
+                                </button>
 
-                                    <button
-                                        onClick={() => navigate("/oceanview/bookmarks")}
-                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                <button
+                                    onClick={() => navigate("/oceanview/bookmarks")}
+                                    className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
                                          ${bookmarkmatch ? link_styles.active : link_styles.passive}`}
-                                    >
-                                        <FaRegBookmark />
-                                        <span>Bookmarks</span>
-                                    </button>
+                                >
+                                    <FaRegBookmark />
+                                    <span>Bookmarks</span>
+                                </button>
 
-                                    <button
-                                        onClick={() => navigate("/oceanview/myreservations")}
-                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                <button
+                                    onClick={() => navigate("/oceanview/myreservations")}
+                                    className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
                                         ${myreservationsmatch ? link_styles.active : link_styles.passive}`}
-                                    >
-                                        <FaClipboardList />
-                                        <span>Reservation</span>
-                                    </button>
+                                >
+                                    <FaClipboardList />
+                                    <span>Reservation</span>
+                                </button>
 
-                                    <button
-                                        onClick={() => navigate("/oceanview/transactionshistory")}
-                                        className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
+                                <button
+                                    onClick={() => navigate("/oceanview/transactionshistory")}
+                                    className={`w-full px-4 py-2 flex items-center space-x-2 text-gray-700 hover:bg-gray-100 
                                         ${transactionshistorymatch ? link_styles.active : link_styles.passive}`}
-                                    >
-                                        <FaHistory />
-                                        <span>Transactions</span>
-                                    </button>
+                                >
+                                    <FaHistory />
+                                    <span>Transactions</span>
+                                </button>
 
-                                    <button
-                                        onClick={handleLogout}
-                                        className="w-full px-4 py-2 flex items-center space-x-2 text-red-600 hover:bg-red-100"
-                                    >
-                                        <FaSignOutAlt />
-                                        <span>Logout</span>
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full px-4 py-2 flex items-center space-x-2 text-red-600 hover:bg-red-100"
+                                >
+                                    <FaSignOutAlt />
+                                    <span>Logout</span>
+                                </button>
                             </div>
                         )}
                     </div>

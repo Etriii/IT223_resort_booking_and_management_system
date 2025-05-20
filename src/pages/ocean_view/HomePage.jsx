@@ -62,7 +62,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div id="body" className="h-[90vh] mb-10">
+      <div id="body" className="h-[93vh] mb-10">
         <section className="relative h-full">
           <div
             className="absolute top-0 left-0 w-full h-full bg-cover bg-center brightness-[70%] -z-10"
