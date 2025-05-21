@@ -24,7 +24,7 @@ const MyAccount = () => {
                 <div className="flex justify-center mb-8">
                     <div className="relative group w-40 h-40">
                         <img
-                            src={profilePhoto || "https://via.placeholder.com/150"}
+                            src={profilePhoto || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvQ37pgm9wBYYq3DLzl5v8F7LgL39GZE5pyw&s"}
                             alt="Profile"
                             className="rounded-full object-cover w-full h-full border shadow"
                         />
@@ -42,13 +42,13 @@ const MyAccount = () => {
                             <label className="font-medium flex items-center gap-2">
                                 <FaUser /> Username
                             </label>
-                            <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Username" />
+                            <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Username" />
                         </div>
                         <div className="space-y-2">
                             <label className="font-medium flex items-center gap-2">
                                 <FaEnvelope /> Email
                             </label>
-                            <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Email" />
+                            <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Email" />
                         </div>
                         <div className="space-y-2">
                             <label className="font-medium flex items-center gap-2">
@@ -56,7 +56,7 @@ const MyAccount = () => {
                             </label>
                             <input
                                 type="password"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200"
                                 placeholder="New Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -72,9 +72,9 @@ const MyAccount = () => {
                                 <FaUser /> Full Name
                             </label>
                             <div className="space-y-1">
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200 " placeholder="First Name" />
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Middle Name" />
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Surname" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200 " placeholder="First Name" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Middle Name" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Surname" />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -82,16 +82,16 @@ const MyAccount = () => {
                                 <FaMapMarkerAlt /> Address
                             </label>
                             <div className="space-y-1">
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Region" />
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Province" />
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="City" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Region" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Province" />
+                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="City" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label className="font-medium flex items-center gap-2">
                                 <FaPhone /> Phone Number
                             </label>
-                            <input type="tel" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Phone Number" />
+                            <input type="tel" className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 transition duration-200" placeholder="Phone Number" />
                         </div>
                     </div>
                 </form>

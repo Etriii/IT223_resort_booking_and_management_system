@@ -15,10 +15,17 @@ import { BiSolidEditAlt } from 'react-icons/bi'
 import { LuEye } from 'react-icons/lu'
 
 const ReservationTables = () => {
-
   const containerRef = useRef(null);
 
-  const { reservations, setReservations, loading, error, setError, fetchReservations } = useFetchReservations(useFetchUserRoleWithResortId);
+
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const formatDate = (date) => date.toISOString().split('T')[0];
+  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), status: '' });
+
+  const { reservations, setReservations, loading, error, setError, fetchReservations } = useFetchReservations({ filters });
+
 
   const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
   const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
@@ -126,10 +133,9 @@ const ReservationTables = () => {
 
   // Table Filters
 
-  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: '02-2-2024', end_date: null });
-
   const filteredReservation = reservations?.filter(resort => {
-    return true;
+    const statusMatch = !filters.status || resort.status?.toLowerCase().includes(filters.status.toLowerCase());
+    return statusMatch;
   }) || [];
 
   const totalPages = Math.ceil(filteredReservation.length / filters.paginate);
@@ -138,6 +144,7 @@ const ReservationTables = () => {
   useEffect(() => {
     setFilters((prev) => ({ ...prev, page: 1 }));
   }, [filters.paginate]);
+
 
   return (
     <div className={`bg-gray-50 lg:order-1 p-4`}>
