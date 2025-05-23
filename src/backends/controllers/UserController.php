@@ -179,4 +179,10 @@ class UserController
     {
         session_destroy();
     }
+
+    public function getUserDetails(Request $request)
+    {
+        echo json_encode($this->userModel->getUserDetails($request->get('user_id')));
+        return;
+    }
 }

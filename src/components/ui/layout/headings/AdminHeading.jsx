@@ -4,7 +4,7 @@ import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 import { HiLogout } from "react-icons/hi";
 
 import { useLocation, useNavigate, useMatch } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import logout from "../../../../utils/logout";
 
@@ -12,7 +12,6 @@ import logout from "../../../../utils/logout";
 const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
 
     const location = useLocation();
-
     const navigate = useNavigate();
 
     const getHeading = () => {
@@ -65,6 +64,20 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
         }
     }
 
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpenProfile(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
     return (
         <header className={`w-ful shadow-lg px-2 py-1 flex justify-start items-center space-x-2 sticky top-0 bg-white w-full z-[400] ${className}`}>
             <div className=" hover:bg-gray-200 rounded">
@@ -80,7 +93,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
                         <IoIosNotificationsOutline className="size-7" onClick={() => handleOpenNotif()} />
                     </div>
                     <span className=" text-nowrap">{`${userName ? userName : 'Username'}`}</span>
-                    <div className="relative">
+                    <div className="relative" ref={dropdownRef}>
                         <div className=" p-1 bg-gray-100 hover:bg-gray-200 rounded-full relative">
                             <div className=" cursor-pointer size-8 text-gray-700" onClick={() => handleOpenProfile()} >
                                 <img src={userProfile ? `${userProfile}` : '/images/user_profiles/default_profile.png'} className="w-full h-full rounded-full" alt="User Profile" />
