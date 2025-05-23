@@ -5,7 +5,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ControlledCarousel from "../../components/ui/carousel/resortdetailscarousel.jsx";
 import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
-
+import useFetchImages from "../../hooks/cloudinary/useFetchImagesById.jsx";
 
 const ResortDetails = ({ initialBookmarkStatus }) => {
   const { id } = useParams();
@@ -20,8 +20,17 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const [newReview, setNewReview] = useState(""); // New review text
   const [formRating, setFormRating] = useState(0); // Rating for new review
   const [guestReview, setGuestReview] = useState(null); // Guest's own review
- 
-  
+
+  // const [mainImage] = useFetchImages(id, "main_image");
+  const [mainimage] = useFetchImages(id, "main_image");
+  const [image1] = useFetchImages(id, "image1");
+  const [image1_2] = useFetchImages(id, "image1_2");
+  const [image1_3] = useFetchImages(id, "image1_3");
+  const [image2] = useFetchImages(id, "image2");
+  const [image3] = useFetchImages(id, "image3");
+  const [room_image_1] = useFetchImages(id, "room_image_1");
+  const [room_image_2] = useFetchImages(id, "room_image_1");
+  const [room_image_3] = useFetchImages(id, "room_image_1");
 
   useEffect(() => {
     document.title = "Resort Details | Ocean View";
@@ -56,7 +65,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const fetchReviews = async () => {
     // Fetch reviews from API or mock data
     const fetchedReviews = []; // Replace with actual API fetch call
-    const average = 4.5; 
+    const average = 4.5;
     setReviews(fetchedReviews);
     setReviewsAverage(average);
     setReviewsCount(fetchedReviews.length);
@@ -110,11 +119,11 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
   return (
     <div>
-      <div id="body" className="px-40">   
+      <div id="body" className="px-40">
         <div
           className="bg-cover bg-no-repeat bg-center h-[45vh] relative rounded-xl"
           style={{
-            backgroundImage: `url(${ backgroundImage})`,
+            backgroundImage: `url(${mainimage})`,
           }}
         >
           <div className="absolute inset-y-20 inset-x-96 flex items-center justify-center text-center bg-black/60 rounded-xl">
@@ -127,7 +136,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </h3>
             </div>
           </div>
-          
         </div>
 
         <div className="py-4">
@@ -181,22 +189,22 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               <ControlledCarousel id={id} />
               {/* images */}
               <div className="grid grid-cols-2 gap-6 mt-1">
-                <img
-                  src={`/images/resort_images/${
-                    resort.image2 || "default.jpg"
-                  }`}
+                <div className="grid col-1 ">
+                  <img
+                  src={image2}
                   alt="Room Image 2"
-                  className="h-[16rem] w-50"
+                  className="h-[16rem] w-100 object-cover"
                   style={{ backgroundColor: "gray", borderRadius: "8px" }}
                 />
-                <img
-                  src={`/images/resort_images/${
-                    resort.image3 || "default.jpg"
-                  }`}
-                  alt="Room Image 3"
-                  className="h-auto w-50"
+                </div>              
+                <div className="grid col-1 ">
+                  <img
+                  src={image3}
+                  alt="Room Image 2"
+                  className="h-[16rem] w-100 object-cover"
                   style={{ backgroundColor: "gray", borderRadius: "8px" }}
                 />
+                </div>
               </div>
 
               <div className="mt-8 text-sm tracking-wider">
@@ -230,7 +238,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
             </div>
 
-
             {/* Right */}
             <div className="w-2/6 pl-4">
               <h1 className="beachname text-xl font-bold">Location</h1>
@@ -252,15 +259,12 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
               <h3 className="text-xl font-bold mt-8">Rooms</h3>
               <RoomControlledCarousel id={id} />
-              <div
-                className="mt-6 pl-1 text-sm tracking-wider"
-                
-              >
+              <div className="mt-6 pl-1 text-sm tracking-wider">
                 <p className="text-black py-2 mb-8">
                   {resort.room_description}
                 </p>
               </div>
-                  
+
               <NavLink
                 to={`/oceanview/resortbuildings/${resort.id}`}
                 className="text-black border-2 border-black hover:text-white hover:bg-blue-500 hover:border-none no-underline font-bold p-4 flex justify-center rounded-full"
