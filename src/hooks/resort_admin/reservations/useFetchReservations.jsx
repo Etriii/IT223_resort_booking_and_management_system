@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
 import { apiFetch } from '../../../utils/apiFetch';
+import { useFetchUserRoleWithResortId } from '../../../hooks'
 
-// const useFetchReservations = ({ resort_id, start_date = , end_date =  }) => {
-const useFetchReservations = ({ resort_id, start_date = new Date(Date.now() + 86400000).toISOString().split('T')[0], end_date = new Date(Date.now() + 86400000).toISOString().split('T')[0] }) => {
+// const useFetchReservations = ({ resort_id, start_date = , end_date =  }) => {start_date = new Date(Date.now() + 86400000).toISOString().split('T')[0], end_date = new Date(Date.now() + 86400000).toISOString().split('T')[0]
+const useFetchReservations = ({ filters }) => {
 
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,8 +12,7 @@ const useFetchReservations = ({ resort_id, start_date = new Date(Date.now() + 86
 
     const fetchReservations = async () => {
         try {
-            const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]?.resort_id;
-            const res = await apiFetch(`controller=Bookings&action=getBookingsInRangeOf&resort_id=${resort_id}&start_date=${start_date}&end_date=${end_date}`);
+            const res = await apiFetch(`controller=Bookings&action=getBookingsInRangeOf&resort_id=${useFetchUserRoleWithResortId()}&start_date=${filters.start_date}&end_date=${filters.end_date}`);
             const data = await res.json();
             setReservations(data);
         } catch {
@@ -27,8 +27,9 @@ const useFetchReservations = ({ resort_id, start_date = new Date(Date.now() + 86
     };
 
     useEffect(() => {
+        // console.log(filters);
         fetchReservations();
-    }, []);
+    }, [filters.start_date, filters.end_date]);
 
     return { reservations, setReservations, loading, error, setError, fetchReservations };
 }

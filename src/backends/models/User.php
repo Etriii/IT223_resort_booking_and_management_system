@@ -267,4 +267,11 @@ class User
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getUserDetails($user_id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM user_full_detail where id = :user_id");
+        $stmt->execute(['user_id' => $user_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
