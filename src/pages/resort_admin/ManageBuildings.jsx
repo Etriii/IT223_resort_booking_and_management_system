@@ -278,7 +278,7 @@ const ManageBuildings = () => {
         )}
       </Table>
 
-      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredBuildings} />
+      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredBuildings} />
     </div >
   );
 };

@@ -10,6 +10,8 @@ import { PiWarningCircleBold } from "react-icons/pi";
 
 import { apiFetch } from '../../utils/apiFetch';
 
+import useFetchUserRoleWithResortId from '../../hooks/utils/useFetchUserRoleWithResortId';
+
 const Login = () => {
     const navigate = useNavigate();
 
@@ -107,6 +109,8 @@ const Login = () => {
                     // fetch(`http://localhost:8000/api.php?controller=User&action=setUserIDinDB&user_id=5`);
 
                     const role = await fetchUserRoles();
+                    document.cookie = `resort_id=${useFetchUserRoleWithResortId()}; expires=${expires};` + "; path=/ ;";
+
                     redirectLogIn(role[0]);
                 }
             }, 1000);

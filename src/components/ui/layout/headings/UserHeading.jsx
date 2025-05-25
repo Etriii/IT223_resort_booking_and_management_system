@@ -54,10 +54,13 @@ import { FaUserCog, FaSignOutAlt, FaBell, FaRegBookmark, FaClipboardList, FaHist
 import logo from '../../../../assets/images/logo/ov_logo.png';
 import { IoIosArrowDown } from "react-icons/io";
 
+import useDropdownState from '../../../../utils/useDropdownState';
+
+
 
 const UserHeading = () => {
     const [loggedIn, setLoggedIn] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] =  useDropdownState();
     const navigate = useNavigate();
 
     const dropdownRef = useRef(null);
@@ -74,7 +77,7 @@ const UserHeading = () => {
         setMenuOpen(!menuOpen);
     };
 
-    const [isOpenProfile, setIsOpenProfile] = useState(false);
+    const [isOpenProfile, setIsOpenProfile] = useDropdownState();
     const [isOpenNotification, setIsOpenNotification] = useState(false);
 
     const handleOpenProfile = () => {

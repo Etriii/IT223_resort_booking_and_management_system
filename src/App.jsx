@@ -69,6 +69,7 @@
 // export default App
 
 import './App.css'
+import useScrollPersistence from './utils/useScrollPersistence';
 
 import { Routes, Route } from "react-router-dom";
 
@@ -92,6 +93,9 @@ import { Authenticate, ProtectedRoute, RedirectIfAuthenticated } from './utils/m
 
 
 const App = () => {
+
+  useScrollPersistence();
+
   return (
     <Routes>
 
