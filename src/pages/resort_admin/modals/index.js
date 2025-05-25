@@ -6,3 +6,7 @@ export {default as FilterModal} from './buildings/FilterModal';
 
 // Reservations
 export {default as ReservationsFilterModal} from './reservations/ReservationsFilterModal';
+
+// Activity Logs
+export {default as ActivityLogFilters} from './activity_logs/ActivityLogFilters';
+export {default as ViewActivityLog} from './activity_logs/ViewActivityLog';

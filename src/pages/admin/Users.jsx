@@ -14,8 +14,10 @@ import Modal from "../../components/ui/modals/Modal";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
 import { apiFetch } from '../../utils/apiFetch';
 
+import Pagination from '../../components/ui/table/Pagination';
+
 const Accounts = () => {
-    
+
     const containerRef = useRef(null);
 
     const [users, setUsers] = useState([]);
@@ -168,9 +170,9 @@ const Accounts = () => {
                 <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-2">
                         <InputField
-                        value={usernameFilter}
-                        onChange={(e) => setUsernameFilter(e.target.value)}
-                        placeholder="Search by Username"
+                            value={usernameFilter}
+                            onChange={(e) => setUsernameFilter(e.target.value)}
+                            placeholder="Search by Username"
                         />
                     </div>
                     <button
@@ -180,7 +182,7 @@ const Accounts = () => {
                         <IoMdAdd className="text-base" />
                         <span>Add User</span>
                     </button>
-                 </div>
+                </div>
             </div>
 
             <Table theadings={['Id', 'Profile_Photo', 'Username', 'Email', 'Role', 'Status', 'Action']} isLoading={loading} containerRef={containerRef}>
@@ -225,7 +227,10 @@ const Accounts = () => {
                 )}
             </Table>
 
-            <div className="flex justify-between items-center mt-4 flex-wrap">
+            <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredUsers} />
+
+
+            {/* <div className="flex justify-between items-center mt-4 flex-wrap">
                 <div>
                     <span>Showing {(filters.page - 1) * filters.paginate + 1} to {Math.min(filters.page * filters.paginate, filteredUsers.length)} of {filteredUsers.length} entries</span>
                 </div>
@@ -254,7 +259,7 @@ const Accounts = () => {
                         &raquo;
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

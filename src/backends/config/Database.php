@@ -34,6 +34,12 @@ class Database
                     $stmt->execute(['user_id' => $userId]);
                 }
 
+                if (isset($_COOKIE['resort_id'])) {
+                    $resort_id = (int) $_COOKIE['resort_id'];
+                    $stmt = $this->conn->prepare("SET @resort_id = :resort_id");
+                    $stmt->execute(['resort_id' => $resort_id]);
+                }
+
                 date_default_timezone_set('Asia/Manila');
             } catch (PDOException $e) {
                 die(json_encode(["error" => "Database Connection Failed: " . $e->getMessage()]));

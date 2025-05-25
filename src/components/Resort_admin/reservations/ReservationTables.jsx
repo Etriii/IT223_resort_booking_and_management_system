@@ -22,13 +22,9 @@ const ReservationTables = () => {
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
   const formatDate = (date) => date.toISOString().split('T')[0];
-  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), status: '' });
+  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), status: '', user_name: '' });
 
   const { reservations, setReservations, loading, error, setError, fetchReservations } = useFetchReservations({ filters });
-
-
-  const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
-  const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
 
   // Forms
   const [createReservationtForm, setReservationResortForm] = useState({
@@ -44,6 +40,9 @@ const ReservationTables = () => {
   const [deleteReservationForm, setDeleteReservationForm] = useState({
     resort_id: ''
   });
+
+  const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
+  const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
 
   const closeModal = () => {
     setModal(prev => ({ ...prev, isOpen: false }));
@@ -130,12 +129,22 @@ const ReservationTables = () => {
     }, 1000);
   };
 
+  const handleUsernameChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+
 
   // Table Filters
 
-  const filteredReservation = reservations?.filter(resort => {
-    const statusMatch = !filters.status || resort.status?.toLowerCase().includes(filters.status.toLowerCase());
-    return statusMatch;
+  const filteredReservation = reservations?.filter(reservation => {
+    const statusMatch = !filters.status || reservation.status?.toLowerCase().includes(filters.status.toLowerCase());
+    const usernameMatch = !filters.user_name || reservation.user_name?.toLowerCase().includes(filters.user_name.toLowerCase());
+    return statusMatch && usernameMatch;
   }) || [];
 
   const totalPages = Math.ceil(filteredReservation.length / filters.paginate);
@@ -145,6 +154,7 @@ const ReservationTables = () => {
     setFilters((prev) => ({ ...prev, page: 1 }));
   }, [filters.paginate]);
 
+  // useEffect(() => { console.log(filters) }, [filters]);
 
   return (
     <div className={`bg-gray-50 lg:order-1 p-4`}>
@@ -153,7 +163,21 @@ const ReservationTables = () => {
       {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
       <div className={`sticky top-[4.5rem]`}>
-        <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Username', create_label: 'New' }} />
+        <div className={`pb-4`}>
+          Filetered Date:{" "}
+          {new Date(filters.start_date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}{" "}
+          to{" "}
+          {new Date(filters.end_date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </div>
+        <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'user_name', placeholder: 'Username', create_label: 'New' }} />
         <Table theadings={['b_id', 'username', 'room_id', 'check_in', 'check_out', 'total_amount', 'status', 'actions']} isLoading={loading} containerRef={containerRef} >
           {filteredReservation.length > 0 ? (
             paginatedReservation.map((reservation, index) => (
@@ -180,7 +204,7 @@ const ReservationTables = () => {
           )}
         </Table>
 
-        <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredReservation} />
+        <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredReservation} />
       </div>
     </div>
   )
