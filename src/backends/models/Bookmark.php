@@ -28,4 +28,17 @@ class Bookmark
     }
 
     public function destroy() {}
+
+    public function getBookmarksByUserId($user_id)
+    {
+        $stmt = $this->conn->prepare("
+    SELECT * 
+    FROM {$this->table} 
+    JOIN resorts ON resorts.id = {$this->table}.resort_id 
+    WHERE {$this->table}.user_id = :user_id
+    ");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

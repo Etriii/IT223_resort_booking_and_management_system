@@ -26,7 +26,7 @@ const Accounts = () => {
     const [usernameFilter, setUsernameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    const [filters, setFilters] = useState({ paginate: 8, page: 1 });
+    const [filters, setFilters] = useState({ paginate: 5, page: 1 });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalVariant, setModalVariant] = useState('create');

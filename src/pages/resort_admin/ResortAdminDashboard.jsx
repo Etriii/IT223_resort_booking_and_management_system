@@ -24,7 +24,6 @@ const ResortAdminDashboard = () => {
 
   //table
   useEffect(() => {
-    document.title = "Bookings | Ocean View";
 
     const fetchBookings = async () => {
       try {
@@ -78,8 +77,8 @@ const ResortAdminDashboard = () => {
       <div className="grid grid-cols-12 gap-6">
         <Linechart height="h-[39lvh]" />
         <div className="flex flex-col col-span-4 gap-4">
-          <BalanceCard title="Bookings" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"}/>
-          <BalanceCard title="Upcoming Balance" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"}/>
+          <BalanceCard title="Bookings" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"} />
+          <BalanceCard title="Upcoming Balance" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"} />
         </div>
         <div className="col-span-8 bg-gray-200 p-1 rounded-lg">
           <div className="hidden md:block overflow-x-hidden">
@@ -117,7 +116,7 @@ const ResortAdminDashboard = () => {
             </Table>
           </div>
         </div>
-        <RoomsCard value={totalRooms[0]?.Total_Rooms ? totalRooms[0].Total_Rooms : "0"}/>
+        <RoomsCard value={totalRooms[0]?.Total_Rooms ? totalRooms[0].Total_Rooms : "0"} />
       </div>
     </>
   );

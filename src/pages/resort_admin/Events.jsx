@@ -3,6 +3,8 @@ import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
+import Pagination from '../../components/ui/table/Pagination';
+
 
 import { FiFilter } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
@@ -85,6 +87,10 @@ const Events = () => {
     setCurrentPage(1);
   }, [searchTerm, pageSize]);
 
+  const [filters, setFilters] = useState({
+    paginate: 5, page: 1, username: ''
+  });
+
   return (
     <div>
       <Modal
@@ -95,12 +101,12 @@ const Events = () => {
           modalVariant === "create"
             ? "Create Item"
             : modalVariant === "read"
-            ? "View Item"
-            : modalVariant === "update"
-            ? "Edit Item"
-            : modalVariant === "delete"
-            ? "Delete Item"
-            : "Information"
+              ? "View Item"
+              : modalVariant === "update"
+                ? "Edit Item"
+                : modalVariant === "delete"
+                  ? "Delete Item"
+                  : "Information"
         }
         message="Please confirm your action."
         onConfirm={handleConfirm}
@@ -194,47 +200,8 @@ const Events = () => {
         )}
       </Table>
 
-      <div className="flex justify-between items-center mt-4 flex-wrap">
-        <div>
-          <span>
-            Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {Math.min(currentPage * pageSize, filteredEvents.length)} of{" "}
-            {filteredEvents.length} entries
-          </span>
-        </div>
+      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredEvents} />
 
-        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
-          >
-            &laquo;
-          </button>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i + 1}
-              className={`px-3 py-1 rounded-md ${
-                currentPage === i + 1
-                  ? "bg-green-500 text-white"
-                  : "text-green-500 hover:bg-green-100"
-              }`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100"
-          >
-            &raquo;
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

@@ -14,6 +14,8 @@ import { MdOutlineDeleteForever } from 'react-icons/md'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { LuEye } from 'react-icons/lu'
 
+import { BookingCard } from '../index';
+
 const ReservationTables = () => {
   const containerRef = useRef(null);
 
@@ -48,7 +50,7 @@ const ReservationTables = () => {
     setModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  const openModal = (variant, reservation) => {
+  const openModal = (variant, booking) => {
     let children;
     let modal_title;
 
@@ -58,6 +60,7 @@ const ReservationTables = () => {
         break;
       case 'read':
         modal_title = 'View Reservation';
+        children = <BookingCard booking={booking} />
         break;
       case 'update':
         modal_title = 'Edit Reservation';

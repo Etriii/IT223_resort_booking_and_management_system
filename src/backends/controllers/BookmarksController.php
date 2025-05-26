@@ -17,7 +17,12 @@ class BookmarksController
         echo json_encode($this->bookMarkModel->getAllBookmarks());
     }
 
-    public function getBookmarksById(Request $request){
+    public function getBookmarksById(Request $request)
+    {
         echo json_encode($this->bookMarkModel->getBookmarksById($request->get('id')));
+    }
+
+    public function getBookmarksByUserId(Request $request) {
+        echo json_encode($this->bookMarkModel->getBookmarksByUserId($request->get('user_id')));
     }
 }

@@ -16,14 +16,16 @@ import { useFetchActivityLogs } from '../../hooks/index';
 import Pagination from "../../components/ui/table/Pagination";
 
 const ResortActivityLogs = () => {
+  document.title = "Activity Logs | Ocean View";
+
   const containerRef = useRef(null);
 
   const today = new Date();
   const tomorrow = new Date();
-  tomorrow.setDate(today.getDate());// + 1
+  tomorrow.setDate(today.getDate() + 1);
   const formatDate = (date) => date.toISOString().split('T')[0];
   const [filters, setFilters] = useState({
-    paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), table: 'resorts', action: '', username: ''
+    paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), table: 'bookings', action: '', username: ''
   });
 
   const { activityLogs, setActivityLogs, loading, error, setError, fetchActivityLogs } = useFetchActivityLogs({ filters });
