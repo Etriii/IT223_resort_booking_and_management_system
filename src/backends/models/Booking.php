@@ -41,21 +41,21 @@ class Booking
             )
         ");
 
-        $stmt->bindValue(':p_user_id',         (int)   $data['user_id'],       PDO::PARAM_INT);
-        $stmt->bindValue(':p_room_id',         (int)   $data['room_id'],       PDO::PARAM_INT);
-        $stmt->bindValue(':p_check_in',                $data['check_in']);
-        $stmt->bindValue(':p_check_out',               $data['check_out']);
-        $stmt->bindValue(':p_price_per_night', (float) $data['price_per_night']);
-        $stmt->bindValue(':p_nights',          (int)   $data['nights'],        PDO::PARAM_INT);
-        $stmt->bindValue(':p_discount',        (float) $data['discount']);
-        $stmt->bindValue(':p_tax',             (float) $data['tax_rate']);
-        $stmt->bindValue(':p_sub_total',       (float) $data['sub_total']);
-        $stmt->bindValue(':p_total_amount',    (float) $data['total_amount']);
-        $stmt->bindValue(':p_status',                  $data['status']);
+        $stmt->bindValue(':p_user_id',(int)$data['user_id'],PDO::PARAM_INT);
+        $stmt->bindValue(':p_room_id',(int)$data['room_id'],PDO::PARAM_INT);
+        $stmt->bindValue(':p_check_in', $data['check_in']);
+        $stmt->bindValue(':p_check_out',$data['check_out']);
+        $stmt->bindValue(':p_price_per_night',(float) $data['price_per_night']);
+        $stmt->bindValue(':p_nights', (int)$data['nights'],PDO::PARAM_INT);
+        $stmt->bindValue(':p_discount', (float) $data['discount']);
+        $stmt->bindValue(':p_tax',(float) $data['tax_rate']);
+        $stmt->bindValue(':p_sub_total',(float) $data['sub_total']);
+        $stmt->bindValue(':p_total_amount',(float) $data['total_amount']);
+        $stmt->bindValue(':p_status',$data['status']);
         
         $now = date('Y-m-d H:i:s');
-        $stmt->bindValue(':p_created_at',             $now);
-        $stmt->bindValue(':p_updated_at',             $now);
+        $stmt->bindValue(':p_created_at',$now);
+        $stmt->bindValue(':p_updated_at',$now);
 
         $stmt->execute();
         $stmt->closeCursor();
