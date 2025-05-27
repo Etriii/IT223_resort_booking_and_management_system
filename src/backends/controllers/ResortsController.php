@@ -248,4 +248,23 @@ class ResortsController
     {
         echo json_encode($this->resortsModel->getResortAdminsByResortId($request->get('resort_id')));
     }
+    public function getTaxRateByBuildingId()
+    {
+        header('Content-Type: application/json');
+
+        $building_id = isset($_GET['building_id']) ? intval($_GET['building_id']) : 0;
+
+        if ($building_id <= 0) {
+            echo json_encode(['error' => 'Invalid building ID']);
+            return;
+        }
+
+        $taxRate = $this->resortsModel->getTaxRateByBuildingId($building_id);
+
+        if ($taxRate !== null) {
+            echo json_encode(['tax_rate' => $taxRate]);
+        } else {
+            echo json_encode(['error' => 'Building or related resort not found']);
+        }
+    }
 }
