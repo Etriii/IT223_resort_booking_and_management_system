@@ -182,24 +182,25 @@ ORDER BY rt.name;
     }
 
     public function getTaxRateByBuildingId($building_id)
-    {
-        if ($building_id <= 0) {
-            return null;
-        }
+{
+    if ($building_id <= 0) {
+        return null;
+    }
 
-        $sql = "SELECT r.tax_rate
+    $sql = "SELECT r.tax_rate
             FROM buildings b
             JOIN resorts r ON b.resort_id = r.id
             WHERE b.id = ?";
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$building_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$building_id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row) {
-            return floatval($row['tax_rate']);
-        }
-
-        return null;
+    if ($row) {
+        return floatval($row['tax_rate']);
     }
+
+    return null;
+}
+
 }
