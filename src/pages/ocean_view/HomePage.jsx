@@ -8,10 +8,12 @@ import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GuestProfileModal from '../../components/ui/modals/guest_info.jsx';
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [setGuestDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Home | Ocean View";
@@ -113,7 +115,7 @@ const HomePage = () => {
               gorgeous iconic landscapes and majestic coastlines, welcoming you
               to a rendition of “Little Bali”.
             </p>
-            <button className="mt-6 px-6 py-2 border border-black rounded-full hover:bg-black hover:text-white transition">
+            <button className="mt-6 px-6 py-2 border border-black rounded-full hover:bg-black hover:text-white transition"    onClick={() => navigate("/oceanview/about")}>
               About Us
             </button>
           </div>
