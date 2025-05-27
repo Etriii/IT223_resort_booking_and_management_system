@@ -69,7 +69,7 @@ const Bookmarks = () => {
                 )}
 
             </div>
-            <div className={`text-center p-5`}> <span className={`p-2 cursor-pointer hover:text-blue-600 transition-all delay-100`}>See More...</span></div>
+            {/* <div className={`text-center p-5`}> <span className={`p-2 cursor-pointer hover:text-blue-600 transition-all delay-100`}>See More...</span></div> */}
         </div>
     );
 };
