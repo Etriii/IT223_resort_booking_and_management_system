@@ -55,9 +55,9 @@ const GuestProfileModal = ({ isOpen, onClose, onSave }) => {
             <div className="max-w-2xl h-[85vh] w-full max-h-[90%] bg-white rounded-lg shadow-lg px-10 pb-8 pt-7 overflow-y-auto"  style={{ scrollbarWidth: 'none' }}>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold">Guest Profile Information</h3>
-                    <button onClick={onClose} className="text-gray-600 hover:text-gray-900 font-bold">
+                    {/* <button onClick={onClose} className="text-gray-600 hover:text-gray-900 font-bold">
                         X
-                    </button>
+                    </button> */}
                 </div>
                 <div className="space-y-4">
                 <hr className="w-full border-t border-black my-2" />
@@ -78,12 +78,12 @@ const GuestProfileModal = ({ isOpen, onClose, onSave }) => {
                         ) : null
                     )}
                     <div className="flex justify-end pt-4">
-                        <button
+                        {/* <button
                             onClick={onClose}
                             className="mr-2 text-gray-600 border border-gray-300 px-4 py-2 rounded-md text-sm hover:bg-gray-100"
                         >
                             Cancel
-                        </button>
+                        </button> */}
                         <button
                             onClick={handleSubmit}
                             className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
