@@ -15,3 +15,4 @@ export {default as useFetchUserBookmarks} from './user/bookmarks/useFetchUserBoo
 export {default as useFetchUserRoleWithResortId} from './utils/useFetchUserRoleWithResortId';
 export {default as useFetchUsername} from './utils/useFetchUsername';
 export {default as useFetchCurrentUser} from './utils/useFetchCurrentUser';
+export {default as useFetchRoomById } from './rooms/useFetchRoomById';

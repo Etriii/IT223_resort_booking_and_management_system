@@ -180,7 +180,7 @@ const ResortActivityLogs = () => {
             />
           ))
         ) : (
-          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Reservation found.</div></td></tr>
+          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Recent Activities.</div></td></tr>
         )}
       </Table>
 

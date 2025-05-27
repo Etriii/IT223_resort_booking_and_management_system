@@ -65,15 +65,15 @@ const ManageBuildings = () => {
         break;
       case "read":
         children = <ReadBuildingModal />;
-        modal_title = "View Resort";
+        modal_title = "View Building";
         break;
       case "update":
         children = <UpdateBuildingModal />;
-        modal_title = "Edit Resort";
+        modal_title = "Edit Building";
         break;
       case "delete":
         children = <DeleteBuildingModal />;
-        modal_title = "Delete Resort";
+        modal_title = "Delete Building";
         break;
       case "filter":
         children = <FilterModal filters={filters} setFilters={setFilters} />;

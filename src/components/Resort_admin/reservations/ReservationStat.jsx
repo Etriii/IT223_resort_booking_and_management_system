@@ -81,45 +81,49 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ReservationStat = () => {
-  const [filters, setFilters] = useState({
-    time: 'day',
-  });
+const ReservationStat = ({ reservation_data }) => {
+  // const [filters, setFilters] = useState({
+  //   time: 'day',
+  // });
 
-  const [stats, setStats] = useState([]);
+  const { reservations, setReservations, loading, error, setError, fetchReservations } = reservation_data;
 
-  const timeKeyMap = {
-    day: 'today',
-    week: 'this_week',
-    month: 'this_month',
-    year: 'this_year',
-  };
 
-  const handleOnChangeTimeFilter = (e) => {
-    setFilters(prev => ({
-      ...prev, time: e.target.value
-    }));
-  };
+  // const [stats, setStats] = useState([]);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await apiFetch('controller=Bookings&action=getBookingStats');
-        const data = await res.json();
-        setStats(data);
-      } catch (error) {
-        console.error("Failed to fetch booking stats", error);
-      }
-    };
+  // const timeKeyMap = {
+  //   day: 'today',
+  //   week: 'this_week',
+  //   month: 'this_month',
+  //   year: 'this_year',
+  // };
 
-    fetchStats();
-  }, []);
+  // console.log(JSON.stringify(reservation_data));
+  // const handleOnChangeTimeFilter = (e) => {
+  //   setFilters(prev => ({
+  //     ...prev, time: e.target.value
+  //   }));
+  // };
+
+  // useEffect(() => {
+  //   const fetchStats = async () => {
+  //     try {
+  //       const res = await apiFetch('controller=Bookings&action=getBookingStats');
+  //       const data = await res.json();
+  //       setStats(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch booking stats", error);
+  //     }
+  //   };
+
+  //   fetchStats();
+  // }, []);
 
 
   const getCount = (status) => {
-    const item = stats.find(s => s.status === status);
-    return item ? parseInt(item[timeKeyMap[filters.time]]) || 0 : 0;
-  };
+    return reservations.filter(reservation => reservation.status === status).length;
+  }
+
 
   const doughnutData = {
     labels: ['Completed', 'Confirmed', 'Pending', 'Cancelled'],
@@ -131,7 +135,7 @@ const ReservationStat = () => {
           getCount('Pending'),
           getCount('Cancelled')
         ],
-        backgroundColor: ['#22c55e', '#3b82f6', '#facc15', '#ef4444'],
+        backgroundColor: ['#22c55e', '#3b82f6', '#f97216', '#ef4444'],
         borderWidth: 3,
       },
     ],
@@ -140,7 +144,7 @@ const ReservationStat = () => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg shadow-lg lg:order-2">
       <div className={`sticky top-[4.5rem]`}>
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label htmlFor="timeFilter" className="block mb-2 text-sm font-medium text-gray-700">
             Filter by Time
           </label>
@@ -155,7 +159,7 @@ const ReservationStat = () => {
             <option value="week">Week</option>
             <option value="day">Day</option>
           </select>
-        </div>
+        </div> */}
 
         <div className="mb-6">
           <div className="bg-white rounded-lg p-4 shadow flex flex-col items-center">

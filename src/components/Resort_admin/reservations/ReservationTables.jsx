@@ -16,17 +16,12 @@ import { LuEye } from 'react-icons/lu'
 
 import { BookingCard } from '../index';
 
-const ReservationTables = () => {
+const ReservationTables = ({ filters_data, reservation_data }) => {
   const containerRef = useRef(null);
 
+  const [filters, setFilters] = filters_data;
 
-  const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
-  const formatDate = (date) => date.toISOString().split('T')[0];
-  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), status: '', user_name: '' });
-
-  const { reservations, setReservations, loading, error, setError, fetchReservations } = useFetchReservations({ filters });
+  const { reservations, setReservations, loading, error, setError, fetchReservations } = reservation_data;
 
   // Forms
   const [createReservationtForm, setReservationResortForm] = useState({
@@ -159,6 +154,13 @@ const ReservationTables = () => {
 
   // useEffect(() => { console.log(filters) }, [filters]);
 
+  const status_color = {
+    Pending: 'text-orange-600',
+    Confirmed: 'text-blue-600',
+    Cancelled: 'text-red-600',
+    Completed: 'text-green-600',
+  };
+
   return (
     <div className={`bg-gray-50 lg:order-1 p-4`}>
 
@@ -166,19 +168,24 @@ const ReservationTables = () => {
       {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
       <div className={`sticky top-[4.5rem]`}>
-        <div className={`pb-4`}>
-          Filetered Date:{" "}
-          {new Date(filters.start_date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}{" "}
-          to{" "}
-          {new Date(filters.end_date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
+        <div className={`flex justify-between items-center pb-4`}>
+          <div className={``}>
+            Filetered Date:{" "}
+            {new Date(filters.start_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            to{" "}
+            {new Date(filters.end_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
+          <div>
+            Status: <span className={status_color[filters.status]}>{filters.status == null || filters.status == '' ? 'All' : filters.status}</span>
+          </div>
         </div>
         <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'user_name', placeholder: 'Username', create_label: 'New' }} />
         <Table theadings={['b_id', 'username', 'room_id', 'check_in', 'check_out', 'total_amount', 'status', 'actions']} isLoading={loading} containerRef={containerRef} >
@@ -203,7 +210,7 @@ const ReservationTables = () => {
               />
             ))
           ) : (
-            <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Reservation found.</div></td></tr>
+            <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No {filters.status} Reservation found.</div></td></tr>
           )}
         </Table>
 

@@ -73,7 +73,7 @@ class Booking
         $query = "SELECT * FROM booking_full_summarry WHERE resort_id = :resort_id";
 
         if (!empty($data['check_in']) && !empty($data['check_out'])) {
-            $query .= " AND check_in <= :check_out AND check_out >= :check_in";
+            $query .= " AND check_in <= :check_out AND check_out >= :check_in ORDER BY check_in ASC";
         }
 
         $stmt = $this->conn->prepare($query);
@@ -84,6 +84,8 @@ class Booking
             $stmt->bindParam(':check_in', $data['check_in']);
             $stmt->bindParam(':check_out', $data['check_out']);
         }
+
+
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

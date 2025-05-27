@@ -73,78 +73,61 @@
 
 import React from "react";
 
-const ElegantBookingCard = ({ booking }) => {
-  const {
-    floor = "1",
-    room_number = "10",
-    resort_name = "PUNTA VERDE",
-    guests = 3,
-    room_type = "Kings Size Bed",
-    check_in = "December 13, 2024",
-    check_out = "December 20, 2024",
-    total_price = 74054.5,
-    payment_option = "full", // "full" or "down"
-    image_url = "",
-  } = booking;
+import { useFetchRoomById } from "../../../hooks";
 
-  const defaultImage = "https://via.placeholder.com/600x400?text=Room+Image";
+const ElegantBookingCard = ({ booking }) => {
+  // const {
+  //   floor = "1",
+  //   room_number = "10",
+  //   resort_name = "PUNTA VERDE",
+  //   guests = 3,
+  //   room_type = "Kings Size Bed",
+  //   check_in = "December 13, 2024",
+  //   check_out = "December 20, 2024",
+  //   total_price = 74054.5,
+  //   image_url = "",
+  // } = booking;
+
+  const defaultImage = "https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg";
+
+  const { room, setRoom, loading, error, setError, fetchRoom } = useFetchRoomById(booking.room_id);
 
   return (
-    <div className="bg-white max-w-md mx-auto rounded-xl shadow-xl overflow-hidden border p-4">
+    <div className="bg-white max-w-md mx-auto rounded-xl shadow-xl overflow-hidden border p-4 w-96">
       <img
-        src={image_url || defaultImage}
+        src={loading ? defaultImage : room.room_image ?? defaultImage}
         alt="Room"
         className="rounded-md w-full h-64 object-cover"
       />
 
+      {/* {room && JSON.stringify(room)} */}
+
       <div className="text-center mt-4">
-        <p className="text-sm text-gray-600">Floor {floor} - Room {room_number}</p>
-        <h2 className="font-semibold text-lg tracking-wide mt-1">{resort_name}</h2>
+        <p className="text-sm text-gray-600">Floor - Room</p>
+        <h2 className="font-semibold text-lg tracking-wide mt-1">resor name</h2>
       </div>
 
       <hr className="my-4" />
 
       <div className="grid grid-cols-2 gap-y-2 text-sm px-2">
         <span className="text-gray-600">Guests:</span>
-        <span className="font-semibold">{guests}</span>
+        <span className="font-semibold">{3}</span>
 
         <span className="text-gray-600">Room Type:</span>
-        <span className="font-semibold">{room_type}</span>
+        <span className="font-semibold">{1}</span>
 
         <span className="text-gray-600">Check-in:</span>
-        <span className="font-semibold">{check_in}</span>
+        <span className="font-semibold">{1}</span>
 
         <span className="text-gray-600">Check-out:</span>
-        <span className="font-semibold">{check_out}</span>
+        <span className="font-semibold">{2}</span>
       </div>
 
       <hr className="my-4" />
 
-      <div className="px-2 text-sm space-y-2">
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="payment"
-            checked={payment_option === "down"}
-            readOnly
-          />
-          <span>Down Payment | <span className="font-semibold">50%</span> off total payment</span>
-        </label>
-
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="payment"
-            checked={payment_option === "full"}
-            readOnly
-          />
-          <span>Full Payment | <span className="font-semibold">10% Discount</span></span>
-        </label>
-      </div>
-
       <div className="mt-6 text-center">
         <p className="font-semibold text-gray-600">Total</p>
-        <p className="text-2xl font-bold text-blue-600">₱{total_price.toLocaleString()}</p>
+        <p className="text-2xl font-bold text-blue-600">₱{21}</p>
       </div>
     </div>
   );

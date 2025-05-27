@@ -32,7 +32,7 @@ class Bookmark
     public function getBookmarksByUserId($user_id)
     {
         $stmt = $this->conn->prepare("
-    SELECT * 
+    SELECT {$this->table}.id as bookmarked_id, resorts.id as resort_id, resorts.name, resorts.location, resorts.main_image
     FROM {$this->table} 
     JOIN resorts ON resorts.id = {$this->table}.resort_id 
     WHERE {$this->table}.user_id = :user_id

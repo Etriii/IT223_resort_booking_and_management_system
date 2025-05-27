@@ -119,7 +119,7 @@ const Events = () => {
         </ActionNotification>
       )}
 
-      <div className="flex items-center justify-between flex-wrap mb-4">
+      <div className="flex items-center justify-between flex-wrap ">
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100">
             <FiFilter className="text-lg" />

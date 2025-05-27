@@ -1,35 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-import InputField from '../../components/ui/form/InputField';
+import { useNavigate } from "react-router-dom";
 
-// const bookmarkedResorts = [
-//     {
-//         id: 1,
-//         name: "Ocean Breeze Resort",
-//         location: "El Nido, Palawan",
-//         image:
-//             "https://media-cdn.tripadvisor.com/media/photo-s/28/fd/37/ed/pearl-farm-beach-resort.jpg",
-//     },
-//     {
-//         id: 2,
-//         name: "Sunset Cove",
-//         location: "Siargao Island",
-//         image:
-//             "https://www.viceroybali.com/wp-content/uploads/2024/03/What-Is-the-Difference-Between-a-Resort-and-a-Hotel-2.png",
-//     },
-//     {
-//         id: 3,
-//         name: "Coral Sands Resort",
-//         location: "Boracay, Aklan",
-//         image:
-//             "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-//     },
-// ];
+import InputField from '../../components/ui/form/InputField';
 
 import { useFetchUserBookmarks } from "../../hooks";
 
 const Bookmarks = () => {
 
+    const navigate = useNavigate();
 
     const { bookmarkedResorts, setBookmarkedResorts, loading, error, setError, fetchBookmarkedResorts } = useFetchUserBookmarks();
 
@@ -42,6 +21,16 @@ const Bookmarks = () => {
         return resortNameMatch;
     }) || [];
 
+    const handleOnChangeInput = (e) => {
+        const { name, value } = e.target;
+        console.log(name, value);
+        setFilters(prev => ({ ...prev, [name]: value }));
+    }
+
+    const navigate_to = (resort_id) => {
+        navigate(`/oceanview/resortdetails/${resort_id}`);
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-10 px-4 sm:px-10">
             {/* {bookmarkedResorts && JSON.stringify(bookmarkedResorts)} */}
@@ -50,7 +39,7 @@ const Bookmarks = () => {
                     🌴 Your Bookmarked Resorts
                 </h1>
                 <div>
-                    <InputField className="w-56" placeholder="Resort Name" />
+                    <InputField name='resort_name' className="w-56" placeholder="Resort Name" onChange={handleOnChangeInput} />
                 </div>
             </div>
 
@@ -58,14 +47,15 @@ const Bookmarks = () => {
                 {filteredBookmarkedResorts.length > 0 ? (
                     filteredBookmarkedResorts.map((filteredBookmarkedResrort, index) => (//filteredBookmarkedResorts
                         <div
-                            key={filteredBookmarkedResrort.id}
-                            className="bg-white rounded-2xl shadow-lg overflow-hidden transition transform hover:scale-105 hover:shadow-xl"
+                            key={filteredBookmarkedResrort.bookmarked_id}
+                            className="bg-white rounded-2xl shadow-lg overflow-hidden transition transform hover:scale-105 hover:shadow-xl hover:cursor-pointer"
+                            onClick={() => { navigate_to(filteredBookmarkedResrort.resort_id) }}
                         >
-                            {/* <img
-                                src={filteredBookmarkedResrort.resort.image}
-                                alt={filteredBookmarkedResrort.resort.name}
+                            <img
+                                src={filteredBookmarkedResrort.main_image ?? 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'}
+                                alt={filteredBookmarkedResrort.name}
                                 className="h-48 w-full object-cover"
-                            /> */}
+                            />
                             <div className="p-4">
                                 <h2 className="text-xl font-semibold text-gray-800">
                                     {filteredBookmarkedResrort.name}
