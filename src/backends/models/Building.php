@@ -21,6 +21,13 @@ class Building
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getBuildingById($buildingId)
+{
+    $stmt = $this->conn->prepare("SELECT * FROM buildings WHERE id = ?");
+    $stmt->execute([$buildingId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
     public function getBuildingsByResortId($resort_id)
     {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE resort_id=" . $resort_id);
