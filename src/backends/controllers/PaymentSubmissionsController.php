@@ -31,7 +31,6 @@ class PaymentSubmissionsController
             exit;
         }
 
-
         $booking_id = $input['booking_id'] ?? null;
         $screenshot_path = $input['screenshot_path'] ?? null;
         $amount_paid = $input['amount_paid'] ?? null;
@@ -41,6 +40,7 @@ class PaymentSubmissionsController
         $reviewed_at = $input['reviewed_at'] ?? null;
         $created_at = $input['created_at'] ?? null;
         $updated_at = $input['updated_at'] ?? null;
+        
 
         if (!$booking_id || !$screenshot_path || !$amount_paid || !$reference_number) {
             http_response_code(400);
@@ -65,6 +65,7 @@ class PaymentSubmissionsController
             'updated_at' => $now
         ];
 
+        
         $result = $this->paymentSubmissionModel->createPayment($data);
 
         if ($result['success']) {

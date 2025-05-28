@@ -30,6 +30,7 @@ const MyReservation = () => {
         fetchReservations();
         setShowPaymentModal(false);
     };
+    
 
     const fetchReservations = async () => {
         const currentUserId = localStorage.getItem('user_id');
@@ -157,6 +158,7 @@ const MyReservation = () => {
                 onClose={() => setShowPaymentModal(false)}
                 reservation={selectedBooking}
                 onPaymentSuccess={handlePaymentSuccess}
+                fetchReservations={fetchReservations}
             />
         </div>
     );
