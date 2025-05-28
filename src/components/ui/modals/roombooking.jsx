@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Calendar } from 'lucide-react';
 import backgroundImage from '../../../assets/images/home/backgroundaboutus.jpg';
 import { useParams } from 'react-router-dom';
+import Payment from '../../../components/ui/modals/paymentbooking.jsx';
 
 const RoomBookingModal = ({
     room,
@@ -234,6 +235,7 @@ const handleBookNow = async () => {
 };
 
 
+
 return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${isOpen ? 'flex' : 'hidden'} bg-black/50 overflow-auto`}>
         <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-lg w-full max-w-[80vw] max-h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -418,8 +420,9 @@ return (
                         onClick={handleBookNow}
                         className="text-white px-4 rounded-lg bg-blue-600 no-underline py-2 text-sm hover:bg-blue-700 font-bold whitespace-nowrap"
                     >
-                        Confirm & Book
+                        Confirm Payment
                     </button>
+
                 </div>
             </div>
         </div>
