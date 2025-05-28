@@ -65,16 +65,59 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
     setReviewsCount(fetchedReviews.length);
   };
 
-  const handleBookmarkToggle = () => {
-    setIsBookmarked(!isBookmarked);
-    if (!isBookmarked) {
-      setBookmarks((prevBookmarks) => [...prevBookmarks, id]);
-    } else {
-      setBookmarks((prevBookmarks) =>
-        prevBookmarks.filter((bookmarkId) => bookmarkId !== id)
-      );
+  useEffect(() => {
+    const checkBookmark = async () => {
+  try {
+    const userId = localStorage.getItem("user_id");
+    const response = await fetch(`http://localhost:8000/api.php?controller=Bookmarks&action=getBookmarksByUserId&user_id=${userId}`);
+    const data = await response.json();
+
+    console.log("Bookmark fetch response:", data); 
+
+    if (!Array.isArray(data)) {
+      console.error("Expected an array but got:", data);
+      return;
+    }
+
+    if (resort && resort.id) {
+      const bookmarked = data.some(bookmark => bookmark.resort_id === resort.id);
+      setIsBookmarked(bookmarked);
+    }
+  } catch (error) {
+    console.error('Failed to check bookmark status', error);
+  }
+};
+
+
+    checkBookmark();
+  }, [resort]);
+
+  const handleBookmarkToggle = async () => {
+    const user_id = localStorage.getItem('user_id');
+    const resort_id = resort.id;
+
+    const url = isBookmarked
+      ? 'http://localhost:8000/api.php?controller=Bookmarks&action=removeBookmark'
+      : 'http://localhost:8000/api.php?controller=Bookmarks&action=addBookmark';
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id, resort_id }),
+      });
+
+      const data = await response.json();
+      console.log('Bookmark toggle response:', data);
+
+      if (data.success) {
+        setIsBookmarked(!isBookmarked);
+      }
+    } catch (error) {
+      console.error('Bookmark toggle failed:', error);
     }
   };
+
 
   const toggleReviewExpansion = (reviewID) => {
     setExpandedReviews((prev) =>
@@ -185,19 +228,19 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               <div className="grid grid-cols-2 gap-6 mt-1">
                 <div className="grid col-1 ">
                   <img
-                  src={image2}
-                  alt="Room Image 2"
-                  className="h-[16rem] w-100 object-cover"
-                  style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                />
-                </div>              
+                    src={image2}
+                    alt="Room Image 2"
+                    className="h-[16rem] w-100 object-cover"
+                    style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                  />
+                </div>
                 <div className="grid col-1 ">
                   <img
-                  src={image3}
-                  alt="Room Image 2"
-                  className="h-[16rem] w-100 object-cover"
-                  style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                />
+                    src={image3}
+                    alt="Room Image 2"
+                    className="h-[16rem] w-100 object-cover"
+                    style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                  />
                 </div>
               </div>
 
@@ -280,9 +323,8 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 </h6>
                 <p className="text-black text-[14px] pb-3">Event Description</p>
                 <img
-                  src={`/images/resort_images/${
-                    resort.image2 || "default.jpg"
-                  }`}
+                  src={`/images/resort_images/${resort.image2 || "default.jpg"
+                    }`}
                   alt="Event Image"
                   className="h-[20rem] w-full object-cover rounded-lg"
                   style={{ backgroundColor: "gray" }}
@@ -292,9 +334,8 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               {/* Right */}
               <div className="md:col-span-3 w-full">
                 <img
-                  src={`/images/resort_images/${
-                    resort.image2 || "default.jpg"
-                  }`}
+                  src={`/images/resort_images/${resort.image2 || "default.jpg"
+                    }`}
                   alt="Event Image"
                   className="h-[24rem] w-full object-cover rounded-lg"
                   style={{ backgroundColor: "gray" }}

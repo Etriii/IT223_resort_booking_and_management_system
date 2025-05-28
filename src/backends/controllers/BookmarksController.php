@@ -25,4 +25,40 @@ class BookmarksController
     public function getBookmarksByUserId(Request $request) {
         echo json_encode($this->bookMarkModel->getBookmarksByUserId($request->get('user_id')));
     }
+    public function addBookmark(Request $request)
+{
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $user_id = $input['user_id'] ?? null;
+    $resort_id = $input['resort_id'] ?? null;
+
+    if (!$user_id || !$resort_id) {
+        echo json_encode(['success' => false, 'message' => 'Missing user_id or resort_id']);
+        return;
+    }
+
+    $bookmarkModel = new Bookmark();
+    $result = $bookmarkModel->addBookmark($user_id, $resort_id);
+
+    echo json_encode($result);
+}
+
+public function removeBookmark(Request $request)
+{
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $user_id = $input['user_id'] ?? null;
+    $resort_id = $input['resort_id'] ?? null;
+
+    if (!$user_id || !$resort_id) {
+        echo json_encode(['success' => false, 'message' => 'Missing user_id or resort_id']);
+        return;
+    }
+
+    $bookmarkModel = new Bookmark();
+    $result = $bookmarkModel->removeBookmark($user_id, $resort_id);
+
+    echo json_encode($result);
+}
+
 }
