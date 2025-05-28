@@ -72,6 +72,7 @@ const ActivityLogFilters = ({ filters, setFilters }) => {
                     {/* bookings, bookmarks, buildings, payments, resortEvents, Resorts, Reviews, Rooms */}
                     <option value="bookings">Bookings</option>
                     <option value="bookmarks">Bookmarks</option>
+                    <option value="reviews">Reviews</option>
                     <option value="buildings">Buidlings</option>
                     <option value="payments">Payments</option>
                     <option value="resort_events">Resort Events</option>

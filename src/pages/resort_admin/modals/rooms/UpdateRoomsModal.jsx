@@ -1,9 +1,9 @@
-// import React from 'react'
+import React from 'react'
 
-// const UpdateRoomsModal = () => {
-//   return (
-//     <div>Resort UpdateRoomsModal</div>
-//   )
-// }
+const UpdateRoomsModal = () => {
+  return (
+    <div>Resort UpdateRoomsModal</div>
+  )
+}
 
-// export default UpdateRoomsModal
+export default UpdateRoomsModal

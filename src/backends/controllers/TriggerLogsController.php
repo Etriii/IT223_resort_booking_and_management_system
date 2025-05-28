@@ -17,6 +17,34 @@ class TriggerLogsController
         echo json_encode($this->triggerLogModel->getTriggerLogs());
     }
 
+    public function getAllLogs(Request $request)
+    {
+        $table = $_GET['table'] ?? null;
+        $start_date = $_GET['start_date'] ?? null;
+        $end_date = $_GET['end_date'] ?? null;
+
+        $errors = [];
+
+        if (!isset($start_date) || !strtotime($start_date)) {
+            $errors[] = "Invalid start_date. ";
+        }
+
+        if (!isset($end_date) || !strtotime($end_date)) {
+            $errors[] = "Invalid end_date. ";
+        }
+
+        if (isset($start_date, $end_date) && strtotime($start_date) > strtotime($end_date)) {
+            $errors[] = "start_date cannot be after end_date. ";
+        }
+
+        if (!empty($errors)) {
+            echo json_encode(['success' => false, 'errors' => $errors]);
+            exit;
+        }
+
+        echo json_encode($this->triggerLogModel->getLogs(['table' => $table, 'start_date' =>  $start_date, 'end_date' =>  $end_date]));
+    }
+
     public function getLogs(Request $request)
     {
         // $resort_id = $request->get('resort_id');

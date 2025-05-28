@@ -11,7 +11,7 @@ import ActionNotification from '../../components/ui/modals/ActionNotification';
 import Modal from '../../components/ui/modals/Modal';
 import { ActivityLogFilters, ViewActivityLog } from './modals/index';
 
-import { useFetchActivityLogs } from '../../hooks/index';
+import { useFetchActivityLogs, useFetchAllUsers } from '../../hooks/index';
 
 import Pagination from "../../components/ui/table/Pagination";
 
@@ -19,6 +19,8 @@ const ResortActivityLogs = () => {
   document.title = "Activity Logs | Ocean View";
 
   const containerRef = useRef(null);
+
+  const { users, setUsers, loading: userLoading, error: userError, fetchAllUsers } = useFetchAllUsers();
 
   const today = new Date();
   const tomorrow = new Date();
@@ -76,7 +78,9 @@ const ResortActivityLogs = () => {
 
   // Filters
 
-  const filteredLogs = activityLogs?.filter(log => {
+  const [processedLogs, setProcessedLogs] = useState([]);
+
+  const filteredLogs = processedLogs?.filter(log => {
     const usernameMatch = !filters.username || log.triggered_by?.toLowerCase().includes(filters.username.toLowerCase());
     const actionMatch = !filters.action || log.action?.toLowerCase().includes(filters.action.toLowerCase());
     return usernameMatch && actionMatch;
@@ -89,7 +93,25 @@ const ResortActivityLogs = () => {
     setFilters((prev) => ({ ...prev, page: 1 }));
   }, [filters.paginate]);
 
-  // useEffect(() => { console.log(filters) }, [filters]);
+  useEffect(() => {
+    const updatedLogs = activityLogs.map(log => {
+      if (log.triggered_by === null || log.triggered_by === '') {
+        return log; // Leave unchanged
+      }
+
+      const user = users.find(u => u.id === log.triggered_by);
+      return {
+        ...log,
+        triggered_by: user ? user.username : log.triggered_by, // Replace ID with username if found
+      };
+    });
+
+    setProcessedLogs(updatedLogs);
+  }, [activityLogs, users]);
+
+  useEffect(() => {
+    setFilters(prev => ({ ...prev, page: 1 }))
+  }, [filters.end_date, filters.start_date, filters.table, filters.username, filters.action]);
 
   return (
     <div>
@@ -141,7 +163,7 @@ const ResortActivityLogs = () => {
           </div>
 
           <div>
-            Action: <span>Here</span>
+            Action: <span>{filters.action == '' ? 'All' : filters.action}</span>
           </div>
 
         </div>
@@ -184,7 +206,7 @@ const ResortActivityLogs = () => {
             />
           ))
         ) : (
-          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Recent Activities.</div></td></tr>
+          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Recent {filters.action} Activities.</div></td></tr>
         )}
       </Table>
 
