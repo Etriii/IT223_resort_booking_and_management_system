@@ -71,7 +71,7 @@ class Booking
     }
 
 
-    public function getBookingId($id) {}
+    // public function getBookingId($id) {}
     public function getBookingByResortId($resort_id)
     {
         $stmt = $this->conn->prepare("
