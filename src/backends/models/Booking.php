@@ -20,9 +20,6 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create() {}
-
-    public function getBookingId($id) {}
    public function createBooking(array $data)
 {
     try {
@@ -103,7 +100,6 @@ class Booking
     {
         $stmt = $this->conn->prepare("SELECT 
         FORMAT(SUM(bk.total_amount), 0) AS Total_Amount
-        FROM " . $this->table . " bk
         FROM " . $this->table . " bk
         JOIN rooms r ON bk.room_id = r.id
         JOIN buildings b ON r.building_id = b.id
