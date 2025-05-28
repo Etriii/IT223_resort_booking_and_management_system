@@ -34,30 +34,29 @@ class Resorts
         $stmt->execute(['contact_details' => $contact_details]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
     public function getDetailsByResortId($resort_id)
     {
-        $stmt = $this->conn->prepare("SELECT r.id, r.resort_description, r.room_description,
-        GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities FROM resorts r LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
-        WHERE r.id = :resort_id GROUP BY r.id; ");
-        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function updateResortDetails($resort_id, $resort_description, $room_description)
-    {
         $stmt = $this->conn->prepare("
-        UPDATE " . $this->table . " 
-        SET resort_description = :resort_description, room_description = :room_description 
-        WHERE id = :resort_id
+        SELECT r.id, r.resort_description, r.room_description,
+               GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities
+        FROM resorts r
+        LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
+        WHERE r.id = :resort_id
+        GROUP BY r.id
     ");
 
-        $stmt->bindParam(':resort_description', $resort_description);
-        $stmt->bindParam(':room_description', $room_description);
         $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        if (!$stmt->execute()) {
+            $errorInfo = $stmt->errorInfo();
+            throw new Exception("SQL error: " . implode(", ", $errorInfo));
+        }
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
 
@@ -148,25 +147,24 @@ class Resorts
     }
 
     public function getTaxRateByBuildingId($building_id)
-{
-    if ($building_id <= 0) {
-        return null;
-    }
+    {
+        if ($building_id <= 0) {
+            return null;
+        }
 
-    $sql = "SELECT r.tax_rate
+        $sql = "SELECT r.tax_rate
             FROM buildings b
             JOIN resorts r ON b.resort_id = r.id
             WHERE b.id = ?";
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([$building_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$building_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        return floatval($row['tax_rate']);
+        if ($row) {
+            return floatval($row['tax_rate']);
+        }
+
+        return null;
     }
-
-    return null;
-}
-
 }

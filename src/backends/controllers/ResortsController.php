@@ -134,6 +134,11 @@ class ResortsController
     {
         $id = $_GET['id'] ?? null;
 
+        if (!$id) {
+            echo json_encode(["success" => false, "message" => "Resort ID is missing"]);
+            return;
+        }
+
         $resort = $this->resortsModel->getDetailsByResortId($id);
 
         if ($resort) {
