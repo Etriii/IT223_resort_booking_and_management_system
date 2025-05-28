@@ -75,6 +75,8 @@ import React from "react";
 
 import { useFetchRoomById } from "../../../hooks";
 
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 const ElegantBookingCard = ({ booking }) => {
   // const {
   //   floor = "1",
@@ -94,11 +96,18 @@ const ElegantBookingCard = ({ booking }) => {
 
   return (
     <div className="bg-white max-w-md mx-auto rounded-xl shadow-xl overflow-hidden border p-4 w-96">
-      <img
-        src={loading ? defaultImage : room.room_image ?? defaultImage}
-        alt="Room"
-        className="rounded-md w-full h-64 object-cover"
-      />
+      {
+        loading ?
+          <div className={`h-64 flex justify-center items-center border space-x-2`}>
+            <AiOutlineLoading3Quarters className=" animate-spin font-bold" /><h1>  'Loading Image...'</h1>
+          </div>
+          :
+          <img
+            src={room.room_image ?? defaultImage}
+            alt="Room"
+            className="rounded-md w-full h-64 object-cover"
+          />
+      }
 
       {/* {room && JSON.stringify(room)} */}
 

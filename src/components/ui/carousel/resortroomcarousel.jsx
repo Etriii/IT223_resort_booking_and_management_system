@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useFetchImages from '../../../hooks/cloudinary/useFetchImagesById';
 
 function RoomControlledCarousel({ id }) {  
   const [index, setIndex] = useState(0);
@@ -12,6 +13,7 @@ function RoomControlledCarousel({ id }) {
   }, [id]);  
 
   const fetchResortDetails = async () => {
+
     try {
       const response = await fetch(
         `http://localhost:8000/api.php?controller=Resorts&action=getResorts&id=${id}`
@@ -51,11 +53,14 @@ function RoomControlledCarousel({ id }) {
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  const resortImages = resort ? [
-    resort.image1,
-    resort.image1_2,
-    resort.image1_3, 
-  ] : [];
+        const [room_image_1] = useFetchImages(id, "room_image_1");
+      const [room_image_2] = useFetchImages(id, "room_image_2");
+      const [room_image_3] = useFetchImages(id, "room_image_3");
+  // const resortImages = resort ? [
+  //  room_image_1,
+  //   room_image_2,
+  //   room_image_3, 
+  // ] : [];
 
   return (
     <div className="w-full relative">
@@ -66,9 +71,9 @@ function RoomControlledCarousel({ id }) {
               className={`${index === 0 ? 'block' : 'hidden'} transition-all duration-700`}
             >
               <div className="flex flex-col  md:flex-row items-center rounded-xl bg-black">
-                <div className="relative w-full md:w-7/12 h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <div className="relative w-full h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[0]}`}
+                    src={room_image_1}
                     alt="Resort Image 1"
                     className="w-full h-full object-cover"
                   />
@@ -80,9 +85,9 @@ function RoomControlledCarousel({ id }) {
               className={`${index === 1 ? 'block' : 'hidden'} transition-all duration-700`}
             >
               <div className="flex flex-col md:flex-row items-center rounded-xl bg-slate-700">
-                <div className="relative w-full md:w-7/12 h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <div className="relative w-full h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[1]}`}
+                    src={room_image_2}
                     alt="Resort Image 2"
                     className="w-full h-full object-cover"
                   />
@@ -94,9 +99,9 @@ function RoomControlledCarousel({ id }) {
               className={`${index === 2 ? 'block' : 'hidden'} transition-all duration-700`}
             >
               <div className="flex flex-col md:flex-row items-center rounded-xl bg-slate-800">
-                <div className="relative w-full md:w-7/12 h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <div className="relative w-full h-[250px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[2]}`}
+                    src={room_image_3}
                     alt="Resort Image 3"
                     className="w-full h-full object-cover"
                   />

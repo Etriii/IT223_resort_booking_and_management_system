@@ -17,7 +17,7 @@ const Linechart = ({ span, height }) => {
             `http://localhost:8000/api.php?controller=Bookings&action=getTotalBookingsByResortId&resort_id=${resort_id}`
           );
   
-          const data = await response.json();
+          const data = await response.json(); 
           setBookings(data);
         } catch (error) {
           setNotify({

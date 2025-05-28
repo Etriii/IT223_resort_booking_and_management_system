@@ -20,10 +20,10 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-   public function createBooking(array $data)
-{
-    try {
-        $stmt = $this->conn->prepare("
+    public function createBooking(array $data)
+    {
+        try {
+            $stmt = $this->conn->prepare("
             CALL create_booking(
                 :p_user_id,
                 :p_room_id,
@@ -41,34 +41,34 @@ class Booking
             )
         ");
 
-        $stmt->bindValue(':p_user_id',(int)$data['user_id'],PDO::PARAM_INT);
-        $stmt->bindValue(':p_room_id',(int)$data['room_id'],PDO::PARAM_INT);
-        $stmt->bindValue(':p_check_in', $data['check_in']);
-        $stmt->bindValue(':p_check_out',$data['check_out']);
-        $stmt->bindValue(':p_price_per_night',(float) $data['price_per_night']);
-        $stmt->bindValue(':p_nights', (int)$data['nights'],PDO::PARAM_INT);
-        $stmt->bindValue(':p_discount', (float) $data['discount']);
-        $stmt->bindValue(':p_tax',(float) $data['tax_rate']);
-        $stmt->bindValue(':p_sub_total',(float) $data['sub_total']);
-        $stmt->bindValue(':p_total_amount',(float) $data['total_amount']);
-        $stmt->bindValue(':p_status',$data['status']);
-        
-        $now = date('Y-m-d H:i:s');
-        $stmt->bindValue(':p_created_at',$now);
-        $stmt->bindValue(':p_updated_at',$now);
+            $stmt->bindValue(':p_user_id', (int)$data['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':p_room_id', (int)$data['room_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':p_check_in', $data['check_in']);
+            $stmt->bindValue(':p_check_out', $data['check_out']);
+            $stmt->bindValue(':p_price_per_night', (float) $data['price_per_night']);
+            $stmt->bindValue(':p_nights', (int)$data['nights'], PDO::PARAM_INT);
+            $stmt->bindValue(':p_discount', (float) $data['discount']);
+            $stmt->bindValue(':p_tax', (float) $data['tax_rate']);
+            $stmt->bindValue(':p_sub_total', (float) $data['sub_total']);
+            $stmt->bindValue(':p_total_amount', (float) $data['total_amount']);
+            $stmt->bindValue(':p_status', $data['status']);
 
-        $stmt->execute();
-        $stmt->closeCursor();
+            $now = date('Y-m-d H:i:s');
+            $stmt->bindValue(':p_created_at', $now);
+            $stmt->bindValue(':p_updated_at', $now);
 
-        return ['success' => true, 'message' => 'Booking created successfully.'];
-    } catch (PDOException $e) {
-        return [
-            'success' => false,
-            'message' => 'Failed to create booking.',
-            'error'   => $e->getMessage()
-        ];
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            return ['success' => true, 'message' => 'Booking created successfully.'];
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Failed to create booking.',
+                'error'   => $e->getMessage()
+            ];
+        }
     }
-}
 
 
     public function getBookingId($id) {}
@@ -110,13 +110,6 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getBookingByRoomId($room_id) {}
-
-
-    public function update() {}
-
-    public function destroy() {}
-
     public function getBookingsInRangeOf($data)
     {
         $query = "SELECT * FROM booking_full_summarry WHERE resort_id = :resort_id";
@@ -135,12 +128,10 @@ class Booking
         }
 
 
-
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getBookingByRoomId($room_id) {}
-
 
     public function update() {}
 

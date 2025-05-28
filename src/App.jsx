@@ -124,6 +124,7 @@ const App = () => {
             <Route path="manage/rooms/:building_id" element={<ManageRooms />} />
             {/* I think mag add dri og mga incoming reservations */}
             <Route path="reservations" element={<Reservations />} />
+            add dapat kog payments here
             <Route path="schedules" element={<ResortSchedules />} />
 
             <Route element={<ProtectedRoute allowedRoles={['resort_super_admin']} />}>

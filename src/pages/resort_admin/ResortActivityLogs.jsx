@@ -140,6 +140,10 @@ const ResortActivityLogs = () => {
             </span>
           </div>
 
+          <div>
+            Action: <span>Here</span>
+          </div>
+
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">

@@ -225,8 +225,6 @@ class ResortsController
 
         $response = curl_exec($ch);
         curl_close($ch);
-
-        // Optionally log or handle the response
     }
 
     public function destroyResort(Request $request)

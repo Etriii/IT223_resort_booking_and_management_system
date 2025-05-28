@@ -21,16 +21,10 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const [formRating, setFormRating] = useState(0); // Rating for new review
   const [guestReview, setGuestReview] = useState(null); // Guest's own review
 
-  // const [mainImage] = useFetchImages(id, "main_image");
   const [mainimage] = useFetchImages(id, "main_image");
-  const [image1] = useFetchImages(id, "image1");
-  const [image1_2] = useFetchImages(id, "image1_2");
-  const [image1_3] = useFetchImages(id, "image1_3");
   const [image2] = useFetchImages(id, "image2");
   const [image3] = useFetchImages(id, "image3");
-  const [room_image_1] = useFetchImages(id, "room_image_1");
-  const [room_image_2] = useFetchImages(id, "room_image_1");
-  const [room_image_3] = useFetchImages(id, "room_image_1");
+
 
   useEffect(() => {
     document.title = "Resort Details | Ocean View";
