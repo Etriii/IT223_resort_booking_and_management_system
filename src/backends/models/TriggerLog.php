@@ -62,6 +62,7 @@ class TriggerLog
     //     // return $stmt->fetchAll(PDO::FETCH_ASSOC);
     // }
 
+
     public function getLogs($data)
     {
         $data['table'] = trim($data['table']); // normalize input

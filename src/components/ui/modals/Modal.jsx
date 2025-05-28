@@ -38,6 +38,7 @@ const Modal = ({
         read: 'bg-blue-50 text-blue-800',
         update: 'bg-gray-50 text-yellow-800',
         delete: 'bg-red-50 text-red-800',
+        filter: 'bg-white'
     };
 
     const getVariantStyles = () => {

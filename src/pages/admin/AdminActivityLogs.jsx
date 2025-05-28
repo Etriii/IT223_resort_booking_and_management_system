@@ -1,227 +1,224 @@
-import { useState, useEffect, useRef } from 'react';
-import Table from '../../components/ui/table/Table';
-import TableData from '../../components/ui/table/TableData';
-import ToggleDiv from '../../components/ui/modals/ToggleDiv';
-import Pagination from '../../components/ui/table/Pagination';
-import { LuEye } from 'react-icons/lu';
-import { apiFetch } from '../../utils/apiFetch';
+import { useEffect, useRef, useState } from "react";
+import Table from "../../components/ui/table/Table";
+import TableData from "../../components/ui/table/TableData";
+import ToggleDiv from "../../components/ui/modals/ToggleDiv";
+import { LuEye } from "react-icons/lu";
+import { FiFilter } from "react-icons/fi";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { BiSolidEditAlt } from "react-icons/bi";
+
+import ActionNotification from '../../components/ui/modals/ActionNotification';
+import Modal from '../../components/ui/modals/Modal';
+
+import { ViewActivityLog } from '../resort_admin/modals';
+
+import { AdminActivityLogFilters } from './modals';
+
+import { useFetchActivityAllLogs, useFetchAllUsers } from '../../hooks/index';
+
+
+import Pagination from "../../components/ui/table/Pagination";
 
 const AdminActivityLogs = () => {
-  const containerRef = useRef(null);
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [notify, setNotify] = useState(null);
+  document.title = "Activity Logs | Ocean View";
 
+  const containerRef = useRef(null);
+
+  const { users, setUsers, loading: userLoading, error: userError, fetchAllUsers } = useFetchAllUsers();
+
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const formatDate = (date) => date.toISOString().split('T')[0];
   const [filters, setFilters] = useState({
-    searchTerm: '',
-    username: '',
-    fromDate: '',
-    toDate: '',
-    page: 1,
-    paginate: 10,
+    paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), table: 'bookings', action: '', username: '', resort_id: ''
   });
 
- 
-  const [tempFilters, setTempFilters] = useState({ ...filters });
+  const { activityLogs, setActivityLogs, loading, error, setError, fetchActivityLogs } = useFetchActivityAllLogs({ filters });
 
-  const [totalLogs, setTotalLogs] = useState(0);
+  const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
+  const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
 
-  const fetchLogs = async () => {
-    setLoading(true);
-    try {
-      const response = await apiFetch(`controller=Logs&action=getAdminActivityLogs`, {
-        method: 'POST',
-        body: JSON.stringify({
-          search: filters.searchTerm,
-          username: filters.username,
-          fromDate: filters.fromDate,
-          toDate: filters.toDate,
-          page: filters.page,
-          limit: filters.paginate,
-        }),
-      });
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, isOpen: false }));
+  };
 
-      const data = await response.json();
-      if (data.success) {
-        setLogs(data.logs || []);
-        setTotalLogs(data.total || 0);
-      } else {
-        setLogs([]);
-        setTotalLogs(0);
-      }
-    } catch (error) {
-      setNotify({
-        type: 'error',
-        message: error.message || 'Failed to load logs.',
-      });
-    } finally {
-      setLoading(false);
+  const openModal = (variant, log) => {
+    // i visit lang ang modal nga component naa didto ang mga variant
+    let children;
+    let modal_title;
+
+    switch (variant) {
+      case 'read':
+        modal_title = 'View Activity Logs';
+        children = <ViewActivityLog log={log} />;
+        break;
+      case 'filter':
+        children = <AdminActivityLogFilters filters={filters} setFilters={setFilters} />;
+        modal_title = 'Filters';
+        break;
+      default:
+        children = <>Nahh wala</>;
     }
+    setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
   };
 
-  useEffect(() => {
-    document.title = 'Admin Activity Logs | Ocean View';
-    fetchLogs();
-  }, [filters]);
+  const handleConfirm = () => {
+    setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
+    setNotify({}); //reset ang notif ni ha
 
-  
-  const handleTempChange = (e) => {
+    setTimeout(async () => {
+      setModal(prev => ({ ...prev, loading: false }));
+    }, 1000);
+  };
+
+  const handleUsernameChange = (e) => {
     const { name, value } = e.target;
-    setTempFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
- 
-  const applyFilters = () => {
     setFilters((prev) => ({
       ...prev,
-      ...tempFilters,
-      page: 1, 
+      [name]: value,
     }));
-  };
+  }
 
- 
-  const totalPages = Math.ceil(totalLogs / filters.paginate);
 
-  
-  const handleView = (id) => {
-    alert(`Viewing log ID: ${id}`);
-  };
+
+  // Filters
+
+  const [processedLogs, setProcessedLogs] = useState([]);
+
+  const filteredLogs = processedLogs?.filter(log => {
+    const usernameMatch = !filters.username || log.triggered_by?.toLowerCase().includes(filters.username.toLowerCase());
+    const actionMatch = !filters.action || log.action?.toLowerCase().includes(filters.action.toLowerCase());
+    const resortIdMatch = !filters.resort_id || String(log.resort_id)?.toLowerCase().includes(String(filters.resort_id)?.toLowerCase());
+    return usernameMatch && actionMatch && resortIdMatch;
+  }) || [];
+
+  const totalPages = Math.ceil(filteredLogs.length / filters.paginate);
+  const paginatedLogs = filteredLogs.slice((filters.page - 1) * filters.paginate, filters.page * filters.paginate);
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, page: 1 }));
+  }, [filters.paginate]);
+
+  useEffect(() => {
+    setFilters(prev => ({ ...prev, page: 1 }))
+  }, [filters.end_date, filters.start_date, filters.table, filters.username, filters.action, filters.resort_id]);
+
+  useEffect(() => {
+    const updatedLogs = activityLogs.map(log => {
+      if (log.triggered_by === null || log.triggered_by === '') {
+        return log; // Leave unchanged
+      }
+
+      const user = users.find(u => u.id === log.triggered_by);
+      return {
+        ...log,
+        triggered_by: user ? user.username : log.triggered_by, // Replace ID with username if found
+      };
+    });
+
+    setProcessedLogs(updatedLogs);
+  }, [activityLogs, users]);
 
   return (
-    <div className="p-4 space-y-4">
-      {notify?.message && (
-        <div className={`p-2 rounded mb-2 text-sm ${notify.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-          {notify.message}
+    <div>
+      <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
+      {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
+
+      <div className="flex items-center justify-between flex-wrap mb-1">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => { openModal('filter') }}
+            className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100"
+          >
+            <FiFilter className="text-lg" />
+            Filter
+          </button>
+
+          <select
+            className="px-3 py-2 border rounded-md text-sm text-gray-700 focus:outline-green-600"
+            value={filters.paginate}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              setFilters((prev) => ({ ...prev, paginate: value }));
+            }}
+          >
+            {[5, 10, 25, 50].map((num) => (
+              <option key={num} value={num}>
+                {num} entries
+              </option>
+            ))}
+          </select>
+          <div>
+            Table: <span className={`font-semibold text-green-600`}>{filters.table}</span>
+          </div>
+          <div>
+            Date:{" "}
+            <span className={`font-semibold text-green-600`}>
+              {new Date(filters.start_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}{" "}
+              to{" "}
+              {new Date(filters.end_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+          </div>
+
+          <div>
+            Action: <span>{filters.action == '' ? 'All' : filters.action}</span>
+          </div>
+
         </div>
-      )}
 
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <button
-          onClick={applyFilters}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-100 transition"
-        >
-          Filter
-        </button>
-
-        <select
-          name="paginate"
-          value={tempFilters.paginate}
-          onChange={handleTempChange}
-          className="h-9 px-3 border rounded-md text-sm focus:outline-green-600"
-        >
-          <option value="5">5 entries</option>
-          <option value="10">10 entries</option>
-          <option value="20">20 entries</option>
-          <option value="50">50 entries</option>
-        </select>
-
-        <input
-          type="text"
-          name="searchTerm"
-          placeholder="Search Activity"
-          value={tempFilters.searchTerm}
-          onChange={handleTempChange}
-          className="h-9 px-3 border rounded-md focus:outline-green-600 min-w-[150px]"
-        />
-
-        <input
-          type="date"
-          name="fromDate"
-          value={tempFilters.fromDate}
-          onChange={handleTempChange}
-          className="h-9 px-3 border rounded-md text-sm focus:outline-green-600"
-        />
-
-        <input
-          type="date"
-          name="toDate"
-          value={tempFilters.toDate}
-          onChange={handleTempChange}
-          className="h-9 px-3 border rounded-md text-sm focus:outline-green-600"
-        />
-
-        <input
-          type="text"
-          name="username"
-          placeholder="Search by Username"
-          value={tempFilters.username}
-          onChange={handleTempChange}
-          className="h-9 px-3 border rounded-md focus:outline-green-600 min-w-[150px]"
-        />
+        <div className="flex items-center gap-3 flex-wrap">
+          <input
+            type="text"
+            name="username"
+            placeholder="Search by Triggered By"
+            value={filters.username}
+            onChange={handleUsernameChange}
+            className="h-9 px-3 border rounded-md focus:outline-green-600 min-w-[150px]"
+          />
+        </div>
       </div>
 
-      {/* Table */}
+      {/* {filteredLogs && JSON.stringify(filteredLogs)} */}
+
       <Table
-        theadings={['ID', 'Username', 'Activity', 'Date', 'Actions']}
-        isLoading={loading}
+        theadings={["ID", "Affected Record ID", "Action", "Triggered By", "Resort Id", "Triggered At", "Actions"]}
         containerRef={containerRef}
+        isLoading={loading}
       >
-        {logs.length > 0 ? (
-          logs.map((log, index) => (
+        {filteredLogs.length > 0 ? (
+          paginatedLogs.map((log, index) => (
             <TableData
               key={log.id || index}
               columns={[
                 log.id,
-                log.username,
-                log.activity,
-                log.timestamp,
+                log.affected_id,
+                log.action,
+                log.triggered_by,
+                log.resort_id,
+                <>{new Date(log.created_at).toLocaleString()}</>,
                 <ToggleDiv buttonText="Actions" containerRef={containerRef}>
-                  <div
-                    className="px-3 py-2 flex items-center hover:bg-gray-200 cursor-pointer rounded-md text-sm"
-                    onClick={() => handleView(log.id)}
-                  >
-                    <LuEye className="mr-2 text-lg" /> View
-                  </div>
-                </ToggleDiv>,
+                  <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', log) }}> <LuEye className="size-5 mr-2" />View </div>
+                  {/* <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', log) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div> */}
+                  {/* <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', log) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div> */}
+                </ToggleDiv>
               ]}
             />
           ))
         ) : (
-          <tr>
-            <td colSpan={5}>
-              <div className="p-4 text-center text-gray-500 text-sm">No activity logs found.</div>
-            </td>
-          </tr>
+          <tr><td colSpan={7}><div className=" p-2 border border-gray-100">No Recent {filters.action} Activities.</div></td></tr>
         )}
       </Table>
 
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 flex-wrap">
-        <span className="mb-2 sm:mb-0">
-          Showing {(filters.page - 1) * filters.paginate + 1} to{' '}
-          {Math.min(filters.page * filters.paginate, totalLogs)} of {totalLogs} entries
-        </span>
-
-        <div className="flex items-center space-x-2">
-          <button
-            disabled={filters.page === 1}
-            onClick={() => setFilters((prev) => ({ ...prev, page: prev.page - 1 }))}
-            className="px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &laquo;
-          </button>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i + 1}
-              className={`px-4 py-2 rounded-md text-sm ${
-                filters.page === i + 1 ? 'bg-green-500 text-white' : 'text-green-500 hover:bg-green-100'
-              } transition`}
-              onClick={() => setFilters((prev) => ({ ...prev, page: i + 1 }))}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={filters.page === totalPages}
-            onClick={() => setFilters((prev) => ({ ...prev, page: prev.page + 1 }))}
-            className="px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &raquo;
-          </button>
-        </div>
-      </div>
+      <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredLogs} />
     </div>
   );
 };

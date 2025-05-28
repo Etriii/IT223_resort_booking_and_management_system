@@ -100,12 +100,12 @@ const ManageBuildings = () => {
         variant === "create"
           ? "Create Building"
           : variant === "update"
-          ? "Edit Building"
-          : variant === "read"
-          ? "View Building"
-          : variant === "delete"
-          ? "Delete Building"
-          : "Filters",
+            ? "Edit Building"
+            : variant === "read"
+              ? "View Building"
+              : variant === "delete"
+                ? "Delete Building"
+                : "Filters",
       loading: false,
       building,
     });

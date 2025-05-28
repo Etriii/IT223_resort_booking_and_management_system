@@ -9,3 +9,4 @@ export {default as FilterModal} from './FilterModal';
 
 export {default as DeleteUserRoleModal} from './DeleteUserRoleModal';
 export {default as CreateUserRoleModal} from './CreateUserRoleModal';
+export {default as AdminActivityLogFilters} from './AdminActivityLogFilters';

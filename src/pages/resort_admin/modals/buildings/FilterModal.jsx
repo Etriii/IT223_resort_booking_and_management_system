@@ -2,7 +2,7 @@ import React from 'react'
 
 const FilterModal = () => {
   return (
-    <div>Resort FilterModal</div>
+    <div>Building FilterModal</div>
   )
 }
 

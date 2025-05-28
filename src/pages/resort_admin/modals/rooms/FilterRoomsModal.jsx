@@ -1,9 +1,9 @@
-// import React from 'react'
+import React from 'react'
 
-// const FilterRoomsModal = () => {
-//   return (
-//     <div>Resort FilterRoomsModal</div>
-//   )
-// }
+const FilterRoomsModal = () => {
+  return (
+    <div>Resort FilterRoomsModal</div>
+  )
+}
 
-// export default FilterRoomsModal
+export default FilterRoomsModal
