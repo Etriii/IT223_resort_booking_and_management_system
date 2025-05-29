@@ -86,37 +86,33 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import InputField from '../../components/ui/form/InputField';
+import InputField from "../../components/ui/form/InputField";
 import { useFetchUserBookmarks } from "../../hooks";
-import { getResortById } from '../../utils/cloudinaryapi'; // assuming this is used inside the hook
+import { getResortById } from "../../utils/cloudinaryapi";
 
 const CLOUD_NAME = "dpa4l9gxw";
 
 const Bookmarks = () => {
     const navigate = useNavigate();
+    const { bookmarkedResorts, loading, error } = useFetchUserBookmarks();
 
-    const { bookmarkedResorts, loading, error, fetchBookmarkedResorts } = useFetchUserBookmarks();
-
-    const [filters, setFilters] = useState({ resort_name: '' });
-
+    const [filters, setFilters] = useState({ resort_name: "" });
     const [resortImages, setResortImages] = useState({});
-
-    const filteredBookmarkedResorts = bookmarkedResorts?.filter(bookmarkedResort => {
-        const resortNameMatch = !filters.resort_name || bookmarkedResort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
-        return resortNameMatch;
-    }) || [];
 
     const handleOnChangeInput = (e) => {
         const { name, value } = e.target;
-        setFilters(prev => ({ ...prev, [name]: value }));
+        setFilters((prev) => ({ ...prev, [name]: value }));
     };
+
+    const filteredBookmarkedResorts =
+        bookmarkedResorts?.filter((resort) =>
+            resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase())
+        ) || [];
 
     const navigate_to = (resort_id) => {
         navigate(`/oceanview/resortdetails/${resort_id}`);
     };
 
-    // ✅ Fetch resort images by ID
     useEffect(() => {
         const fetchImages = async () => {
             const imageMap = {};
@@ -130,46 +126,60 @@ const Bookmarks = () => {
                     }
                 }
             }
-            setResortImages(prev => ({ ...prev, ...imageMap }));
+            setResortImages((prev) => ({ ...prev, ...imageMap }));
         };
 
-        if (bookmarkedResorts?.length > 0) {
-            fetchImages();
-        }
+        if (bookmarkedResorts?.length > 0) fetchImages();
     }, [bookmarkedResorts]);
 
+
+    if (!bookmarkedResorts || bookmarkedResorts.length === 0) {
+
+        return <div className="px-8 py-6 border-gray-300 rounded-t-2xl bg-gradient-to-r">
+            <h2 className="text-xl text-center font-extrabold text-black tracking-wide">
+                🌴 Your Bookmarked Resorts
+            </h2>
+            <p className="text-center text-gray-600 py-8"> No bookmarked resorts found.</p></div>;
+    }
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-10 px-4 sm:px-10">
-            <div className="flex justify-between items-center pb-5">
-                <h1 className="text-3xl font-bold text-gray-800">🌴 Your Bookmarked Resorts</h1>
-                <InputField name='resort_name' className="w-56" placeholder="Resort Name" onChange={handleOnChangeInput} />
+        <div className="min-h-screen bg-white py-10 sm:px-10">
+            <div className="mb-12 flex flex-col sm:flex-row justify-between items-center gap-4 px-40">
+                <h2 className="text-xl font-extrabold text-black tracking-wide">
+                    🌴 Your Bookmarked Resorts
+                </h2>
+                <InputField
+                    name="resort_name"
+                    className="w-full sm:w-80"
+                    placeholder="Search Resort Name"
+                    onChange={handleOnChangeInput}
+                />
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredBookmarkedResorts.length > 0 ? (
-                    filteredBookmarkedResorts.map((resort) => (
-                        <div
-                            key={resort.bookmarked_id}
-                            className="bg-white rounded-2xl shadow-lg overflow-hidden transition transform hover:scale-105 hover:shadow-xl hover:cursor-pointer"
-                            onClick={() => navigate_to(resort.resort_id)}
-                        >
-                            <img
-                                src={
-                                    resortImages[resort.resort_id] ||
-                                    'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'
-                                }
-                                alt={resort.name}
-                                className="h-48 w-full object-cover"
-                            />
-                            <div className="p-4">
-                                <h2 className="text-xl font-semibold text-gray-800">{resort.name}</h2>
-                                <p className="text-gray-500">{resort.location}</p>
-                            </div>
+            <div className="grid gap-16 sm:grid-cols-2 lg:grid-cols-3 px-40">
+                {filteredBookmarkedResorts.map((resort) => (
+                    <div
+                        key={resort.bookmarked_id}
+                        className="bg-white border border-gray-200 rounded-2xl shadow hover:shadow-xl transition transform hover:scale-[1.02] cursor-pointer overflow-hidden"
+                        onClick={() => navigate_to(resort.resort_id)}
+                    >
+                        <img
+                            src={
+                                resortImages[resort.resort_id] ||
+                                "https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg"
+                            }
+                            alt={resort.name}
+                            className="w-full h-48 object-cover"
+                        />
+                        <div className="p-4">
+                            <h2 className="text-lg font-semibold text-gray-900 truncate">
+                                {resort.name}
+                            </h2>
+                            <p className="text-sm text-gray-500">{resort.location}</p>
                         </div>
-                    ))
-                ) : (
-                    <p>No bookmarked resorts found.</p>
-                )}
+                    </div>
+                ))
+                }
             </div>
             {/* <div className={`text-center p-5`}> <span className={`p-2 cursor-pointer hover:text-blue-600 transition-all delay-100`}>See More...</span></div> */}
         </div>
