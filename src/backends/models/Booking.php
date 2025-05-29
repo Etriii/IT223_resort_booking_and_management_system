@@ -144,12 +144,7 @@ class Booking
     // return $formatted;
 }
 
-    public function getBookingByRoomId($room_id) {}
 
-
-    public function update() {}
-
-    public function destroy() {}
 
     public function getBookingsInRangeOf($data)
     {

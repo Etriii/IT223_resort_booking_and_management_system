@@ -132,8 +132,9 @@ class Resorts
             ':id' => $id,
         ]);
     }
-    public function getTotalRoomsByResort($resort_id){
-         $stmt = $this->conn->prepare("SELECT
+    public function getTotalRoomsByResort($resort_id)
+    {
+        $stmt = $this->conn->prepare("SELECT
     r.id AS ResortID,
     r.name AS ResortName,
     t.TotalRooms,
@@ -142,7 +143,7 @@ class Resorts
     rt.name AS RoomType,
     COUNT(ro.id) AS RoomTypeCount
 
-FROM " .$this->table." r
+FROM " . $this->table . " r
 
 LEFT JOIN rooms ro ON ro.resort_id = r.id
 LEFT JOIN room_types rt ON ro.room_type_id = rt.id
@@ -181,25 +182,24 @@ ORDER BY rt.name;
     }
 
     public function getTaxRateByBuildingId($building_id)
-{
-    if ($building_id <= 0) {
-        return null;
-    }
+    {
+        if ($building_id <= 0) {
+            return null;
+        }
 
-    $sql = "SELECT r.tax_rate
+        $sql = "SELECT r.tax_rate
             FROM buildings b
             JOIN resorts r ON b.resort_id = r.id
             WHERE b.id = ?";
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([$building_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$building_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        return floatval($row['tax_rate']);
+        if ($row) {
+            return floatval($row['tax_rate']);
+        }
+
+        return null;
     }
-
-    return null;
-}
-
 }

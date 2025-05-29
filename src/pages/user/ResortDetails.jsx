@@ -6,7 +6,6 @@ import ControlledCarousel from "../../components/ui/carousel/resortdetailscarous
 import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
 import useFetchImages from "../../hooks/cloudinary/useFetchImagesById.jsx";
-import useFetchImages from "../../hooks/cloudinary/useFetchImagesById.jsx";
 
 const ResortDetails = ({ initialBookmarkStatus }) => {
   const { id } = useParams();
