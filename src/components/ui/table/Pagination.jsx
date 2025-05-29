@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Pagination = ({ filters, setFilters, totalPages, filteredResorts }) => {
+const Pagination = ({ filters, setFilters, totalPages, filtered }) => {
 
     const getPageNumbers = (totalPages, currentPage) => {
         const delta = 1;
@@ -33,7 +33,7 @@ const Pagination = ({ filters, setFilters, totalPages, filteredResorts }) => {
         <div className="flex md:justify-between md:items-center md:flex-row p-2 flex-wrap justify-center items-center flex-col-reverse space-y-2">
             <div>
                 <span>
-                    Showing {(filters.page - 1) * filters.paginate + 1} - {Math.min(filters.page * filters.paginate, filteredResorts.length)} of {filteredResorts.length} entries
+                    Showing {(filters.page - 1) * filters.paginate + 1} - {Math.min(filters.page * filters.paginate, filtered.length)} of {filtered.length} entries
                 </span>
             </div>
 

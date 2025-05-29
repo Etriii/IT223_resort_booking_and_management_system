@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../config/Database.php';
 // NEXT TIME NALANG KITA E USE :< HENDE PALA FWEDE
+// Need pala mag stored procedure, joins, views, and triggers
 class Model
 {
     protected $conn;

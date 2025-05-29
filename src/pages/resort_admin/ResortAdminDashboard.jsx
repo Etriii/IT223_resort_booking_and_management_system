@@ -137,8 +137,8 @@ const [profit30Days, setProfit30Days] = useState([]);
       <div className="grid grid-cols-12 gap-6">
         <Linechart height="h-[39lvh]" monthlyData={profitMonthly} dailyData={profit30Days}/>
         <div className="flex flex-col col-span-4 gap-4">
-          <BalanceCard title="Bookings" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"}/>
-          <BalanceCard title="Upcoming Balance" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"}/>
+          <BalanceCard title="Bookings" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"} />
+          <BalanceCard title="Upcoming Balance" value={totalBookings[0]?.Total_Amount ? totalBookings[0].Total_Amount : "0"} />
         </div>
         <div className="col-span-8 bg-gray-200 p-1 rounded-lg">
           <div className="hidden md:block overflow-x-hidden">

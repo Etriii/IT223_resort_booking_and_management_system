@@ -32,6 +32,11 @@ const ResortRoomList = () => {
     const [guestDetails, setGuestDetails] = useState(null);
     const [isGuestInfoModalOpen, setIsGuestInfoModalOpen] = useState(false);
 
+    const [resortTaxRate, setResortTaxRate] = useState(0);
+    const [loadingTaxRate, setLoadingTaxRate] = useState(false);
+    const fixedTaxRate = 0.00;
+    const [applicableDiscount, setApplicableDiscount] = useState(0);
+
     useEffect(() => {
         document.title = "Rooms in Building | Ocean View";
         getRoomsByBuildingId();
@@ -42,6 +47,83 @@ const ResortRoomList = () => {
             applyFilters();
         }
     }, [filters, allRooms]);
+
+
+    useEffect(() => {
+        if (isBookingModalOpen && selectedRoom?.building_id) {
+            const fetchTaxAndDiscount = async () => {
+                try {
+                    setLoadingTaxRate(true);
+                    const buildingId = selectedRoom.building_id;
+
+                    if (!buildingId) {
+                        console.error("Invalid building_id:", buildingId);
+                        setResortTaxRate(0);
+                        setApplicableDiscount(0);
+                        setLoadingTaxRate(false);
+                        return;
+                    }
+
+
+                    const buildingRes = await fetch(`http://localhost:8000/api.php?controller=Buildings&action=getBuildingById&building_id=${buildingId}`);
+                    const buildingData = await buildingRes.json();
+
+                    const resortId = buildingData?.resort_id;
+                    if (!resortId) {
+                        console.warn("No resort ID found for building:", buildingData);
+                        setResortTaxRate(0);
+                        setApplicableDiscount(0);
+                        setLoadingTaxRate(false);
+                        return;
+                    }
+
+                    const taxRes = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getTaxRateByBuildingId&building_id=${buildingId}`);
+                    const taxData = await taxRes.json();
+
+                    if (taxData && typeof taxData.tax_rate === 'number') {
+                        setResortTaxRate(taxData.tax_rate);
+                    } else {
+                        setResortTaxRate(0);
+                    }
+
+
+                    const eventsRes = await fetch(`http://localhost:8000/api.php?controller=Events&action=getEventByResortId&resort_id=${resortId}`);
+                    const events = await eventsRes.json();
+
+                    let maxDiscount = 0;
+
+                    const checkIn = new Date(filters.checkInDate);
+                    const checkOut = new Date(filters.checkOutDate);
+
+                    if (Array.isArray(events)) {
+                        events.forEach(event => {
+                            const eventStart = new Date(event.start_date);
+                            const eventEnd = new Date(event.end_date);
+
+
+                            if (checkOut >= eventStart && checkIn <= eventEnd) {
+                                maxDiscount = Math.max(maxDiscount, parseFloat(event.discount_rate || 0));
+                            }
+                        });
+                    }
+
+                    setApplicableDiscount(maxDiscount);
+                } catch (err) {
+                    console.error("Error fetching tax/discount info:", err);
+                    setResortTaxRate(0);
+                    setApplicableDiscount(0);
+                } finally {
+                    setLoadingTaxRate(false);
+                }
+            };
+
+            fetchTaxAndDiscount();
+        } else {
+            setResortTaxRate(0);
+            setApplicableDiscount(0);
+        }
+    }, [isBookingModalOpen, selectedRoom, filters.checkInDate, filters.checkOutDate]);
+
 
     const getRoomsByBuildingId = async () => {
         try {
@@ -79,7 +161,7 @@ const ResortRoomList = () => {
             const price = parseFloat(room.price_per_night);
             if (price < filters.budget[0] || price > filters.budget[1]) return false;
 
-            if (filters.roomType !== 'All' && room.room_type_name !== filters.roomType) return false;
+            if (filters.roomType !== 'All' && room.roRom_type_name !== filters.roomType) return false;
 
             if (filters.guests && parseInt(room.room_type_capacity) < parseInt(filters.guests)) return false;
 
@@ -107,11 +189,14 @@ const ResortRoomList = () => {
         if (checkIn && checkOut) {
             const checkInDateObj = new Date(checkIn);
             const checkOutDateObj = new Date(checkOut);
-            const diffInDays = Math.ceil((checkOutDateObj.getTime() - checkInDateObj.getTime()) / (1000 * 60 * 60 * 24));
-            setDaysOfStay(diffInDays);
+
+            const diffInMs = checkOutDateObj.getTime() - checkInDateObj.getTime();
+            const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+            setDaysOfStay(diffInDays + 1);
         } else {
             setDaysOfStay(0);
         }
+
     };
 
     const openRoomDetailModal = (room) => {
@@ -184,7 +269,6 @@ const ResortRoomList = () => {
                 const confirmGuestInfo = window.confirm("You need to complete your information to book a room. Do you want to proceed?");
                 if (confirmGuestInfo) {
                     setIsGuestInfoModalOpen(true);
-
                 }
                 return;
             }
@@ -198,6 +282,16 @@ const ResortRoomList = () => {
             setLoading(false);
         }
     };
+
+    const roomSubtotal = selectedRoom?.price_per_night && daysOfStay
+        ? selectedRoom.price_per_night * daysOfStay
+        : 0;
+
+    const discountAmount = roomSubtotal * (applicableDiscount / 100);
+    const discountedSubtotal = roomSubtotal - discountAmount;
+
+    const totalTaxes = discountedSubtotal * fixedTaxRate + (discountedSubtotal * (resortTaxRate / 100));
+    const totalBillWithTax = discountedSubtotal + totalTaxes;
 
     return (
         <div>
@@ -342,7 +436,12 @@ const ResortRoomList = () => {
                                         parentRoomType={filters.roomType}
                                         parentFilters={filters}
                                         parentRoomName={selectedRoom.room_name}
+                                        taxRate={resortTaxRate} 
+                                        roomSubtotal={roomSubtotal}
+                                        ParenttotalTaxes={totalTaxes}
+                                        totalBillWithTax={totalBillWithTax}
                                     />
+
                                 )}
                             </div>
                         )}

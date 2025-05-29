@@ -14,7 +14,10 @@ import ActionNotification from "../../components/ui/modals/ActionNotification";
 import { apiFetch } from '../../utils/apiFetch';
 import CreateUserModal from "./modals/CreateUserModal";
 
+import Pagination from '../../components/ui/table/Pagination';
+
 const Accounts = () => {
+
     const containerRef = useRef(null);
 
     const [users, setUsers] = useState([]);
@@ -22,7 +25,7 @@ const Accounts = () => {
     const [notify, setNotify] = useState();
     const [usernameFilter, setUsernameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [filters, setFilters] = useState({ paginate: 8, page: 1 });
+    const [filters, setFilters] = useState({ paginate: 5, page: 1 });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalVariant, setModalVariant] = useState('create');
@@ -180,11 +183,13 @@ const Accounts = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                    <InputField
-                        value={usernameFilter}
-                        onChange={(e) => setUsernameFilter(e.target.value)}
-                        placeholder="Search by Username"
-                    />
+                    <div className="flex items-center space-x-2">
+                        <InputField
+                            value={usernameFilter}
+                            onChange={(e) => setUsernameFilter(e.target.value)}
+                            placeholder="Search by Username"
+                        />
+                    </div>
                     <button
                         className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition"
                         onClick={() => openModal('create')}
@@ -237,7 +242,10 @@ const Accounts = () => {
                 )}
             </Table>
 
-            <div className="flex justify-between items-center mt-4 flex-wrap">
+            <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredUsers} />
+
+
+            {/* <div className="flex justify-between items-center mt-4 flex-wrap">
                 <div>
                     <span>Showing {(filters.page - 1) * filters.paginate + 1} to {Math.min(filters.page * filters.paginate, filteredUsers.length)} of {filteredUsers.length} entries</span>
                 </div>
@@ -266,7 +274,7 @@ const Accounts = () => {
                         &raquo;
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

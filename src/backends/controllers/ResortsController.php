@@ -225,8 +225,6 @@ class ResortsController
 
         $response = curl_exec($ch);
         curl_close($ch);
-
-        // Optionally log or handle the response
     }
 
     public function getTotalRoomsByResort(Request $request) {
@@ -268,5 +266,24 @@ class ResortsController
     public function getResortAdminsByResortId(Request $request)
     {
         echo json_encode($this->resortsModel->getResortAdminsByResortId($request->get('resort_id')));
+    }
+    public function getTaxRateByBuildingId()
+    {
+        header('Content-Type: application/json');
+
+        $building_id = isset($_GET['building_id']) ? intval($_GET['building_id']) : 0;
+
+        if ($building_id <= 0) {
+            echo json_encode(['error' => 'Invalid building ID']);
+            return;
+        }
+
+        $taxRate = $this->resortsModel->getTaxRateByBuildingId($building_id);
+
+        if ($taxRate !== null) {
+            echo json_encode(['tax_rate' => $taxRate]);
+        } else {
+            echo json_encode(['error' => 'Building or related resort not found']);
+        }
     }
 }

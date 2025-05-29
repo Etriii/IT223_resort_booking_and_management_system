@@ -179,4 +179,27 @@ ORDER BY rt.name;
         $stmt->execute(['resort_id' => $resort_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getTaxRateByBuildingId($building_id)
+{
+    if ($building_id <= 0) {
+        return null;
+    }
+
+    $sql = "SELECT r.tax_rate
+            FROM buildings b
+            JOIN resorts r ON b.resort_id = r.id
+            WHERE b.id = ?";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$building_id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+        return floatval($row['tax_rate']);
+    }
+
+    return null;
+}
+
 }

@@ -274,7 +274,7 @@ const Resorts = () => {
                 )}
             </Table>
 
-            <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filteredResorts={filteredResorts} />
+            <Pagination filters={filters} setFilters={setFilters} totalPages={totalPages} filtered={filteredResorts} />
 
         </div>
     );

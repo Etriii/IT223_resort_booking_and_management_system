@@ -4,9 +4,11 @@ import { useState } from 'react';
 import ResortAdminHeading from "../components/ui/layout/headings/ResortAdminHeading";
 import ResortAdminSideNav from "../components/ui/layout/side_navs/ResortAdminSideNav";
 
+import useNavbarState from '../utils/useNavbarState';
+
 const ResortAdminLayout = () => {
 
-    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+    const [isSideNavOpen, setIsSideNavOpen] = useNavbarState();
 
     return (
         // <div className="flex">

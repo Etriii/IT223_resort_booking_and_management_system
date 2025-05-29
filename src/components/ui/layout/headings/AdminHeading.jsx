@@ -8,6 +8,9 @@ import { useEffect, useRef, useState } from "react";
 
 import logout from "../../../../utils/logout";
 
+import useDropdownState from '../../../../utils/useDropdownState';
+
+
 
 const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
 
@@ -47,7 +50,7 @@ const AdminHeading = ({ className, toggleSideNav, isOpen }) => {
     //     alert('na toggle ko');
     // }
 
-    const [isOpenProfile, setIsOpenProfile] = useState(false);
+    const [isOpenProfile, setIsOpenProfile] = useDropdownState();
     const [isOpenNotification, setIsOpenNotification] = useState(false);
 
     const handleOpenProfile = () => {

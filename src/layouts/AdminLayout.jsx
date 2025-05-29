@@ -4,9 +4,11 @@ import AdminHeading from "../components/ui/layout/headings/AdminHeading";
 import AdminSideNav from "../components/ui/layout/side_navs/AdminSideNav";
 import { useState } from 'react';
 
+import useNavbarState from '../utils/useNavbarState';
+
 const AdminLayout = () => {
 
-    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+    const [isSideNavOpen, setIsSideNavOpen] = useNavbarState();
 
     return (
         <div className='flex'>

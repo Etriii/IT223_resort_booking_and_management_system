@@ -69,6 +69,7 @@
 // export default App
 
 import './App.css'
+import useScrollPersistence from './utils/useScrollPersistence';
 
 import { Routes, Route } from "react-router-dom";
 
@@ -92,6 +93,9 @@ import { Authenticate, ProtectedRoute, RedirectIfAuthenticated } from './utils/m
 
 
 const App = () => {
+
+  useScrollPersistence();
+
   return (
     <Routes>
 
@@ -120,6 +124,7 @@ const App = () => {
             <Route path="manage/rooms/:building_id" element={<ManageRooms />} />
             {/* I think mag add dri og mga incoming reservations */}
             <Route path="reservations" element={<Reservations />} />
+            add dapat kog payments here
             <Route path="schedules" element={<ResortSchedules />} />
 
             <Route element={<ProtectedRoute allowedRoles={['resort_super_admin']} />}>

@@ -16,6 +16,11 @@ class BuildingsController
     {
         echo json_encode($this->buildingModel->getBuildings());
     }
+    public function getBuildingById(Request $request)
+{
+    $buildingId = $request->get('building_id');
+    echo json_encode($this->buildingModel->getBuildingById($buildingId));
+}
     public function getBuildingsByResortId(Request $request): void
     {
         $resort_id = $request->get('resort_id');

@@ -6,6 +6,7 @@ import ControlledCarousel from "../../components/ui/carousel/resortdetailscarous
 import RoomControlledCarousel from "../../components/ui/carousel/resortroomcarousel.jsx";
 import UserFooter from "../../components/ui/layout/footers/UserFooter.jsx";
 import useFetchImages from "../../hooks/cloudinary/useFetchImagesById.jsx";
+import useFetchImages from "../../hooks/cloudinary/useFetchImagesById.jsx";
 
 const ResortDetails = ({ initialBookmarkStatus }) => {
   const { id } = useParams();
@@ -21,16 +22,10 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const [formRating, setFormRating] = useState(0); // Rating for new review
   const [guestReview, setGuestReview] = useState(null); // Guest's own review
 
-  // const [mainImage] = useFetchImages(id, "main_image");
   const [mainimage] = useFetchImages(id, "main_image");
-  const [image1] = useFetchImages(id, "image1");
-  const [image1_2] = useFetchImages(id, "image1_2");
-  const [image1_3] = useFetchImages(id, "image1_3");
   const [image2] = useFetchImages(id, "image2");
   const [image3] = useFetchImages(id, "image3");
-  const [room_image_1] = useFetchImages(id, "room_image_1");
-  const [room_image_2] = useFetchImages(id, "room_image_1");
-  const [room_image_3] = useFetchImages(id, "room_image_1");
+
 
   useEffect(() => {
     document.title = "Resort Details | Ocean View";
@@ -71,16 +66,59 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
     setReviewsCount(fetchedReviews.length);
   };
 
-  const handleBookmarkToggle = () => {
-    setIsBookmarked(!isBookmarked);
-    if (!isBookmarked) {
-      setBookmarks((prevBookmarks) => [...prevBookmarks, id]);
-    } else {
-      setBookmarks((prevBookmarks) =>
-        prevBookmarks.filter((bookmarkId) => bookmarkId !== id)
-      );
+  useEffect(() => {
+    const checkBookmark = async () => {
+  try {
+    const userId = localStorage.getItem("user_id");
+    const response = await fetch(`http://localhost:8000/api.php?controller=Bookmarks&action=getBookmarksByUserId&user_id=${userId}`);
+    const data = await response.json();
+
+    console.log("Bookmark fetch response:", data); 
+
+    if (!Array.isArray(data)) {
+      console.error("Expected an array but got:", data);
+      return;
+    }
+
+    if (resort && resort.id) {
+      const bookmarked = data.some(bookmark => bookmark.resort_id === resort.id);
+      setIsBookmarked(bookmarked);
+    }
+  } catch (error) {
+    console.error('Failed to check bookmark status', error);
+  }
+};
+
+
+    checkBookmark();
+  }, [resort]);
+
+  const handleBookmarkToggle = async () => {
+    const user_id = localStorage.getItem('user_id');
+    const resort_id = resort.id;
+
+    const url = isBookmarked
+      ? 'http://localhost:8000/api.php?controller=Bookmarks&action=removeBookmark'
+      : 'http://localhost:8000/api.php?controller=Bookmarks&action=addBookmark';
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id, resort_id }),
+      });
+
+      const data = await response.json();
+      console.log('Bookmark toggle response:', data);
+
+      if (data.success) {
+        setIsBookmarked(!isBookmarked);
+      }
+    } catch (error) {
+      console.error('Bookmark toggle failed:', error);
     }
   };
+
 
   const toggleReviewExpansion = (reviewID) => {
     setExpandedReviews((prev) =>
@@ -191,19 +229,19 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               <div className="grid grid-cols-2 gap-6 mt-1">
                 <div className="grid col-1 ">
                   <img
-                  src={image2}
-                  alt="Room Image 2"
-                  className="h-[16rem] w-100 object-cover"
-                  style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                />
-                </div>              
+                    src={image2}
+                    alt="Room Image 2"
+                    className="h-[16rem] w-100 object-cover"
+                    style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                  />
+                </div>
                 <div className="grid col-1 ">
                   <img
-                  src={image3}
-                  alt="Room Image 2"
-                  className="h-[16rem] w-100 object-cover"
-                  style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                />
+                    src={image3}
+                    alt="Room Image 2"
+                    className="h-[16rem] w-100 object-cover"
+                    style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                  />
                 </div>
               </div>
 
@@ -286,9 +324,8 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 </h6>
                 <p className="text-black text-[14px] pb-3">Event Description</p>
                 <img
-                  src={`/images/resort_images/${
-                    resort.image2 || "default.jpg"
-                  }`}
+                  src={`/images/resort_images/${resort.image2 || "default.jpg"
+                    }`}
                   alt="Event Image"
                   className="h-[20rem] w-full object-cover rounded-lg"
                   style={{ backgroundColor: "gray" }}
@@ -298,9 +335,8 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               {/* Right */}
               <div className="md:col-span-3 w-full">
                 <img
-                  src={`/images/resort_images/${
-                    resort.image2 || "default.jpg"
-                  }`}
+                  src={`/images/resort_images/${resort.image2 || "default.jpg"
+                    }`}
                   alt="Event Image"
                   className="h-[24rem] w-full object-cover rounded-lg"
                   style={{ backgroundColor: "gray" }}

@@ -9,11 +9,22 @@ class BookingDetailsController
 
     public function __construct()
     {
+        
         $this->bookingDetailModel = new BookingDetail();
     }
 
-    public function getBookingDetails()
+    public function getBookingDetails(Request $request) 
     {
-        echo json_encode($this->bookingDetailModel->getBookingDetails());
+        $userId = $request->get('user_id');
+
+        error_log("Received user_id in controller: " . var_export($userId, true));
+
+        if (!$userId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'User ID is required to fetch booking details.']);
+            exit;
+        }
+
+        echo json_encode($this->bookingDetailModel->getBookingDetailsByUserId($userId));
     }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useFetchImages from '../../../hooks/cloudinary/useFetchImagesById';
 
 function ControlledCarousel({ id }) {
   const [index, setIndex] = useState(0);
@@ -51,11 +52,14 @@ function ControlledCarousel({ id }) {
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  const resortImages = resort ? [
-    resort.image1,
-    resort.image1_2,
-    resort.image1_3, 
-  ] : [];
+    const [image1] = useFetchImages(id, "image1");
+  const [image1_2] = useFetchImages(id, "image1_2");
+  const [image1_3] = useFetchImages(id, "image1_3");
+  // const resortImages = resort ? [
+  //   resort.image1,
+  //   resort.image1_2,
+  //   resort.image1_3, 
+  // ] : [];
 
   return (
     <div className="w-full py-5 relative">
@@ -66,9 +70,9 @@ function ControlledCarousel({ id }) {
               className={`${index === 0 ? 'block' : 'hidden'} transition-all  duration-700`}
             >
               <div className="flex flex-col bg-black md:flex-row items-center rounded-xl">
-                <div className="relative w-full md:w-7/12 h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <div className="relative w-full h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[0]}`}
+                    src={image1}
                     alt="Resort Image 1"
                     className="w-full h-full object-cover"
                   />
@@ -80,9 +84,9 @@ function ControlledCarousel({ id }) {
               className={`${index === 1 ? 'block' : 'hidden'} transition-all duration-700`}
             >
               <div className="flex flex-col bg-slate-700 md:flex-row rounded-xl items-center">
-                <div className="relative w-full  md:w-7/12 h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+                <div className="relative w-full h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[1]}`}
+                    src={image1_2}
                     alt="Resort Image 2"
                     className="w-full h-full object-cover"
                   />
@@ -93,10 +97,10 @@ function ControlledCarousel({ id }) {
             <div
               className={`${index === 2 ? 'block' : 'hidden'} transition-all  duration-700`}
             >
-              <div className="flex flex-col bg-red-500 md:flex-row rounded-xl items-center">
-                <div className="relative w-full md:w-7/12 h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+              <div className="flex flex-col  md:flex-row rounded-xl items-center">
+                <div className="relative w-full bg-red-500 h-[300px] overflow-hidden rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
                   <img
-                    src={`/images/resort_images/${resortImages[2]}`}
+                    src={image1_3}
                     alt="Resort Image 3"
                     className="w-full h-full object-cover"
                   />
