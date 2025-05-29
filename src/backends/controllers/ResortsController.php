@@ -227,6 +227,28 @@ class ResortsController
         curl_close($ch);
     }
 
+    public function getTotalRoomsByResort(Request $request) {
+
+    $resort_id = $request->get('resort_id');
+
+    if (!$resort_id) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'resort_id is required']);
+        return; // Stop here if missing param
+    }
+
+    $data = $this->resortsModel->getTotalRoomsByResort($resort_id);
+
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => !empty($data),
+        'data' => $data ?: [],
+        'message' => $data ? '' : 'No data found.'
+    ]);
+}
+
+
+
     public function destroyResort(Request $request)
     {
         if ($this->resortsModel->destroyResort($request->get('resort_id'))) {

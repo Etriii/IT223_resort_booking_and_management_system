@@ -285,7 +285,7 @@ if (!class_exists($controllerClass)) {
     http_response_code(500);
     echo json_encode(["error" => "Controller class not found"]);
     exit;
-}
+} 
 
 // Create controller instance
 $controller = new $controllerClass();

@@ -109,7 +109,10 @@ class BookingsController
 
         echo json_encode($this->bookingsModel->getBookingsInRangeOf(['check_in' => $start_date, 'check_out' => $end_date, 'resort_id' => $resort_id]));
     }
-
+    public function getTotalAmountResortId(Request $request){
+        $resort_id = $request->get('resort_id');
+        echo json_encode($this->bookingsModel->getTotalAmountResortId($resort_id));
+    }
     public function getBookingStats()
     {
         echo json_encode($this->bookingsModel->getBookingStats());

@@ -1,7 +1,6 @@
 import Table from '../../components/ui/table/Table';
 import TableData from '../../components/ui/table/TableData';
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
-
 import { FiFilter } from 'react-icons/fi';
 import { IoMdAdd } from "react-icons/io";
 import { LuEye } from "react-icons/lu";
@@ -13,6 +12,7 @@ import InputField from "../../components/ui/form/InputField";
 import Modal from "../../components/ui/modals/Modal";
 import ActionNotification from "../../components/ui/modals/ActionNotification";
 import { apiFetch } from '../../utils/apiFetch';
+import CreateUserModal from "./modals/CreateUserModal";
 
 import Pagination from '../../components/ui/table/Pagination';
 
@@ -25,12 +25,17 @@ const Accounts = () => {
     const [notify, setNotify] = useState();
     const [usernameFilter, setUsernameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-
     const [filters, setFilters] = useState({ paginate: 5, page: 1 });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalVariant, setModalVariant] = useState('create');
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+    const [createUserForm, setCreateUserForm] = useState({
+        username: '',
+        email: '',
+        role: '',
+    });
 
     const openModal = (variant) => {
         setModalVariant(variant);
@@ -41,13 +46,36 @@ const Accounts = () => {
     const openFilterModal = () => setIsFilterModalOpen(true);
     const closeFilterModal = () => setIsFilterModalOpen(false);
 
-    const handleConfirm = () => {
-        console.log("Action Confirmed");
-        closeModal();
+    const handleCreateUserInputChange = (e) => {
+        const { name, value } = e.target;
+        setCreateUserForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleConfirm = async () => {
+        if (modalVariant === 'create') {
+            try {
+                const response = await apiFetch('controller=User&action=createUser', {
+                    method: 'POST',
+                    body: JSON.stringify(createUserForm),
+                });
+                const result = await response.json();
+                setNotify({ type: 'success', message: 'User created successfully' });
+
+                const refetch = await apiFetch('controller=User&action=getAllUsers');
+                setUsers(await refetch.json());
+
+                closeModal();
+                setCreateUserForm({ username: '', email: '', role: '' });
+            } catch (error) {
+                setNotify({ type: 'error', message: error.message || 'Failed to create user' });
+            }
+        } else {
+            console.log("Other action confirmed");
+            closeModal();
+        }
     };
 
     const handleCancel = () => {
-        console.log("Action Canceled");
         closeModal();
     };
 
@@ -60,10 +88,7 @@ const Accounts = () => {
                 const data = await response.json();
                 setUsers(data);
             } catch (error) {
-                setNotify({
-                    type: 'error',
-                    message: error.message || 'Failed to fetch users',
-                });
+                setNotify({ type: 'error', message: error.message || 'Failed to fetch users' });
             } finally {
                 setTimeout(() => setLoading(false), 500);
             }
@@ -74,10 +99,7 @@ const Accounts = () => {
 
     const filteredUsers = users?.filter(user => {
         const usernameMatch = user.username?.toLowerCase().includes(usernameFilter.toLowerCase());
-        const statusMatch =
-            statusFilter === 'all' ||
-            user.status?.toLowerCase() === statusFilter.toLowerCase();
-
+        const statusMatch = statusFilter === 'all' || user.status?.toLowerCase() === statusFilter.toLowerCase();
         return usernameMatch && statusMatch;
     });
 
@@ -97,23 +119,16 @@ const Accounts = () => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 variant={modalVariant}
-                title={
-                    modalVariant === 'create'
-                        ? 'Create Item'
-                        : modalVariant === 'read'
-                            ? 'View Item'
-                            : modalVariant === 'update'
-                                ? 'Edit Item'
-                                : modalVariant === 'delete'
-                                    ? 'Delete Item'
-                                    : modalVariant === 'confirmation'
-                                        ? 'Are you sure?'
-                                        : 'Information'
-                }
+                title={modalVariant === 'create' ? 'Create User' : 'User Action'}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             >
-                yes
+                {modalVariant === 'create' && (
+                    <CreateUserModal 
+                        handleCreateFormInputChange={handleCreateUserInputChange} 
+                        formData={createUserForm}
+                    />
+                )}
             </Modal>
 
             <Modal
