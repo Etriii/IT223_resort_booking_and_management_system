@@ -132,7 +132,40 @@ class Resorts
             ':id' => $id,
         ]);
     }
+    public function getTotalRoomsByResort($resort_id){
+         $stmt = $this->conn->prepare("SELECT
+    r.id AS ResortID,
+    r.name AS ResortName,
+    t.TotalRooms,
+    t.TotalBuildings,
+    t.TotalFloors,
+    rt.name AS RoomType,
+    COUNT(ro.id) AS RoomTypeCount
 
+FROM " .$this->table." r
+
+LEFT JOIN rooms ro ON ro.resort_id = r.id
+LEFT JOIN room_types rt ON ro.room_type_id = rt.id
+LEFT JOIN (
+    SELECT 
+        r2.id AS ResortID,
+        COUNT(DISTINCT ro2.id) AS TotalRooms,
+        COUNT(DISTINCT b.id) AS TotalBuildings,
+        SUM(DISTINCT b.floor_count) AS TotalFloors
+    FROM resorts r2
+    LEFT JOIN rooms ro2 ON ro2.resort_id = r2.id
+    LEFT JOIN buildings b ON b.resort_id = r2.id
+    GROUP BY r2.id
+) AS t ON t.ResortID = r.id
+
+WHERE r.id = :resort_id
+
+GROUP BY r.id, r.name, rt.name, t.TotalRooms, t.TotalBuildings, t.TotalFloors
+ORDER BY rt.name;
+");
+        $stmt->execute(['resort_id' => $resort_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function destroyResort($resort_id)
     {

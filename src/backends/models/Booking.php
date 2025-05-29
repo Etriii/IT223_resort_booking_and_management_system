@@ -61,6 +61,40 @@ class Booking
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTotalAmountResortId($resort_id)
+{
+    $sql = "
+        SELECT 
+            DATE(bk.check_in) AS check_in,
+            bk.total_amount
+        FROM ".$this->table." bk
+        JOIN rooms r ON bk.room_id = r.id
+        JOIN resorts res ON r.resort_id = res.id
+        WHERE res.id = :resort_id AND bk.status = 'Completed'
+    
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Transform result to desired format
+    // $formatted = [];
+    // foreach ($results as $row) {
+    //     $month = substr($row['CheckInMonth'], 0, 3); // Extract short month name only
+    //     $cost = (int)str_replace(',', '', $row['TotalAmount']); // Remove commas, cast to int
+
+    //     $formatted[] = [
+    //         'label' => $month,
+    //         'cost' => $cost,
+    //     ];
+    // }
+
+    // return $formatted;
+}
+
     public function getBookingByRoomId($room_id) {}
 
 

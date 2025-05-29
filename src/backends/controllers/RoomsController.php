@@ -119,8 +119,8 @@ class RoomsController
             echo json_encode(['error' => 'Room not found']);
         }
     }
-    public function getTotalRoomsByResortId(Request $request){
-        $resort_id = $request->get('resort_id');
-    echo json_encode($this->roomsModel->getTotalRoomsByResortId($resort_id));
-    }
+    // public function getTotalRoomsByResortId(Request $request){
+    //     $resort_id = $request->get('resort_id');
+    // echo json_encode($this->roomsModel->getTotalRoomsByResortId($resort_id));
+    // }
 }

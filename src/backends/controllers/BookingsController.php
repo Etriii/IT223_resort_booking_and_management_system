@@ -26,6 +26,12 @@ class BookingsController
         $resort_id = $request->get('resort_id');
         echo json_encode($this->bookingsModel->getTotalBookingsByResortId($resort_id));
     }
+    public function getTotalAmountResortId(Request $request)
+    {
+        $resort_id = $request->get('resort_id');
+        echo json_encode($this->bookingsModel->getTotalAmountResortId($resort_id));
+    }
+    
 
     public function getBookingsInRangeOf(Request $request)
     {

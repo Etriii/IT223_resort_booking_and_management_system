@@ -15,6 +15,8 @@ class Payment
     }
 
     public function create() {}
+
+    //http://localhost:8000/api.php?controller=Payments&action=getPayments
     public function getPayments()
     {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);

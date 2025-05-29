@@ -10,6 +10,6 @@ const MyReservation = () => {
             My Reservation
         </>
     );
-}
+} 
 
 export default MyReservation;
