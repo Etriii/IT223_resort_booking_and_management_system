@@ -39,7 +39,7 @@ class Resorts
     public function getDetailsByResortId($resort_id)
     {
         $stmt = $this->conn->prepare("
-        SELECT r.id, r.resort_description, r.room_description,
+        SELECT r.*, r.id,r.name,r.location, r.location_coordinates,  r.resort_description, r.room_description,
                GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities
         FROM resorts r
         LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
