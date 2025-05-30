@@ -298,12 +298,12 @@ const ResortRoomList = () => {
             <div className="px-40 min-h-screen">
                 <div className="flex px-10 justify-between items-center pt-6">
                     <div className="flex-1 text-left">
-                        <h1 className="text-xl font-bold">
+                        <h1 className="text-base font-bold">
                             {allRooms.length > 0 ? allRooms[0]?.building_name : 'Loading...'}
                         </h1>
                     </div>
                     <div className="flex-1 pl-4">
-                        <h1 className="text-lg font-medium">
+                        <h1 className="text-sm font-medium">
                             Available Rooms ({filteredRooms.length})
                         </h1>
 
@@ -366,16 +366,16 @@ const ResortRoomList = () => {
                                                 alt={room.room_name}
                                                 className="w-full h-auto md:h-full object-cover"
                                             />
-                                            <div className="p-4">
-                                                <h2 className="text-xl font-semibold text-gray-800">{room.room_name}</h2>
+                                            <div className="p-4 ">
+                                                <h2 className="text-base font-semibold text-gray-800">{room.room_name}</h2>
                                                 <hr className="w-full border-t border-neutral-400 my-2" />
                                                 <div className="flex w-full flex-col md:flex-row">
                                                     {/* Left */}
                                                     <div className="w-full md:w-4/5 pr-4">
-                                                        <p className="text-sm text-gray-600 mt-1">{room.description}</p>
+                                                        <p className="text-xs text-gray-600 mt-1">{room.description}</p>
 
                                                         <button
-                                                            className="text-blue-600 no-underline py-3 text-sm font-bold inline-block mt-2 hover:text-blue-900 px-0"
+                                                            className="text-blue-600 no-underline py-3 text-xs font-bold inline-block mt-2 hover:text-blue-900 px-0"
                                                             onClick={() => openRoomDetailModal(room)}
                                                         >
                                                             View Details
@@ -383,7 +383,7 @@ const ResortRoomList = () => {
                                                     </div>
 
                                                     {/* Right */}
-                                                    <div className="w-full md:w-1/4 text-left md:text-end mt-4 md:mt-0">
+                                                    <div className="w-full md:w-1/4 text-left md:text-end mt-0 md:mt-0">
                                                         <p className="text-xs text-black font-bold mt-2">{room.room_type_name}</p>
                                                         <hr className="w-full border-t border-neutral-400 my-2" />
                                                         <p className="text-xs text-black font-bold mt-2">₱ {room.price_per_night}</p>

@@ -20,11 +20,12 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
   const [newReview, setNewReview] = useState(""); // New review text
   const [formRating, setFormRating] = useState(0); // Rating for new review
   const [guestReview, setGuestReview] = useState(null); // Guest's own review
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [mainimage] = useFetchImages(id, "main_image");
   const [image2] = useFetchImages(id, "image2");
   const [image3] = useFetchImages(id, "image3");
-
 
   useEffect(() => {
     document.title = "Resort Details | Ocean View";
@@ -34,25 +35,22 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
   const fetchResortDetails = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8000/api.php?controller=Resorts&action=getResorts&id=${id}`
-      );
+      console.log("Fetching resort details for id:", id);
+      const response = await fetch(`http://localhost:8000/api.php?controller=Resorts&action=getDetailsByResortId&id=${id}`);
       const data = await response.json();
-      console.log("Resort API response:", data);
+      console.log("Response data:", data);
 
-      if (Array.isArray(data)) {
-        const resortFound = data.find((res) => res.id === parseInt(id));
-        setResort(resortFound);
-      } else if (data?.name && data?.location) {
-        setResort(data);
-      } else if (data?.data?.name && data?.data?.location) {
-        setResort(data.data);
+      if (data.success) {
+        setResort(data.resort);
       } else {
-        setError("Failed to load resort details: Invalid data format.");
+        console.error('Resort not found:', data.message);
+        setError("Failed to load resort details: Resort not found.");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Failed to fetch resort details:', error);
       setError("Failed to load resort details.");
-      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,30 +65,46 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
   useEffect(() => {
     const checkBookmark = async () => {
-  try {
-    const userId = localStorage.getItem("user_id");
-    const response = await fetch(`http://localhost:8000/api.php?controller=Bookmarks&action=getBookmarksByUserId&user_id=${userId}`);
-    const data = await response.json();
+      try {
+        const userId = localStorage.getItem("user_id");
+        const response = await fetch(`http://localhost:8000/api.php?controller=Bookmarks&action=getBookmarksByUserId&user_id=${userId}`);
+        const data = await response.json();
 
-    console.log("Bookmark fetch response:", data); 
+        console.log("Bookmark fetch response:", data);
 
-    if (!Array.isArray(data)) {
-      console.error("Expected an array but got:", data);
-      return;
-    }
+        if (!Array.isArray(data)) {
+          console.error("Expected an array but got:", data);
+          return;
+        }
 
-    if (resort && resort.id) {
-      const bookmarked = data.some(bookmark => bookmark.resort_id === resort.id);
-      setIsBookmarked(bookmarked);
-    }
-  } catch (error) {
-    console.error('Failed to check bookmark status', error);
-  }
-};
-
+        if (resort && resort.id) {
+          const bookmarked = data.some(bookmark => bookmark.resort_id === resort.id);
+          setIsBookmarked(bookmarked);
+        }
+      } catch (error) {
+        console.error('Failed to check bookmark status', error);
+      }
+    };
 
     checkBookmark();
   }, [resort]);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api.php?controller=Events&action=getEventByResortId&resort_id=${resort.id}`);
+        const data = await response.json();
+        setEvent(data);
+        console.log('events', data);
+      } catch (error) {
+        console.error('Failed to fetch event:', error);
+      }
+    };
+
+    if (resort?.id) {
+      fetchEvent();
+    }
+  }, [resort?.id]);
 
   const handleBookmarkToggle = async () => {
     const user_id = localStorage.getItem('user_id');
@@ -118,7 +132,6 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
     }
   };
 
-
   const toggleReviewExpansion = (reviewID) => {
     setExpandedReviews((prev) =>
       prev.includes(reviewID)
@@ -141,6 +154,14 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
     // Delete review logic here
     console.log("Deleting review");
   };
+
+  const formatDateLong = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, options);
+  };
+
+  if (loading) return <p>Loading...</p>;
 
   if (error) {
     return <div className="text-center mt-20 text-red-500">{error}</div>;
@@ -165,10 +186,10 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
         >
           <div className="absolute inset-y-20 inset-x-96 flex items-center justify-center text-center bg-black/60 rounded-xl">
             <div className="resort p-3">
-              <h1 className="text-white text-4xl font-bold border-b-2 border-white pb-2">
+              <h1 className="text-white text-2xl font-bold border-b-2 border-white pb-2">
                 {resort.name || "Resort Name Not Available"}
               </h1>
-              <h3 className="text-white text-2xl">
+              <h3 className="text-white text-base">
                 {resort.location || "Location Not Available"}
               </h3>
             </div>
@@ -202,7 +223,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div>
               <div className="flex items-center justify-between">
-                <h1 className="beachname text-2xl font-bold">{resort.name}</h1>
+                <h1 className="beachname text-xl font-bold">{resort.name}</h1>
                 <button
                   className="focus:outline-none"
                   onClick={handleBookmarkToggle}
@@ -222,11 +243,11 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
           </div>
           <div className="flex">
             {/* Left */}
-            <div className="w-2/3 pr-8    ">
+            <div className="w-2/3 pr-8">
               <ControlledCarousel id={id} />
               {/* images */}
               <div className="grid grid-cols-2 gap-6 mt-1">
-                <div className="grid col-1 ">
+                <div className="grid col-1">
                   <img
                     src={image2}
                     alt="Room Image 2"
@@ -234,7 +255,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                     style={{ backgroundColor: "gray", borderRadius: "8px" }}
                   />
                 </div>
-                <div className="grid col-1 ">
+                <div className="grid col-1">
                   <img
                     src={image3}
                     alt="Room Image 2"
@@ -249,38 +270,28 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
               </div>
 
               <div className="mt-8">
-                <h3 className="text-2xl font-bold mb-1">Amenities</h3>
+                <h3 className="text-xl font-bold mb-5">Amenities</h3>
                 <div className="container">
-                  {resort.amenities && (
-                    <ul className="list-styled grid grid-cols-1 sm:grid-cols-2">
-                      {resort.amenities.split(",").map((amenity, index) => {
-                        const amenityData = amenity.split("/");
-                        const amenityName = amenityData[0];
-                        const amenityList = amenityData[1]?.split(",") || [];
-
-                        return (
-                          <div key={index} className="mt-3">
-                            <strong className="block">{amenityName}</strong>
-                            {amenityList.map((item, i) => (
-                              <li key={i} className="mt-1">
-                                {item}
-                              </li>
-                            ))}
-                          </div>
-                        );
-                      })}
+                  {resort.amenities && resort.amenities.trim() !== '' ? (
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 list-disc list-inside text-gray-700 text-sm">
+                      {resort.amenities
+                        .split(',')
+                        .map((amenity, index) => (
+                          <li key={index} className="capitalize">{amenity.trim()}</li>
+                        ))}
                     </ul>
+                  ) : (
+                    <p className="text-gray-500">No amenities available for this resort.</p>
                   )}
                 </div>
               </div>
             </div>
-
             {/* Right */}
             <div className="w-2/6 pl-4">
               <h1 className="beachname text-xl font-bold">Location</h1>
               <div>
                 {/* icon diri */}
-                <p className="beachlocation">{resort.location}</p>
+                <p className="beachlocation pb-2 text-sm">{resort.location}</p>
               </div>
               <div className="w-full">
                 <iframe
@@ -304,7 +315,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
               <NavLink
                 to={`/oceanview/resortbuildings/${resort.id}`}
-                className="text-black border-2 border-black hover:text-white hover:bg-blue-500 hover:border-none no-underline font-bold p-4 flex justify-center rounded-full"
+                className="text-black border-2 border-black hover:text-white hover:bg-blue-500 hover:border-none no-underline font-bold p-3 flex justify-center rounded-full"
               >
                 View All Rooms
               </NavLink>
@@ -313,49 +324,43 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
           <div className="resortevents pt-9 mb-6">
             <hr className="w-full border-t border-black my-2" />
-            <h1 className="text-black text-2xl font-bold pb-4">Events</h1>
+            <h1 className="text-black text-xl font-bold pb-4">Events</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-10 gap-12">
-              {/* Left  */}
-              <div className="md:col-span-7 w-full">
-                <h6 className="text-black text-xl font-bold pb-2 ">
-                  Event Title
-                </h6>
-                <p className="text-black text-[14px] pb-3">Event Description</p>
-                <img
-                  src={`/images/resort_images/${resort.image2 || "default.jpg"
-                    }`}
-                  alt="Event Image"
-                  className="h-[20rem] w-full object-cover rounded-lg"
-                  style={{ backgroundColor: "gray" }}
-                />
-              </div>
+            {event?.id ? (
+              <div className="grid grid-cols-1 md:grid-cols-10 gap-12">
+                {/* Left */}
+                <div className="md:col-span-7 w-full">
+                  <h6 className="text-black text-[1.18rem] font-bold pb-2">
+                    {event?.name || "No Event Name"}
+                  </h6>
+                  <p className="text-black text-base pb-3">
+                    {event?.description || "No Description"}
+                  </p>
+                </div>
 
-              {/* Right */}
-              <div className="md:col-span-3 w-full">
-                <img
-                  src={`/images/resort_images/${resort.image2 || "default.jpg"
-                    }`}
-                  alt="Event Image"
-                  className="h-[24rem] w-full object-cover rounded-lg"
-                  style={{ backgroundColor: "gray" }}
-                />
+                {/* Right */}
+                <div className="md:col-span-3 w-full">
+                  <p className="text-green-800 text-base">Starting at: <strong>{formatDateLong(event.start_date)}</strong></p>
+                  <p className="text-red-800 text-base">Ends at: <strong>{formatDateLong(event.end_date)}</strong></p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="text-gray-500">No events</p>
+            )}
           </div>
 
           <div className="mt-32 mb-40">
             <NavLink
               to={`/oceanview/resortbuildings/${resort.id}`}
-              className="text-white bg-blue-500 hover:bg-blue-700  no-underline font-bold p-5 flex justify-center rounded-full mx-40"
+              className="text-white bg-blue-500 hover:bg-blue-700 no-underline font-bold p-4 flex justify-center rounded-full mx-40"
             >
               Book Now
             </NavLink>
           </div>
 
           <hr className="w-full border-t border-black my-2" />
-          <h3 className="text-2xl font-bold pb-4">Reviews</h3>
-          <div>
+          <h3 className="text-xl font-bold pb-4">Reviews</h3>
+          <div className="text-sm text-gray-500">
             {reviews.length === 0 ? (
               <p>No reviews yet.</p>
             ) : (

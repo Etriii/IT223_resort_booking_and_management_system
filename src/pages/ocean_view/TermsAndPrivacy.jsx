@@ -7,14 +7,14 @@ const TermsAndPrivacy = () => {
     }, []);
     return (
         <main className="max-w-5xl mx-auto p-6 sm:p-10 text-gray-900 bg-white min-h-screen font-sans">
-            <h1 className="text-4xl font-serif font-bold mb-8 text-center text-amber-900">
+            <h1 className="text-2xl font-serif font-bold mb-8 text-center text-amber-900">
                 Terms of Service & Privacy Policy
             </h1>
 
             {/* Terms of Service */}
             <section className="mb-16">
-                <h2 className="text-3xl font-semibold mb-4 text-amber-900">Terms of Service</h2>
-                <p className="mb-6 text-gray-700">Effective Date: May 20, 2025</p>
+                <h2 className="text-xl font-semibold mb-4 text-amber-900">Terms of Service</h2>
+                <p className="mb-6 text-sm text-gray-700">Effective Date: May 20, 2025</p>
 
                 <p className="mb-4">
                     Welcome to Ocean View. These Terms of Service (“Terms”) govern your access to and use of our website, services, and products.
@@ -63,14 +63,14 @@ const TermsAndPrivacy = () => {
 
             {/* Privacy Policy */}
             <section>
-                <h2 className="text-3xl font-semibold mb-4 text-amber-900">Privacy Policy</h2>
+                <h2 className="text-xl font-semibold mb-4 text-amber-900">Privacy Policy</h2>
                 <p className="mb-6 text-gray-700">Effective Date: May 20, 2025</p>
 
                 <p className="mb-4">
                     Ocean View (“we”, “us”, “our”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">1. Information We Collect</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">1. Information We Collect</h3>
                 <ul className="list-disc list-inside space-y-3 text-gray-700">
                     <li>
                         <strong>Personal Information</strong><br />
@@ -86,7 +86,7 @@ const TermsAndPrivacy = () => {
                     </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">2. How We Use Your Information</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">2. How We Use Your Information</h3>
                 <p className="mb-4 text-gray-700">
                     We use your information to:
                 </p>
@@ -99,37 +99,37 @@ const TermsAndPrivacy = () => {
                     <li>Comply with legal obligations</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">3. Sharing Your Information</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">3. Sharing Your Information</h3>
                 <p className="mb-4 text-gray-700">
                     We do not sell your personal data. We may share your information with trusted third-party service providers who assist us in operating our website and delivering services, subject to confidentiality agreements. We may also disclose information to comply with legal requirements or protect our rights.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">4. Data Security</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">4. Data Security</h3>
                 <p className="mb-4 text-gray-700">
                     We implement reasonable security measures to protect your information from unauthorized access, alteration, disclosure, or destruction.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">5. Your Rights and Choices</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">5. Your Rights and Choices</h3>
                 <p className="mb-4 text-gray-700">
                     Depending on your jurisdiction, you may have rights to access, correct, or delete your personal data. You can update your account information or opt out of marketing communications by contacting us.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">6. Retention of Data</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">6. Retention of Data</h3>
                 <p className="mb-4 text-gray-700">
                     We retain your personal data only as long as necessary to provide services and fulfill legal obligations.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">7. Children’s Privacy</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">7. Children’s Privacy</h3>
                 <p className="mb-4 text-gray-700">
                     Our services are not directed to individuals under 18 years old. We do not knowingly collect personal information from children under 18.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">8. Changes to This Privacy Policy</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">8. Changes to This Privacy Policy</h3>
                 <p className="mb-4 text-gray-700">
                     We may update this Privacy Policy periodically. We will notify you of any changes by posting the new policy on this page with a revised effective date.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3 text-amber-800">9. Contact Us</h3>
+                <h3 className="text-base font-semibold mt-6 mb-3 text-amber-800">9. Contact Us</h3>
                 <p className="mb-4 text-gray-700">
                     If you have questions about this Privacy Policy or your data, please contact us at privacy@oceanview.com.
                 </p>

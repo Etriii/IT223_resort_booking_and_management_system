@@ -30,7 +30,7 @@ class Event
 
     public function getEventByResortId($id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE resort_id = :id");
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE resort_id = :id ORDER BY start_date DESC");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -36,7 +36,7 @@ const ResortBuildings = () => {
         <div>
             <div id="body" className="px-40">
                 <div className="py-4">
-                    <h1 className="text-3xl font-bold">Choose a building</h1>
+                    <h1 className="text-xl font-bold">Choose a building</h1>
                     <hr className="w-full border-t border-black my-2" />
 
                     {error && <p className="text-red-500">{error}</p>}
@@ -54,11 +54,11 @@ const ResortBuildings = () => {
                                             alt={building.name}
                                             className="w-full h-full object-cover"
                                         />
-                                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-black bg-opacity-70 pt-3 pb-6 pl-6 pr-6">
-                                            <h1 className="text-white text-lg font-bold text-center">{building.name}</h1>
+                                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-black bg-opacity-70 pb-4 pt-3 pl-4 pr-4">
+                                            <h1 className="text-white text-base font-bold text-center">{building.name}</h1>
                                             <NavLink
                                                 to={`/oceanview/resortroomlist/${building.id}`}
-                                                className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-full text-base"
+                                                className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 rounded-full text-base"
                                             >
                                                 Choose
                                             </NavLink>

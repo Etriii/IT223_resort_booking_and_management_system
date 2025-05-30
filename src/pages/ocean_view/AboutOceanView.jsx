@@ -21,8 +21,8 @@ const AboutOceanView = () => {
                 }}
             >
                 <div className="text-center drop-shadow-[0_0_1px_black]">
-                    <h1 className="text-7xl font-bold">About Us</h1>
-                    <p className="typewriter text-2xl px-3 mt-4 lg:px-72 text-wrap md:px-32">
+                    <h1 className="text-4xl font-bold">About Us</h1>
+                    <p className="typewriter text-xl px-3 mt-4 lg:px-72 text-wrap md:px-32">
                         Welcome to Ocean View, your haven of tranquility and luxury. Discover the perfect escape nestled in nature's beauty.
                     </p>
                     {/* <p className="text-2xl mt-4  px-3 lg:px-60 md:px-32">Welcome to Ocean View, your haven of tranquility and luxury. Discover the perfect escape nestled in nature's beauty.</p> */}
@@ -30,7 +30,7 @@ const AboutOceanView = () => {
             </section>
 
             {/* Content Sections */}
-            <section className="py-10 px-1">
+            <section className="py-14 px-40">
                 <div className="container mx-auto space-y-10">
                     <div className="flex flex-col md:flex-row gap-6">
                         <img src={default_image} alt="Enjoy the Moment" className="rounded w-full md:w-1/4 object-cover h-full" />
@@ -80,10 +80,10 @@ const AboutOceanView = () => {
             </section>
 
             {/* Gallery Section */}
-            <section className="py-10 bg-gray-100 px-1">
+            <section className="py-14 bg-gray-100 px-40">
                 <div className="container mx-auto">
-                    <h2 className="text-center mb-6 font-serif text-[#812C2C] text-3xl tracking-widest">Gallery</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <h2 className="text-center mb-6 font-serif text-[#812C2C] text-2xl tracking-widest">Gallery</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
                         {[
                             'gal1.jpg', 'gal2.jpg', 'gal3.jpg',
                             'gal4.jpg', 'gal5.jpg', 'gal6.jpeg',
@@ -93,7 +93,7 @@ const AboutOceanView = () => {
                                 key={i}
                                 src={default_image}
                                 alt={`Gallery ${i + 1}`}
-                                className="rounded w-full h-[350px] object-cover"
+                                className="rounded w-full h-[300px] object-cover"
                             />
                         ))}
                     </div>
