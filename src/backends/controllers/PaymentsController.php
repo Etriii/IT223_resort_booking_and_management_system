@@ -13,16 +13,16 @@ class PaymentsController
     }
 
     public function getPayments()
-{
-    header('Content-Type: application/json');
+    {
+        header('Content-Type: application/json');
 
-    if (!isset($_COOKIE['user_id'])) {
-        echo json_encode(['error' => 'User not logged in']);
-        return;
+        if (!isset($_COOKIE['user_id'])) {
+            echo json_encode(['error' => 'User not logged in']);
+            return;
+        }
+
+        $userId = $_COOKIE['user_id'];
+        echo json_encode($this->paymentModel->getPaymentsWithDetails($userId));
     }
-
-    $userId = $_COOKIE['user_id'];
-    echo json_encode($this->paymentModel->getPaymentsWithDetails($userId));
-}
 
 }

@@ -165,10 +165,10 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
         >
           <div className="absolute inset-y-20 inset-x-96 flex items-center justify-center text-center bg-black/60 rounded-xl">
             <div className="resort p-3">
-              <h1 className="text-white text-4xl font-bold border-b-2 border-white pb-2">
+              <h1 className="text-white text-4xl font-bold border-b-2 border-white pb-2 font-cantarell">
                 {resort.name || "Resort Name Not Available"}
               </h1>
-              <h3 className="text-white text-2xl">
+              <h3 className="text-white text-2xl font-cantarell">
                 {resort.location || "Location Not Available"}
               </h3>
             </div>
@@ -192,7 +192,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 Resorts
               </NavLink>
               <span>/</span>
-              <span className="text-gray-500">{resort.name}</span>
+              <span className="text-gray-500 ">{resort.name}</span>
             </div>
             <hr className="my-4" />
           </div>
@@ -202,7 +202,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div>
               <div className="flex items-center justify-between">
-                <h1 className="beachname text-2xl font-bold">{resort.name}</h1>
+                <h1 className="beachname text-3xl font-bold tracking-wider font-cantarell">{resort.name}</h1>
                 <button
                   className="focus:outline-none"
                   onClick={handleBookmarkToggle}
@@ -244,12 +244,12 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 </div>
               </div>
 
-              <div className="mt-8 text-sm tracking-wider">
+              <div className="mt-8 text-md tracking-wider">
                 <p>{resort.resort_description}</p>
               </div>
 
               <div className="mt-8">
-                <h3 className="text-2xl font-bold mb-1">Amenities</h3>
+                <h3 className="text-2xl font-bold mb-1 tracking-wider font-cantarell">Amenities</h3>
                 <div className="container">
                   {resort.amenities && (
                     <ul className="list-styled grid grid-cols-1 sm:grid-cols-2">
@@ -277,7 +277,7 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
 
             {/* Right */}
             <div className="w-2/6 pl-4">
-              <h1 className="beachname text-xl font-bold">Location</h1>
+              <h1 className="beachname text-xl font-bold tracking-wider font-cantarell">Location</h1>
               <div>
                 {/* icon diri */}
                 <p className="beachlocation">{resort.location}</p>
@@ -294,9 +294,9 @@ const ResortDetails = ({ initialBookmarkStatus }) => {
                 ></iframe>
               </div>
 
-              <h3 className="text-xl font-bold mt-8">Rooms</h3>
+              <h3 className="text-xl tracking-wider font-bold mt-8 font-cantarell">Rooms</h3>
               <RoomControlledCarousel id={id} />
-              <div className="mt-6 pl-1 text-sm tracking-wider">
+              <div className="mt-6 pl-1 text-md tracking-wider">
                 <p className="text-black py-2 mb-8">
                   {resort.room_description}
                 </p>
