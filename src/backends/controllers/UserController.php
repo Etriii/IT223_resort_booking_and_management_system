@@ -1,100 +1,4 @@
 <?php
-// require_once __DIR__ . '/../models/User.php';
-// // Sample
-// class UserController
-// {
-//     private $userModel;
-
-//     public function __construct()
-//     {
-//         $this->userModel = new User();
-//     }
-
-//     public function getAllUsers()
-//     {
-//         echo json_encode($this->userModel->getAllUsers());
-//     }
-
-//     public function getUserById($id)
-//     {
-//         echo json_encode($this->userModel->getUserById($id));
-//     }
-
-//     public function getUserByEmail($email)
-//     {
-//         // var_dump();
-//         echo json_encode($this->userModel->getUserByEmail($email));
-//     }
-// }
-
-// require_once __DIR__ . '/../models/User.php';
-
-// class UserController
-// {
-//     private $userModel;
-
-//     public function __construct()
-//     {
-//         $this->userModel = new User();
-//     }
-
-//     public function getAllUsers($request)
-//     {
-//         echo json_encode($this->userModel->getAllUsers());
-//     }
-
-//     public function getUserById($request)
-//     {
-//         echo json_encode($this->userModel->getUserById($request->params['id']));
-//     }
-
-//     // public function createUser($request)
-//     // {
-//     //     echo json_encode($this->userModel->createUser($request->params));
-//     // }
-
-//     // public function updateUser($request)
-//     // {
-//     //     echo json_encode($this->userModel->updateUser($request->params));
-//     // }
-
-//     // public function deleteUser($request)
-//     // {
-//     //     echo json_encode($this->userModel->deleteUser($request->params['id']));
-//     // }
-// }
-
-// class UserController
-// {
-//     private $userModel;
-
-//     public function __construct()
-//     {
-//         $this->userModel = new User();
-//     }
-
-//     public function getAllUsers(Request $request)
-//     {
-//         echo json_encode($this->userModel->getAllUsers());
-//     }
-
-//     public function getUserById($id)
-//     {
-//         echo json_encode($this->userModel->getUserById($id));
-//     }
-
-//     public function getUserByEmail(Request $request)
-//     {
-//         $email = $request->get('email');
-//         if (!$email) {
-//             echo json_encode(["error" => "Email is required"]);
-//             return;
-//         }
-
-//         echo json_encode($this->userModel->getUserByEmail($email));
-//     }
-// }
-
 
 require_once __DIR__ . '/../models/User.php';
 
@@ -115,25 +19,12 @@ class UserController
     public function getUserById(Request $request)
     {
         $id = $request->get('id');
-
         if (!$id) {
             echo json_encode(["error" => "User ID is required"]);
             return;
         }
 
         echo json_encode($this->userModel->getUserById($id));
-    }
-
-    public function getUserByEmail(Request $request)
-    {
-        $email = $request->get('email');
-
-        if (!$email) {
-            echo json_encode(["error" => "Email is required"]);
-            return;
-        }
-
-        echo json_encode($this->userModel->getUserByEmail($email));
     }
 
     public function createUser(Request $request)
@@ -143,6 +34,7 @@ class UserController
         $username = $data['username'] ?? null;
         $email = $data['email'] ?? null;
         $password = $data['password'] ?? null;
+        $status = $data['status'] ?? 'active';
 
         if (!$username || !$email || !$password) {
             echo json_encode(["success" => false, "message" => "Username, email, and password are required"]);
@@ -154,35 +46,50 @@ class UserController
             return;
         }
 
-        $user_id = $this->userModel->createUser($username, $email, $password);
+        $user_id = $this->userModel->createUser($username, $email, $password, $status);
+
+        echo json_encode([
+            "success" => true,
+            "message" => "User created successfully",
+            "user_id" => $user_id
+        ]);
     }
 
+    public function updateUser(Request $request)
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
 
-    public function deleteUser($request)
+        $user_id = $data['id'] ?? null;
+        $username = $data['username'] ?? null;
+        $email = $data['email'] ?? null;
+        $status = $data['status'] ?? 'active';
+
+        if (!$user_id || !$username || !$email) {
+            echo json_encode(["success" => false, "message" => "User ID, username, and email are required"]);
+            return;
+        }
+
+        $success = $this->userModel->updateUser($user_id, $username, $email, $status);
+
+        echo json_encode([
+            "success" => $success,
+            "message" => $success ? "User updated successfully" : "User update failed"
+        ]);
+    }
+
+    public function deleteUser(Request $request)
     {
         $user_id = $request->get('user_id');
+        if (!$user_id) {
+            echo json_encode(["success" => false, "message" => "User ID is required"]);
+            return;
+        }
+
         $result = $this->userModel->deleteUser($user_id);
-    }
 
-    public function setUserIDinDB(Request $request)
-    {
-        $_SESSION['user_id'] = $request->get('user_id');
-        echo json_encode(['user_id' => $request->get('user_id')]);
-    }
-
-    public function getSettedUserID()
-    {
-        echo json_encode(['user_id' => $_SESSION['user_id']]);
-    }
-
-    public function destroySettedUserID()
-    {
-        session_destroy();
-    }
-
-    public function getUserDetails(Request $request)
-    {
-        echo json_encode($this->userModel->getUserDetails($request->get('user_id')));
-        return;
+        echo json_encode([
+            "success" => $result,
+            "message" => $result ? "User deleted successfully" : "Failed to delete user"
+        ]);
     }
 }

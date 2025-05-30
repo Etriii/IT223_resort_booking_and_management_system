@@ -78,17 +78,17 @@ class Room
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getTotalRoomsByResortId($resort_id){
-        $stmt = $this->conn->prepare("
-        SELECT COUNT(r.id) AS Total_Rooms
-        FROM ".$this->table. " r
-        JOIN room_types rt ON r.room_type_id = rt.id
-        JOIN buildings b ON r.building_id = b.id
-        WHERE b.resort_id = :resort_id;");
-        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // public function getTotalRoomsByResortId($resort_id){
+    //     $stmt = $this->conn->prepare("
+    //     SELECT COUNT(r.id) AS Total_Rooms
+    //     FROM ".$this->table. " r
+    //     JOIN room_types rt ON r.room_type_id = rt.id
+    //     JOIN buildings b ON r.building_id = b.id
+    //     WHERE b.resort_id = :resort_id;");
+    //     $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
 
     public function getOverlappingReservations($resort_id, $parsedCheckIn, $parsedCheckOut)
     {

@@ -1,145 +1,203 @@
-// import React from "react";
-
-// const BookingCard = ({ booking }) => {
-//     const {
-//         booking_id,
-//         user_name,
-//         room_id,
-//         check_in,
-//         check_out,
-//         booking_subtotal,
-//         total_amount,
-//         status,
-//         price_per_night,
-//         nights,
-//         room_subtotal,
-//         discount,
-//         tax,
-//         final_price,
-//         resort_id,
-//         created_at,
-//         room_image,
-//     } = booking;
-
-//     const defaultImage = "https://via.placeholder.com/600x400?text=Room+Image";
-
-//     const labelClass = "text-gray-500 font-medium";
-//     const valueClass = "text-gray-800";
-
-//     const DetailRow = ({ label, value }) => (
-//         <div className="grid grid-cols-2 py-1">
-//             <span className={labelClass}>{label}</span>
-//             <span className={valueClass}>{value}</span>
-//         </div>
-//     );
-
-//     return (
-//         <div className="bg-white shadow-xl rounded-2xl overflow-hidden max-w-4xl mx-auto my-6 border">
-//             <img
-//                 src={room_image || defaultImage}
-//                 alt="Room"
-//                 className="w-full h-64 object-cover"
-//             />
-
-//             <div className="p-6">
-//                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-//                     Booking #{booking_id}
-//                 </h2>
-
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//                     <DetailRow label="User Name" value={user_name} />
-//                     <DetailRow label="Room ID" value={room_id} />
-//                     <DetailRow label="Check In" value={check_in} />
-//                     <DetailRow label="Check Out" value={check_out} />
-//                     <DetailRow label="Price/Night" value={`₱${price_per_night}`} />
-//                     <DetailRow label="Nights" value={nights} />
-//                     <DetailRow label="Room Subtotal" value={`₱${room_subtotal}`} />
-//                     <DetailRow label="Booking Subtotal" value={`₱${booking_subtotal}`} />
-//                     <DetailRow label="Discount" value={`₱${discount}`} />
-//                     <DetailRow label="Tax" value={`₱${tax}`} />
-//                     <DetailRow label="Final Price" value={`₱${final_price}`} />
-//                     <DetailRow label="Total Amount" value={`₱${total_amount}`} />
-//                     <DetailRow label="Status" value={status} />
-//                     <DetailRow label="Resort ID" value={resort_id} />
-//                     <DetailRow label="Created At" value={new Date(created_at).toLocaleString()} />
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default BookingCard;
-
-
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFetchRoomById } from "../../../hooks";
 
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MdWarningAmber } from "react-icons/md";
 
-const ElegantBookingCard = ({ booking }) => {
-  // const {
-  //   floor = "1",
-  //   room_number = "10",
-  //   resort_name = "PUNTA VERDE",
-  //   guests = 3,
-  //   room_type = "Kings Size Bed",
-  //   check_in = "December 13, 2024",
-  //   check_out = "December 20, 2024",
-  //   total_price = 74054.5,
-  //   image_url = "",
-  // } = booking;
+import { useFetchPaymentByBookingId } from "../../../hooks";
+import Modal from "../../ui/modals/Modal";
+import ActionNotification from "../../ui/modals/ActionNotification";
+import SubmittedPaymentModal from "./SubmittedPaymentModal";
 
+const BookingCard = ({ booking, fetchReservations }) => {
   const defaultImage = "https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg";
 
-  const { room, setRoom, loading, error, setError, fetchRoom } = useFetchRoomById(booking.room_id);
+  const { room, loading, error, fetchRoom } = useFetchRoomById(booking.room_id);
+
+  const { payment, loading: loadingPayment, error: errorPayment, fetchPayment } = useFetchPaymentByBookingId(booking.booking_id);//useFetchPaymentByBookingId
+
+  useEffect(() => {
+    // console.log(booking)
+    fetchRoom(booking.room_id);
+  }, [booking.room_id]);
+
+
+
+  const [notify, setNotify] = useState({ open: '', variant: '', message: '' });
+  const [modal, setModal] = useState({ isOpen: false, variant: 'default', children: <div></div>, loading: false, title: '' });
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const openModal = (variant, payment) => {
+    let children;
+    let modal_title;
+
+    switch (variant) {
+      case 'read':
+        modal_title = 'Submitted Payemnt';
+        children = <SubmittedPaymentModal payment={payment} closeModal={closeModal} fetchPayment={fetchPayment} fetchReservations={fetchReservations} />
+        break;
+      default:
+        children = <>Nahh wala</>;
+    }
+    setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
+  };
+
+
+  const handleConfirm = () => {
+
+    setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
+    setNotify({}); //reset ang notif ni ha
+
+    setTimeout(async () => {
+      let result;
+
+      try {
+        switch (modal.variant) {
+          case 'create':
+            result = await createResort(createResortForm.values);
+            break;
+          case 'update':
+            // console.log(editResortForm.values);
+            result = await editResort(editResortForm.values);
+            break;
+          case 'delete':
+            result = await deleteResort(deleteResortForm.resort_id);
+            break;
+          default:
+            throw new Error("Unknown action mode");
+        }
+      } catch (error) {
+        setModal(prev => ({ ...prev, loading: false }));
+        setNotify({
+          open: true,
+          type: 'error',
+          message: error.message || 'Something went wrong!'
+        });
+        return;
+      }
+
+      setModal(prev => ({ ...prev, loading: false }));
+
+      if (result.success) {
+        fetchResorts();
+        setNotify({
+          open: true,
+          type: modal.variant,
+          message: result.message
+        });
+        closeModal();
+      } else {
+        setNotify({
+          open: true,
+          type: 'error',
+          message: result.message
+        });
+      }
+    }, 1000);
+  };
 
   return (
     <div className="bg-white max-w-md mx-auto rounded-xl shadow-xl overflow-hidden border p-4 w-96">
-      {
-        loading ?
-          <div className={`h-64 flex justify-center items-center border space-x-2`}>
-            <AiOutlineLoading3Quarters className=" animate-spin font-bold" /><h1>  'Loading Image...'</h1>
-          </div>
-          :
-          <img
-            src={room.room_image ?? defaultImage}
-            alt="Room"
-            className="rounded-md w-full h-64 object-cover"
-          />
-      }
 
-      {/* {room && JSON.stringify(room)} */}
+      <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
+      {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
+
+      {payment && payment.status === "pending" && (
+        <div className="flex items-center bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-md p-4 mb-2 space-x-3">
+          <MdWarningAmber className="text-2xl mt-0.5 flex-shrink-0" aria-hidden="true" />
+          <div className="flex-1">
+            <p className="font-semibold">Action Required</p>
+            <p className="text-sm">This booking has a payment that needs to be settled.</p>
+          </div>
+          <button
+            type="button"
+            className="ml-auto text-sm bg-yellow-400 hover:bg-yellow-500 text-white font-medium px-4 py-1.5 rounded transition"
+            onClick={() => {
+              openModal('read', payment);
+            }}
+          >
+            View
+          </button>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="h-64 flex justify-center items-center border space-x-2">
+          <AiOutlineLoading3Quarters className="animate-spin text-2xl text-blue-600" />
+          <h1>Loading Image...</h1>
+        </div>
+      ) : error ? (
+        <div className="h-64 flex justify-center items-center border text-red-500">
+          <p>Error loading room image</p>
+        </div>
+      ) : (
+        <img
+          src={room?.room_image ?? defaultImage}
+          alt={room?.room_name ?? "Room"}
+          className="rounded-md w-full h-64 object-cover"
+        />
+      )}
 
       <div className="text-center mt-4">
-        <p className="text-sm text-gray-600">Floor - Room</p>
-        <h2 className="font-semibold text-lg tracking-wide mt-1">resor name</h2>
+        <h2 className="font-semibold text-lg tracking-wide mt-1">
+          {room?.room_name ?? "Room Name"}
+        </h2>
       </div>
 
       <hr className="my-4" />
 
       <div className="grid grid-cols-2 gap-y-2 text-sm px-2">
-        <span className="text-gray-600">Guests:</span>
-        <span className="font-semibold">{3}</span>
+        <span className="text-gray-600">Guest Name:</span>
+        <span className="font-semibold">{booking.user_name}</span>
 
-        <span className="text-gray-600">Room Type:</span>
-        <span className="font-semibold">{1}</span>
+        <span className="text-gray-600">Status:</span>
+        <span
+          className={`font-semibold ${booking.status === "confirmed"
+            ? "text-green-600"
+            : booking.status === "pending"
+              ? "text-yellow-600"
+              : "text-red-600"
+            }`}
+        >
+          {booking.status}
+        </span>
 
         <span className="text-gray-600">Check-in:</span>
-        <span className="font-semibold">{1}</span>
+        <span className="font-semibold">{new Date(booking.check_in).toLocaleDateString()}</span>
 
         <span className="text-gray-600">Check-out:</span>
-        <span className="font-semibold">{2}</span>
+        <span className="font-semibold">{new Date(booking.check_out).toLocaleDateString()}</span>
+
+        <span className="text-gray-600">Price / Night:</span>
+        <span className="font-semibold">₱{Number(booking.price_per_night || 0).toFixed(2)}</span>
+
+        <span className="text-gray-600">Nights:</span>
+        <span className="font-semibold">{booking.nights}</span>
+
+        <span className="text-gray-600">Room Subtotal:</span>
+        <span className="font-semibold">₱{Number(booking.room_subtotal || 0).toFixed(2)}</span>
+
+        <span className="text-gray-600">Discount:</span>
+        <span className="font-semibold text-green-600">-₱{Number(booking.discount || 0).toFixed(2)}</span>
+
+        <span className="text-gray-600">Tax:</span>
+        <span className="font-semibold">₱{Number(booking.tax || 0).toFixed(2)}</span>
+
+        <span className="text-gray-600">Booking Subtotal:</span>
+        <span className="font-semibold">₱{Number(booking.booking_subtotal || 0).toFixed(2)}</span>
       </div>
 
       <hr className="my-4" />
 
       <div className="mt-6 text-center">
-        <p className="font-semibold text-gray-600">Total</p>
-        <p className="text-2xl font-bold text-blue-600">₱{21}</p>
+        <p className="font-semibold text-gray-600">Final Price</p>
+        <p className="text-2xl font-bold text-blue-600">₱{Number(booking.final_price || 0).toFixed(2)}</p>
       </div>
     </div>
   );
 };
 
-export default ElegantBookingCard;
+export default BookingCard;

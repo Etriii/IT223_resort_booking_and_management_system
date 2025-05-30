@@ -34,30 +34,29 @@ class Resorts
         $stmt->execute(['contact_details' => $contact_details]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
     public function getDetailsByResortId($resort_id)
     {
-        $stmt = $this->conn->prepare("SELECT r.id, r.resort_description, r.room_description,
-        GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities FROM resorts r LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
-        WHERE r.id = :resort_id GROUP BY r.id; ");
-        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function updateResortDetails($resort_id, $resort_description, $room_description)
-    {
         $stmt = $this->conn->prepare("
-        UPDATE " . $this->table . " 
-        SET resort_description = :resort_description, room_description = :room_description 
-        WHERE id = :resort_id
+        SELECT r.*, r.id,r.name,r.location, r.location_coordinates,  r.resort_description, r.room_description,
+               GROUP_CONCAT(ra.amenity SEPARATOR ', ') AS amenities
+        FROM resorts r
+        LEFT JOIN resort_amenities ra ON ra.resort_id = r.id
+        WHERE r.id = :resort_id
+        GROUP BY r.id
     ");
 
-        $stmt->bindParam(':resort_description', $resort_description);
-        $stmt->bindParam(':room_description', $room_description);
         $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        if (!$stmt->execute()) {
+            $errorInfo = $stmt->errorInfo();
+            throw new Exception("SQL error: " . implode(", ", $errorInfo));
+        }
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
 
@@ -132,7 +131,41 @@ class Resorts
             ':id' => $id,
         ]);
     }
+    public function getTotalRoomsByResort($resort_id)
+    {
+        $stmt = $this->conn->prepare("SELECT
+    r.id AS ResortID,
+    r.name AS ResortName,
+    t.TotalRooms,
+    t.TotalBuildings,
+    t.TotalFloors,
+    rt.name AS RoomType,
+    COUNT(ro.id) AS RoomTypeCount
 
+FROM " . $this->table . " r
+
+LEFT JOIN rooms ro ON ro.resort_id = r.id
+LEFT JOIN room_types rt ON ro.room_type_id = rt.id
+LEFT JOIN (
+    SELECT 
+        r2.id AS ResortID,
+        COUNT(DISTINCT ro2.id) AS TotalRooms,
+        COUNT(DISTINCT b.id) AS TotalBuildings,
+        SUM(DISTINCT b.floor_count) AS TotalFloors
+    FROM resorts r2
+    LEFT JOIN rooms ro2 ON ro2.resort_id = r2.id
+    LEFT JOIN buildings b ON b.resort_id = r2.id
+    GROUP BY r2.id
+) AS t ON t.ResortID = r.id
+
+WHERE r.id = :resort_id
+
+GROUP BY r.id, r.name, rt.name, t.TotalRooms, t.TotalBuildings, t.TotalFloors
+ORDER BY rt.name;
+");
+        $stmt->execute(['resort_id' => $resort_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function destroyResort($resort_id)
     {
@@ -148,25 +181,24 @@ class Resorts
     }
 
     public function getTaxRateByBuildingId($building_id)
-{
-    if ($building_id <= 0) {
-        return null;
-    }
+    {
+        if ($building_id <= 0) {
+            return null;
+        }
 
-    $sql = "SELECT r.tax_rate
+        $sql = "SELECT r.tax_rate
             FROM buildings b
             JOIN resorts r ON b.resort_id = r.id
             WHERE b.id = ?";
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([$building_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$building_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        return floatval($row['tax_rate']);
+        if ($row) {
+            return floatval($row['tax_rate']);
+        }
+
+        return null;
     }
-
-    return null;
-}
-
 }

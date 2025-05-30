@@ -40,7 +40,7 @@ class PaymentSubmissionsController
         $reviewed_at = $input['reviewed_at'] ?? null;
         $created_at = $input['created_at'] ?? null;
         $updated_at = $input['updated_at'] ?? null;
-        
+
 
         if (!$booking_id || !$screenshot_path || !$amount_paid || !$reference_number) {
             http_response_code(400);
@@ -65,7 +65,7 @@ class PaymentSubmissionsController
             'updated_at' => $now
         ];
 
-        
+
         $result = $this->paymentSubmissionModel->createPayment($data);
 
         if ($result['success']) {
@@ -77,5 +77,83 @@ class PaymentSubmissionsController
         }
     }
 
-    
+
+    public function getPaymentSubmissionByBookingId(Request $request)
+    {
+        $booking_id = $request->get('booking_id');
+        if ($booking_id == null) {
+            return;
+        }
+        echo json_encode($this->paymentSubmissionModel->getPaymentSubmissionByBookingId($booking_id));
+    }
+
+    public function updatePaymentSubmissionStatus(Request $request)
+    {
+        $formData = $request->get('formData');
+        $payment_submission_id = $formData['id'] ?? null;
+        $status = $formData['status'] ?? null;
+
+        if ($payment_submission_id == null) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'payment_submission_id is required.'
+            ]);
+            return;
+        }
+
+        if ($status == null) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Status is required.'
+            ]);
+            return;
+        }
+
+        if ($status === 'pending') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Cannot update to pending.'
+            ]);
+            return;
+        }
+
+        if ($status === 'rejected') {
+            // Perform the actual update
+            $result = $this->paymentSubmissionModel->updatePaymentSubmissionStatus([
+                'payment_submission_id' => $payment_submission_id,
+                'status' => $status
+            ]);
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'You rejected a payment submission.',
+                'data' => $result
+            ]);
+            return;
+        }
+
+        if ($status === 'approved') {
+            // Add required fields
+            $result = $this->paymentSubmissionModel->updatePaymentSubmissionStatus([
+                'payment_submission_id' => $payment_submission_id,
+                'status' => $status,
+                'booking_id' => $formData['booking_id'],
+                'payment_method' => 'GCash',
+                'amount_paid' => $formData['amount_paid'],
+                'received_by' => $_COOKIE['user_id']
+            ]);
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'You approved a payment submission.',
+                'data' => $result
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid status.'
+        ]);
+    }
 }

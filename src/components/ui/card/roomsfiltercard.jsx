@@ -104,15 +104,15 @@ const FilterCard = ({
 
   return (
     <div className="w-full sticky h-fit text-black px-6 rounded-xl border border-white/20">
-      <h1 className="text-base font-bold mb-2">Filter by</h1>
+      <h1 className="text-sm font-bold mb-2">Filter by</h1>
       <hr className="w-full border-t border-neutral-400 my-2" />
 
       {/* Budget */}
       <div className="mb-6">
-        <h2 className="text-sm font-semibold py-2">Your Budget (per night)</h2>
+        <h2 className="text-xs font-semibold py-2">Your Budget (per night)</h2>
         <div className="flex gap-4 mt-2">
           <div className="flex flex-col w-1/2">
-            <label className="text-sm mb-1">Min</label>
+            <label className="text-xs mb-1">Min</label>
             <input
               type="number"
               placeholder="0"
@@ -121,11 +121,11 @@ const FilterCard = ({
               step="100"
               value={budget[0]}
               onChange={(e) => handleBudgetChange(0, e.target.value)}
-              className="w-full p-2 text-black border border-black/20 rounded-md"
+              className="w-full p-2 text-xs text-black border border-black/20 rounded-md"
             />
           </div>
           <div className="flex flex-col w-1/2">
-            <label className="text-sm mb-1">Max</label>
+            <label className="text-xs mb-1">Max</label>
             <input
               type="number"
               placeholder="0"
@@ -134,7 +134,7 @@ const FilterCard = ({
               step="100"
               value={budget[1]}
               onChange={(e) => handleBudgetChange(1, e.target.value)}
-              className="w-full p-2 text-black border border-black/20 rounded-md"
+              className="w-full p-2 text-xs text-black border border-black/20 rounded-md"
             />
           </div>
         </div>
@@ -142,33 +142,33 @@ const FilterCard = ({
 
       {/* Check-in */}
       <div className="mb-4">
-        <h2 className="text-sm font-semibold mb-2">Check-in</h2>
+        <h2 className="text-xs font-semibold mb-2">Check-in</h2>
         <input
           type="date"
           value={checkInDate}
           onChange={(e) => setCheckInDate(e.target.value)}
-          className="w-full p-2 rounded-md text-black border border-black/20"
+          className="w-full text-xs p-2 rounded-md text-black border border-black/20"
           min={getTodayDate()}
         />
       </div>
 
       {/* Check-out */}
       <div className="mb-4">
-        <h2 className="text-sm font-semibold mb-2">Check-out</h2>
+        <h2 className="text-xs font-semibold mb-2">Check-out</h2>
         <input
           type="date"
           value={checkOutDate}
           onChange={(e) => handleFilterChange('checkOutDate', e.target.value)}
-          className="w-full p-2 rounded-md text-black border border-black/20"
+          className="w-full text-xs p-2 rounded-md text-black border border-black/20"
           min={checkInDate ? checkInDate : getTodayDate()}
         />
       </div>
 
       {/* Room Type */}
       <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">Room Type</label>
+        <label className="block text-xs font-semibold mb-1">Room Type</label>
         <select
-          className="w-full p-2 rounded-md border border-black/20 text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 rounded-md text-xs border border-black/20 text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={roomType}
           onChange={(e) => handleFilterChange('roomType', e.target.value)}
         >
@@ -183,7 +183,7 @@ const FilterCard = ({
 
       {/* Guests */}
       <div className="mb-6">
-        <h2 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+        <h2 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
           Maximum Number of Guests
           <Users className="w-4 h-4" />
         </h2>
@@ -194,7 +194,7 @@ const FilterCard = ({
           onChange={(e) =>
             handleFilterChange('guests', e.target.value ? parseInt(e.target.value, 10) : '')
           }
-          className="w-full p-2 rounded-md text-black border border-black/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 rounded-md text-xs text-black border border-black/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>

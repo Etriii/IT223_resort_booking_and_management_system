@@ -16,4 +16,16 @@ class PaymentsController
     {
         echo json_encode($this->paymentModel->getPayments());
     }
+    public function getPaymentsByUserId()
+    {
+        $user_id = $_GET['user_id'] ?? null;
+
+        if (!$user_id) {
+            echo json_encode(['error' => 'Missing user_id']);
+            return;
+        }
+
+        $payments = $this->paymentModel->getPaymentsByUserId($user_id);
+        echo json_encode($payments);
+    }
 }

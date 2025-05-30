@@ -134,6 +134,11 @@ class ResortsController
     {
         $id = $_GET['id'] ?? null;
 
+        if (!$id) {
+            echo json_encode(["success" => false, "message" => "Resort ID is missing"]);
+            return;
+        }
+
         $resort = $this->resortsModel->getDetailsByResortId($id);
 
         if ($resort) {
@@ -226,6 +231,28 @@ class ResortsController
         $response = curl_exec($ch);
         curl_close($ch);
     }
+
+    public function getTotalRoomsByResort(Request $request) {
+
+    $resort_id = $request->get('resort_id');
+
+    if (!$resort_id) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'resort_id is required']);
+        return; // Stop here if missing param
+    }
+
+    $data = $this->resortsModel->getTotalRoomsByResort($resort_id);
+
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => !empty($data),
+        'data' => $data ?: [],
+        'message' => $data ? '' : 'No data found.'
+    ]);
+}
+
+
 
     public function destroyResort(Request $request)
     {
