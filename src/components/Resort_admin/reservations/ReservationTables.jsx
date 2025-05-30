@@ -150,8 +150,8 @@ const ReservationTables = ({ filters_data, reservation_data }) => {
                   <span className={status_color[reservation.status]}>{reservation.status}</span>,
                   <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                     <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', reservation) }}> <LuEye className="size-5 mr-2" />View </div>
-                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', reservation) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
-                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', reservation) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
+                    {/* <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', reservation) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div> */}
+                    {/* <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', reservation) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div> */}
                   </ToggleDiv>
                 ]}
               />

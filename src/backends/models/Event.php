@@ -35,18 +35,17 @@ class Event
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getEventByName($resort_name)
-    {
+    public function getEventByName($resort_name) {}
 
+    public function getAllEventByResortId($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE resort_id = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function update()
-    {
+    public function update() {}
 
-    }
-
-    public function destroy()
-    {
-
-    }
+    public function destroy() {}
 }
