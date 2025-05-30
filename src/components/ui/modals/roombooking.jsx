@@ -353,7 +353,7 @@ return (
                     <div className="w-full md:w-2/2 flex flex-col order-1 md:order-2">
                         <div className="w-full h-[18rem]">
                             <img
-                                src={room?.image || backgroundImage}
+                                src={room?.room_image || backgroundImage}
                                 alt={room?.room_name}
                                 className="w-full h-full object-cover rounded-xl mx-auto"
                             />

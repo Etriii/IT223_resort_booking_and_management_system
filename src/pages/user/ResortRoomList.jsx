@@ -362,7 +362,7 @@ const ResortRoomList = () => {
                                     <div key={room.id} className="bg-white rounded-xl border border-neutral-400 overflow-hidden mb-6 h-auto md:h-60">
                                         <div className="grid grid-cols-1 md:grid-cols-2">
                                             <img
-                                                src={room.main_image ? room.room_image : backgroundImage}
+                                                src={room.room_image ? room.room_image : backgroundImage}
                                                 alt={room.room_name}
                                                 className="w-full h-auto md:h-full object-cover"
                                             />

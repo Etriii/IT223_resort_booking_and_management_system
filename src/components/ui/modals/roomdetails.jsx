@@ -97,7 +97,7 @@ const RoomDetailModal = ({ room, isOpen, onClose, onBookNow, filters, setIsGuest
                         {/* Right */}
                         <div className="flex-shrink-0">
                             <img
-                                src={room?.image || backgroundImage}
+                                src={room?.room_image || backgroundImage}
                                 alt={room?.room_name || 'Room Image'}
                                 className="w-72 h-fit object-cover rounded-lg"
                             />
