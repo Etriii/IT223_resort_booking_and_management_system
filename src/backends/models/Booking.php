@@ -144,7 +144,25 @@ class Booking
     // return $formatted;
 }
 
+    public function getAllBookingsTotal()
+{
+    $sql = "
+        SELECT 
+            DATE(bk.check_in) AS check_in,
+            bk.total_amount
+        FROM ".$this->table." bk
+        JOIN rooms r ON bk.room_id = r.id
+        JOIN resorts res ON r.resort_id = res.id
+        WHERE bk.status = 'Completed'
+    
+    ";
 
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+}
 
     public function getBookingsInRangeOf($data)
     {

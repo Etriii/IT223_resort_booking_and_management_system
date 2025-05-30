@@ -13,7 +13,11 @@ const TransactionsHistory = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [filters, setFilters] = useState({ page: 1, paginate: 5, payment_method: "" });
+  const [filters, setFilters] = useState({
+    page: 1,
+    paginate: 5,
+    payment_method: "",
+  });
 
   useEffect(() => {
     document.title = "Transactions History | Ocean View";
@@ -39,7 +43,6 @@ const TransactionsHistory = () => {
     setFilters((prev) => ({ ...prev, page: 1 }));
   }, [filters.paginate, filters.payment_method]);
 
-  // Filter payments by payment_method (case-insensitive)
   const filteredPayments = payments.filter((tx) =>
     tx.payment_method
       ?.toLowerCase()
@@ -75,11 +78,9 @@ const TransactionsHistory = () => {
 
   return (
     <div className="p-4">
-
       <div className="flex justify-between items-center mb-4">
-        {/* Left side: Transactions + Show entries */}
         <div className="flex items-center gap-6">
-          <h1 className="text-xl font-bold">Transactions</h1>
+          <h1 className="text-2xl font-bold">Transactions</h1>
           <div className="flex items-center gap-1">
             <span>Show</span>
             <select
@@ -90,7 +91,7 @@ const TransactionsHistory = () => {
                   paginate: Number(e.target.value),
                 }))
               }
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+              className="border border-gray-300 rounded px-2 py-1 text-xs"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -109,7 +110,10 @@ const TransactionsHistory = () => {
             type="text"
             value={filters.payment_method}
             onChange={(e) =>
-              setFilters((prev) => ({ ...prev, payment_method: e.target.value }))
+              setFilters((prev) => ({
+                ...prev,
+                payment_method: e.target.value,
+              }))
             }
             placeholder="e.g. Cash"
             className="border border-gray-300 rounded px-2 py-1 text-sm"

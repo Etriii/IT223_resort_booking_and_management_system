@@ -120,6 +120,8 @@ const Events = () => {
       )}
 
       <div className="flex items-center justify-between flex-wrap ">
+
+        {/* Start filter */}
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-1 px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-100">
             <FiFilter className="text-lg" />
@@ -138,6 +140,7 @@ const Events = () => {
             ))}
           </select>
         </div>
+        {/* End filter */}
 
         <div className="flex items-center space-x-2">
           <InputField

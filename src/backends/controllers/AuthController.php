@@ -12,7 +12,6 @@ class AuthController
 
     public function login(Request $request)
     {
-        
         $email = $request->get('email');
         $password = $request->get('password');
 
@@ -47,6 +46,7 @@ class AuthController
 
         echo json_encode(["message" => "Login successful", "user" => $user]);
     }
+    
 
     public function register(Request $request)
     {
@@ -94,14 +94,22 @@ class AuthController
     // }
 
     public function getLoggedInUser()
-    {
-        if (isset($_COOKIE['user_id'])) {
-            $token = $_COOKIE['user_id'];
-            echo json_encode(["success" => true, "message" => "User id: " . htmlspecialchars($token)]);
+{
+    if (isset($_COOKIE['user_id'])) {
+        $userId = $_COOKIE['user_id'];
+        $user = $this->userModel->getUserById($userId);
+
+        if ($user) {
+            echo json_encode($user); // ✅ Return full user data
+            return;
+        } else {
+            echo json_encode(["success" => false, "message" => "User not found"]);
             return;
         }
-        echo json_encode(["success" => false, "message" => 'No User Currently Logged In']);
     }
+
+    echo json_encode(["success" => false, "message" => 'No User Currently Logged In']);
+}
 
     public function logout(Request $request)
     {

@@ -1,16 +1,21 @@
 import React from "react";
+import useFetchImages from "../../hooks/cloudinary/useFetchImagesById";
 
 
 const ResortRankingCard = () => {
+    const [mainimage] = useFetchImages(1, "main_image");
+    const [mainImage] = useFetchImages(2, "main_image");
     const rankingData = [
       {
         rank: 1,
+        image: mainimage,
         name: "Punta Verde Resort",
         location: "Island Garden City of Samal",
         total: "₱76,056",
       },
       {
         rank: 2,
+        image: mainImage,
         name: "Friday Beach Resort",
         location: "Boracay Island, Philippines",
         total: "₱73,056",
@@ -34,8 +39,15 @@ const ResortRankingCard = () => {
             className="grid grid-cols-3 items-start bg-gray-100 p-2 rounded-lg"
           >
         
-            <div className="text-xl font-bold text-yellow-500">{resort.rank}
+            <div className="relative text-xl font-bold h-full text-yellow-500" style={{
+                    backgroundImage: resort.image ? `url(${resort.image})` : "none",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    padding: '0.5rem 1rem', 
+            }}>{resort.rank}
+              
             </div>
+            
 
      
             <div>

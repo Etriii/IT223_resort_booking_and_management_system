@@ -3,16 +3,28 @@ import React from 'react'
 const RecentProfitCard = () => {
     const profitData = [
         {
-          date: "09/10/2024",
-          resort: "UNTAVERDE RESORT",
+          date: "05/10/2024",
+          resort: "PUNTAVERDE RESORT",
           customer: "Alex Apar",
-          profit: 900,
+          profit: 9000,
         },
         {
-          date: "09/09/2024",
+          date: "05/19/2024",
           resort: "CANIBAD BEACH RESORT",
           customer: "Aileen Lugs",
-          profit: 700,
+          profit: 7900,
+        },
+        {
+          date: "05/15/2024",
+          resort: "FRIDAY BEACH RESORT",
+          customer: "Jeloy Mark",
+          profit: 4000,
+        },
+        {
+          date: "05/09/2024",
+          resort: "CANIBAD BEACH RESORT",
+          customer: "Jeremaya Joy",
+          profit: 8000,
         },
       ];
     

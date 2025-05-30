@@ -1,6 +1,6 @@
 import React from "react";
 
-const DashboardCards = ({ title, value, bg,timeframe}) => {
+const DashboardCards = ({ title, value, bg,timeframe, tom, wk, mth}) => {
   // const cardColor = [
   //   {
   //     bg: "bg-green-500",
@@ -27,15 +27,15 @@ const DashboardCards = ({ title, value, bg,timeframe}) => {
         <div className={`${timeframe} flex justify-between text-sm font-medium`}>
           <div>
             <p>Tomorrow</p>
-            <p className="text-white/80 text-center">28</p>
+            <p className="text-white/80 text-center">{tom}</p>
           </div>
           <div>
             <p>Week</p>
-            <p className="text-white/80 text-center">53</p>
+            <p className="text-white/80 text-center">{wk}</p>
           </div>
           <div>
             <p>Month</p>
-            <p className="text-white/80 text-center">235</p>
+            <p className="text-white/80 text-center">{mth}</p>
           </div>
         </div>
       </div>

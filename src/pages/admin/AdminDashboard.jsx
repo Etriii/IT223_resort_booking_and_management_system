@@ -23,7 +23,7 @@ const Dashboard = () => {
     const fetchProfitData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/api.php?controller=Bookings&action=getAllBookingsTotal&resort_id=${resort_id}`
+          `http://localhost:8000/api.php?controller=Bookings&action=getAllBookingsTotal`
         );
         const data = await res.json();
 
@@ -73,9 +73,9 @@ fetchProfitData();
   return (
     <>
       <div className={`${dashboardcard}`}>
-        <DashboardCards title="Today's Profit" value="37" bg="bg-blue-500 md:col-span-3 sm:col-span-1 lg:col-span-2" timeframe="hidden"/>
-        <DashboardCards title="Profit for the Last 30 Days" value="37" bg="bg-green-500 md:col-span-4 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>
-        <DashboardCards title="Total Number of Contributors" value="37" bg="bg-yellow-500 md:col-span-3 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>       
+        <DashboardCards title="Today's Profit" value="37,900" bg="bg-blue-500 md:col-span-3 sm:col-span-1 lg:col-span-2" timeframe="hidden"/>
+        <DashboardCards title="Profit for the Last 30 Days" value="390,300" bg="bg-green-500 md:col-span-4 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>
+        <DashboardCards title="Total Number of Contributors" value="25" bg="bg-yellow-500 md:col-span-3 sm:col-span-1 lg:col-span-4" timeframe="hidden"/>       
       </div>
       <div className="grid lg:grid-cols-12 sm:grid-cols-4 md:grid-cols-8 space-y-10 gap-5 p-4 bg-gray-100">
         <Linechart span="col-span-full h-[60lvh]" height="h-[55lvh]" monthlyData={profitMonthly} dailyData={profit30Days}/>
