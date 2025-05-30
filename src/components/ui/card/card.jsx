@@ -20,7 +20,7 @@ const Resorts = () => {
         </div>
       )}
 
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
         {resorts && resorts.length > 0 ? (
           resorts.map((resort) => (
             <div
@@ -34,12 +34,12 @@ const Resorts = () => {
                   alt={resort.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-black bg-opacity-60 p-6 pl-8 pr-8">
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-black bg-opacity-60 pb-4 pt-3 pl-5 pr-5">
                   <h1 className="text-white text-xl font-bold">{resort.name}</h1>
                   <h5 className="text-white text-sm">{resort.location}</h5>
                   <NavLink
                     to={`/oceanview/resortdetails/${resort.id}`}
-                    className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full text-sm"
+                    className="mt-3 block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded-full text-sm"
                   >
                     Visit now
                   </NavLink>

@@ -110,7 +110,7 @@ const ResortSchedules = ({ }) => {
               <th className="min-w-[80px] border border-gray-300 px-4 py-2 text-left"></th>
               {days.map((day) => (
                 <th key={day} className="border border-gray-300 px-4 py-2 text-center">
-                  Day {day}
+                  {day}
                 </th>
               ))}
             </tr>
@@ -128,12 +128,48 @@ const ResortSchedules = ({ }) => {
                 </td>
               ))}
             </tr>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2 text-left">1-1</th>
-              {availability.map((_, index) => (
-                <td key={`room-1-1-${index}`} className="border border-gray-300 px-4 py-2 text-center"></td>
-              ))}
-            </tr>
+            {Array.from({ length: 20 }, (_, roomIndex) => {
+              let cols = 15;
+              const cells = [];
+              const maxSpan = 7;
+              let colIndex = 0;
+
+              while (colIndex < cols) {
+                const span = Math.min(Math.ceil(Math.random() * maxSpan), cols - colIndex);
+                const isBooked = Math.random() < 0.5;
+
+                if (isBooked) {
+                  const username = ['alex99', 'lunaX', 'beachBum', 'marco23', 'waveRider', 'jenny7', 'sunnyD', 'coralReef', 'zane23', 'amyOcean', 'leoWave', 'karenZ', 'blueTide', 'noahHill', 'surfGirl', 'derekSun', 'islaMoon', 'glenCoast', 'mira99', 'oceanJay'][roomIndex];
+                  cells.push(
+                    <td
+                      key={`room-${roomIndex}-col-${colIndex}`}
+                      colSpan={span}
+                      className="border border-gray-300 px-4 py-2 text-center bg-blue-500 text-white"
+                    >
+                      {username}
+                    </td>
+                  );
+                } else {
+                  for (let i = 0; i < span; i++) {
+                    cells.push(
+                      <td
+                        key={`room-${roomIndex}-col-${colIndex + i}`}
+                        className="border border-gray-300 px-4 py-2 text-center"
+                      ></td>
+                    );
+                  }
+                }
+
+                colIndex += span;
+              }
+
+              return (
+                <tr key={`room-${roomIndex}`}>
+                  <th className="border border-gray-300 px-4 py-2 text-left">{`Room ${roomIndex + 1}`}</th>
+                  {cells}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

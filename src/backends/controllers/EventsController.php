@@ -18,7 +18,20 @@ class EventsController
 
     public function getEventByResortId(Request $request)
     {
-        echo json_encode($this->eventsModel->getEventByResortId($request->get('resort_id')));
+
+        $resort_id = $request->get('resort_id');
+        $events = $this->eventsModel->getEventByResortId($resort_id);
+
+        if (is_array($events) && count($events) > 0) {
+            echo json_encode($events[0]);
+        } else {
+            echo json_encode(null);
+        }
+    }
+
+    public function getAllEventByResortId(Request $request)
+    {
+        echo json_encode($this->eventsModel->getAllEventByResortId($request->get('resort_id')));
     }
 
     public function create(Request $request)

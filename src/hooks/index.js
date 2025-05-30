@@ -19,3 +19,4 @@ export {default as useFetchUserRoleWithResortId} from './utils/useFetchUserRoleW
 export {default as useFetchUsername} from './utils/useFetchUsername';
 export {default as useFetchCurrentUser} from './utils/useFetchCurrentUser';
 export {default as useFetchRoomById } from './rooms/useFetchRoomById';
+export {default as useFetchPaymentByBookingId} from './resort_admin/payments/useFetchPaymentByBookingId';

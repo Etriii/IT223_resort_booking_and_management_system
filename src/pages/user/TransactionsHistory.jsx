@@ -5,7 +5,7 @@ import Table from "../../components/ui/table/Table";
 import TableData from "../../components/ui/table/TableData";
 import Pagination from "../../components/ui/table/Pagination";
 import ToggleDiv from "../../components/ui/modals/ToggleDiv";
-import TransactionHistoryModal from "../user/modal/TransactionHistoryModal";
+import TransactionHistoryModal from "../../components/ui/modals/transactionhistorymodal";
 
 const TransactionsHistory = () => {
   const containerRef = useRef(null);
@@ -19,25 +19,23 @@ const TransactionsHistory = () => {
     payment_method: "",
   });
 
-  useEffect(() => {
-    document.title = "Transactions History | Ocean View";
+    useEffect(() => {
+        const user_id = localStorage.getItem("user_id");
+        document.title = "Transactions History | Ocean View";
 
-    fetch(
-      "http://localhost:8000/api.php?controller=Payments&action=getPayments",
-      {
-        credentials: "include",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setPayments(data);
-        } else {
-          console.error("Unexpected response:", data);
-        }
-      })
-      .catch((error) => console.error("Failed to fetch payments:", error));
-  }, []);
+        if (!user_id) return;
+
+        fetch(`http://localhost:8000/api.php?controller=Payments&action=getPaymentsByUserId&user_id=${user_id}`, {
+            credentials: "include",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("User's transactions", data);
+                if (Array.isArray(data)) setPayments(data);
+                else console.error("Unexpected response:", data);
+            })
+            .catch((error) => console.error("Failed to fetch payments:", error));
+    }, []);
 
   useEffect(() => {
     setFilters((prev) => ({ ...prev, page: 1 }));
@@ -56,10 +54,10 @@ const TransactionsHistory = () => {
     filters.page * filters.paginate
   );
 
-  const handleView = (transaction) => {
-    setSelectedTransaction(transaction);
-    setModalOpen(true);
-  };
+    const handleView = (transaction) => {
+        setSelectedTransaction(transaction);
+        setModalOpen(true);
+    };
 
   const closeModal = () => {
     setModalOpen(false);
@@ -163,14 +161,11 @@ const TransactionsHistory = () => {
         filtered={filteredPayments}
       />
 
-      {modalOpen && selectedTransaction && (
-        <TransactionHistoryModal
-          transaction={selectedTransaction}
-          onClose={closeModal}
-        />
-      )}
-    </div>
-  );
+            {modalOpen && selectedTransaction && (
+                <TransactionHistoryModal transaction={selectedTransaction} onClose={closeModal} />
+            )}
+        </div>
+    );
 };
 
 export default TransactionsHistory;

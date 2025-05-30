@@ -55,7 +55,7 @@ const ReservationTables = ({ filters_data, reservation_data }) => {
         break;
       case 'read':
         modal_title = 'View Reservation';
-        children = <BookingCard booking={booking} />
+        children = <BookingCard booking={booking} fetchReservations={fetchReservations} />
         break;
       case 'update':
         modal_title = 'Edit Reservation';
@@ -73,59 +73,6 @@ const ReservationTables = ({ filters_data, reservation_data }) => {
     setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
   };
 
-
-  const handleConfirm = () => {
-
-    setModal(prev => ({ ...prev, loading: true }));//pang loading rani sa button
-    setNotify({}); //reset ang notif ni ha
-
-    setTimeout(async () => {
-      let result;
-
-      try {
-        switch (modal.variant) {
-          case 'create':
-            result = await createResort(createResortForm.values);
-            break;
-          case 'update':
-            // console.log(editResortForm.values);
-            result = await editResort(editResortForm.values);
-            break;
-          case 'delete':
-            result = await deleteResort(deleteResortForm.resort_id);
-            break;
-          default:
-            throw new Error("Unknown action mode");
-        }
-      } catch (error) {
-        setModal(prev => ({ ...prev, loading: false }));
-        setNotify({
-          open: true,
-          type: 'error',
-          message: error.message || 'Something went wrong!'
-        });
-        return;
-      }
-
-      setModal(prev => ({ ...prev, loading: false }));
-
-      if (result.success) {
-        fetchResorts();
-        setNotify({
-          open: true,
-          type: modal.variant,
-          message: result.message
-        });
-        closeModal();
-      } else {
-        setNotify({
-          open: true,
-          type: 'error',
-          message: result.message
-        });
-      }
-    }, 1000);
-  };
 
   const handleUsernameChange = (e) => {
     const { name, value } = e.target;
@@ -164,7 +111,7 @@ const ReservationTables = ({ filters_data, reservation_data }) => {
   return (
     <div className={`bg-gray-50 lg:order-1 p-4`}>
 
-      <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onConfirm={handleConfirm} onCancel={() => closeModal()} />
+      <Modal isOpen={modal.isOpen} onClose={closeModal} variant={modal.variant} title={modal.title} loading={modal.loading} children={modal.children}/* Here ang mga body sa imong modal */ onCancel={() => closeModal()} />
       {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
       <div className={`sticky top-[4.5rem]`}>
@@ -200,11 +147,11 @@ const ReservationTables = ({ filters_data, reservation_data }) => {
                   reservation.check_in,
                   reservation.check_out,
                   reservation.total_amount,
-                  reservation.status,
+                  <span className={status_color[reservation.status]}>{reservation.status}</span>,
                   <ToggleDiv buttonText="Actions" containerRef={containerRef}>
                     <div className=" px-2 py-1 flex items-center hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('read', reservation) }}> <LuEye className="size-5 mr-2" />View </div>
-                    <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', reservation) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div>
-                    <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', reservation) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div>
+                    {/* <div className=" px-2 py-1 flex items-center text-orange-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('update', reservation) }}> <BiSolidEditAlt className="size-5 mr-2" />Edit </div> */}
+                    {/* <div className=" px-2 py-1 flex items-center text-red-500 hover:bg-gray-200 cursor-pointer" onClick={() => { openModal('delete', reservation) }}> <MdOutlineDeleteForever className="size-5 mr-2" />Delete </div> */}
                   </ToggleDiv>
                 ]}
               />

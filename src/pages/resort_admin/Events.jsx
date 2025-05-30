@@ -55,7 +55,7 @@ const Events = () => {
           : null;
 
         const response = await fetch(
-          `http://localhost:8000/api.php?controller=Events&action=getEventByResortId&resort_id=${resort_id}`
+          `http://localhost:8000/api.php?controller=Events&action=getAllEventByResortId&resort_id=${resort_id}`
         );
 
         const data = await response.json();
@@ -74,7 +74,7 @@ const Events = () => {
   }, []);
 
   const filteredEvents = events.filter((event) =>
-    event.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    event.name?.toLowerCase().includes(searchTerm.trim().toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredEvents.length / pageSize);
