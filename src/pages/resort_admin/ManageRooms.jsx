@@ -7,11 +7,9 @@ import Modal from "../../components/ui/modals/Modal";
 import Pagination from "../../components/ui/table/Pagination";
 import FilterAndActions from "../../components/ui/table/FilterAndActions";
 
-
 import { LuEye } from "react-icons/lu";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
-import { IoMdAdd } from "react-icons/io";
 
 import {
   CreateRoomsModal,
@@ -19,7 +17,6 @@ import {
   ReadRoomsModal,
   DeleteRoomsModal,
 } from "./modals";
-
 
 const ManageRooms = () => {
   const containerRef = useRef(null);
@@ -50,23 +47,25 @@ const ManageRooms = () => {
   const [notify, setNotify] = useState(null);
 
   const [filters, setFilters] = useState({
-    paginate: 10,
+    paginate: 5,
     page: 1,
     room_name: "",
   });
 
   // Fetch room types
-  const fetchRoomTypes = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/api.php?controller=RoomTypes&action=getAll");
-      const data = await res.json();
-      setRoomTypes(data);
-    } catch {
-      setNotify({ type: "error", message: "Failed to fetch room types" });
-    }
+  const fetchRoomTypes = () => {
+    const data = [
+      { id: 1, name: "King Size", description: "", capacity: 5, base_price: 3500.0 },
+      { id: 2, name: "Queen Size", description: "", capacity: 4, base_price: 3000.0 },
+      { id: 3, name: "Twin Bed", description: "", capacity: 2, base_price: 2800.0 },
+      { id: 4, name: "Deluxe Suite", description: "", capacity: 4, base_price: 5000.0 },
+      { id: 5, name: "Family Room", description: "", capacity: 7, base_price: 4000.0 },
+      { id: 6, name: "Penthouse Suite", description: "", capacity: 10, base_price: 8000.0 },
+      { id: 7, name: "Bungalow Villa", description: "", capacity: 8, base_price: 6000.0 }
+    ];
+    setRoomTypes(data);
   };
 
-  // Fetch buildings
   const fetchBuildings = async () => {
     try {
       const resort_id = JSON.parse(localStorage.getItem("user_role"))?.[0]?.resort_id;
@@ -119,25 +118,19 @@ const ManageRooms = () => {
         variant === "create"
           ? "Add Room"
           : variant === "update"
-          ? "Edit Room"
-          : variant === "view"
-          ? "View Room"
-          : variant === "delete"
-          ? "Delete Room"
-          : "",
+            ? "Edit Room"
+            : variant === "view"
+              ? "View Room"
+              : variant === "delete"
+                ? "Delete Room"
+                : "",
       loading: false,
       room,
     });
 
     if (variant === "update" && room) {
       setFormData({
-        values: {
-          room_number: room.room_name || "",
-          floor_number: room.floor_number || "",
-          room_type: room.room_type_id || "",
-          image: room.room_image || null,
-        },
-        errors: {},
+        values: room
       });
     }
   };
@@ -213,6 +206,25 @@ const ManageRooms = () => {
         </ActionNotification>
       )}
 
+      {/* Building Selector */}
+      <div className="mb-4">
+        <label htmlFor="building-selector" className="block text-sm font-medium text-gray-700 mb-1">
+          Select Building
+        </label>
+        <select
+          id="building-selector"
+          value={selectedBuilding?.id || ""}
+          onChange={handleBuildingChange}
+          className="px-3 py-2 border border-gray-300 rounded-md w-full sm:w-1/3 text-sm"
+        >
+          {buildings.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Filter and Actions */}
       <FilterAndActions
         filters={filters}
@@ -223,19 +235,6 @@ const ManageRooms = () => {
           placeholder: "Search Room",
           create_label: "Add Room",
         }}
-        extraFilters={
-          <select
-            value={selectedBuilding?.id || ""}
-            onChange={handleBuildingChange}
-            className="px-3 py-2 border rounded-md text-sm"
-          >
-            {buildings.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.name}
-              </option>
-            ))}
-          </select>
-        }
       />
 
       {/* Table */}
@@ -247,7 +246,7 @@ const ManageRooms = () => {
               columns={[
                 room.id,
                 room.room_name,
-                room.room_type_name,
+                roomTypes.find(rt => rt.id === Number(room.room_type_id))?.name || "Unknown",
                 room.price_per_night,
                 room.is_available === "1" ? "Available" : "Unavailable",
                 <ToggleDiv buttonText="Actions" containerRef={containerRef} key={`actions-${room.id}`}>

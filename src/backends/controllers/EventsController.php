@@ -29,6 +29,11 @@ class EventsController
         }
     }
 
+    public function getAllEventByResortId(Request $request)
+    {
+        echo json_encode($this->eventsModel->getAllEventByResortId($request->get('resort_id')));
+    }
+
     public function create(Request $request)
     {
         $resort_id = $request->get('resort_id');
