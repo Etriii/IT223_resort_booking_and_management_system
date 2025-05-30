@@ -15,35 +15,56 @@ class Payment
     }
 
     public function create() {}
-
-    public function getPaymentsWithDetails($userId)
-    {
-        $stmt = $this->conn->prepare("
-    SELECT 
-        payments.id AS payment_id,
-        payments.amount_paid,
-        payments.payment_method,
-        payments.created_at AS payment_date,
-        bookings.status AS booking_status,
-        users.username AS received_by
-    FROM payments
-    JOIN bookings ON payments.booking_id = bookings.id
-    JOIN users ON payments.received_by = users.id
-    WHERE bookings.user_id = :user_id
-");
-        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function getPayments()
     {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getPaymentsByUserId($user_id)
+    {
+        try {
+            $query = '
+            SELECT p.*, ps.status AS payment_submission_status
+            FROM payments p
+            INNER JOIN bookings b ON p.booking_id = b.id
+            LEFT JOIN payment_submissions ps ON p.payment_submission_id = ps.id
+            WHERE b.user_id = :user_id
+        ';
 
-    public function getPaymentByBookingId($id) {}
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error in getPaymentsByUserId: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getPaymentSubmissionsByBookingId($booking_id)
+    {
+        try {
+            $query = '
+            SELECT *
+            FROM payment_submissions
+            WHERE booking_id = :booking_id
+        ';
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error in getPaymentSubmissionsByBookingId: " . $e->getMessage());
+            return [];
+        }
+    }
+
+
+
 
     public function update() {}
 

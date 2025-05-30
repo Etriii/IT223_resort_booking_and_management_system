@@ -14,16 +14,16 @@ const ResortsList = () => {
             <h1
               style={{
                 fontFamily: "'Allerta Stencil', sans-serif",
-                fontSize: '40px',
+                fontSize: '25px',
                 fontWeight: 'bold',
-                paddingTop: '1rem',
+                paddingTop: '2rem',
               }}
             >
               Reserve your favorite spot on the beach
             </h1> 
           </div>
 
-          <div className="mt-5 flex items-center px-44 pb-6">
+          <div className=" flex items-center px-44 pb-6">
             <input
               type="text"
               placeholder="Search Resorts"
@@ -31,7 +31,7 @@ const ResortsList = () => {
               aria-describedby="search-button"
               className="flex-1"
               style={{
-                height: '50px',
+                height: '40px',
                 border: '2px solid #7c7c7c',
                 borderRadius: '30px',
                 paddingLeft: '40px',
@@ -44,9 +44,9 @@ const ResortsList = () => {
           <h5
             style={{
               fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '18px',
+              fontSize: '15px',
               fontWeight: 'bold',
-              paddingTop: '1rem',
+              paddingTop: '0rem',
               textAlign: 'center',
             }}
           >
@@ -56,7 +56,7 @@ const ResortsList = () => {
           <h5
             style={{
               fontFamily: "'Allerta Stencil', sans-serif",
-              fontSize: '25px',
+              fontSize: '20px',
               fontWeight: 'bold',
               textAlign: 'center',
               color: 'darkCyan',
@@ -66,11 +66,11 @@ const ResortsList = () => {
           </h5>
         </section>
 
-        <div className="mt-10">
+        <div className="mt-2">
           <ControlledCarousel />
         </div>
 
-        <div className="mt-8">
+        <div className="">
           <ResortCard />
         </div>
       </div>
