@@ -80,7 +80,7 @@ import { AdminLayout, ResortAdminLayout, UserLayout, LoginLayout } from './layou
 import { AdminDashboard, Resorts, Users, AdminMyAccount, AdminActivityLogs, FullScreenMap, UpdateDatabase } from "./pages/admin";
 
 //Resort Admin Page
-import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount, ReportAndAnalytics, ResortActivityLogs, ResortSchedules } from './pages/resort_admin';
+import { ResortAdminDashboard, ManageResort, Reservations, ManageBuildings, ManageRooms, Events, RAMyAccount, ReportAndAnalytics, ResortActivityLogs, ResortSchedules, Payments } from './pages/resort_admin';
 
 // User Page
 import { Bookmarks, MyAccount, MyReservations, TransactionsHistory, ResortsList, ResortDetails, ResortRoomList, ResortBuildings } from './pages/user';
@@ -122,9 +122,8 @@ const App = () => {
             <Route path="manage/resort" element={<ManageResort />} />
             <Route path="manage/buildings" element={<ManageBuildings />} />
             <Route path="manage/rooms/:building_id" element={<ManageRooms />} />
-            {/* I think mag add dri og mga incoming reservations */}
             <Route path="reservations" element={<Reservations />} />
-            add dapat kog payments here
+            <Route path="payments" element={<Payments />} />
             <Route path="schedules" element={<ResortSchedules />} />
 
             <Route element={<ProtectedRoute allowedRoles={['resort_super_admin']} />}>

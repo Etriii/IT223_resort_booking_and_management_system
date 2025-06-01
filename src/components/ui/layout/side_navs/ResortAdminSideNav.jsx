@@ -2,7 +2,7 @@ import { useNavigate, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { MdDashboard, MdOutlineQuestionMark, MdEvent, MdOutlineManageHistory } from "react-icons/md";
-import { RiCalendarCheckLine } from "react-icons/ri";
+import { RiCalendarCheckLine, RiSecurePaymentLine } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 import { TbBuildingPavilion, TbBuildingCircus, TbBuildingCommunity, TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineSetting } from "react-icons/ai";
@@ -104,6 +104,12 @@ const ResortAdminSideNav = ({ className, isOpen }) => {
                     ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/reservations')}>
                     <RiCalendarCheckLine className={`${lists_default_styles.icon}`} />
                     <span className={`${lists_default_styles.span}`}>Reservations</span>
+                </li>
+
+                <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/payments/*')
+                    ? link_styles.active : link_styles.passive} `} onClick={() => navigate('/oceanview/resortadmin/payments')}>
+                    <RiSecurePaymentLine className={`${lists_default_styles.icon}`} />
+                    <span className={`${lists_default_styles.span}`}>Payments</span>
                 </li>
 
                 <li className={`${lists_default_styles.list} ${useMatch('/oceanview/resortadmin/schedules/*')

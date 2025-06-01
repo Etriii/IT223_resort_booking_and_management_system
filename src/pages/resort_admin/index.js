@@ -8,3 +8,4 @@ export {default as RAMyAccount} from './RAMyAccount';
 export {default as ReportAndAnalytics} from './ReportAndAnalytics'
 export {default as ResortActivityLogs} from './ResortActivityLogs';
 export {default as ResortSchedules} from './ResortSchedules';
+export {default as Payments} from './Payments';

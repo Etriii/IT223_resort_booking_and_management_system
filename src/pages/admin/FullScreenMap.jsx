@@ -8,6 +8,10 @@ function FullScreenMap() {
     const searchParams = new URLSearchParams(location.search);
     const embedUrl = searchParams.get('embedUrl');
 
+    if (embedUrl == null) {
+        return 'embedUrl is needed';
+    }
+
     return (
         <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
             {embedUrl ? (

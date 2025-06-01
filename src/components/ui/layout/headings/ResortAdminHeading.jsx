@@ -29,6 +29,7 @@ const ResortAdminHeading = ({ className, toggleSideNav, isOpen }) => {
         if (path.includes('/oceanview/resortadmin/reportsandanalytics')) return 'Reports and Analytics';
         if (path.includes('/oceanview/resortadmin/activitylogs')) return 'Activity Logs';
         if (path.includes('/oceanview/resortadmin/myaccount')) return 'My Account';
+        if (path.includes('/oceanview/resortadmin/payments')) return 'Payments';
 
         return 'Admin Page';
     };

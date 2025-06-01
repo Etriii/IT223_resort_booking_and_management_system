@@ -33,7 +33,12 @@ const ResortSchedules = ({ }) => {
   }, []);
 
   // FILTERS
-  const [filters, setFilters] = useState({ paginate: 5, page: 1 });
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 31);
+  const formatDate = (date) => date.toISOString().split('T')[0];
+  // const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: formatDate(today), end_date: formatDate(tomorrow), status: 'Pending', user_name: '' });
+  const [filters, setFilters] = useState({ paginate: 5, page: 1, start_date: 'May 12, 2025', end_date: 'May 26, 2025', status: 'Pending', user_name: '' });
 
 
   // 
@@ -69,25 +74,37 @@ const ResortSchedules = ({ }) => {
             <FiFilter className="text-lg" />
             Filter
           </button>
+          <div className={``}>
+            Filetered Date:{" "}
+            {new Date(filters.start_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            to{" "}
+            {new Date(filters.end_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
         </div>
-        <button className={`px-2 py-1 bg-blue-600 border-none text-white rounded-md flex items-center`}>
-          <span className={` text-xl mr-1`}>+</span> Reservation
-        </button>
-      </div>
-      <div className="bg-blue-600 p-3 flex items-center justify-center w-full">
-        <div className="flex gap-1">
-          <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition" >
-            ««
-          </button>
-          <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition"  >
-            «
-          </button>
-          <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition"  >
-            »
-          </button>
-          <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition" >
-            »»
-          </button>
+
+        <div className={`p-1 bg-blue-600 border-none text-white rounded-md flex items-center fixed top-15 right-2`}>
+          <div className="flex gap-1">
+            <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition" >
+              ««
+            </button>
+            <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition"  >
+              «
+            </button>
+            <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition"  >
+              »
+            </button>
+            <button onClick={() => { }} className="px-2 py-1 text-sm text-blue-600 bg-white rounded hover:bg-blue-100 transition" >
+              »»
+            </button>
+          </div>
         </div>
       </div>
 

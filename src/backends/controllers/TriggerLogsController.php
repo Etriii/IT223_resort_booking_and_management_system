@@ -60,7 +60,7 @@ class TriggerLogsController
         // }
 
 
-        $acceptedTables = ['bookings', 'bookmarks', 'buildings', 'payments', 'resort_events', 'resorts', 'reviews', 'rooms'];
+        $acceptedTables = ['bookings', 'bookmarks', 'buildings', 'payments', 'resort_events', 'resorts', 'reviews', 'rooms', 'payment_submissions'];
 
         // Simulating getting request data (replace with your actual input source)
         $resort_id = $_GET['resort_id'] ?? null;

@@ -4,6 +4,9 @@ import ReservationItem from '../../components/User/ReservationItem.jsx';
 import PaymentModal from '../../components/ui/modals/paymentbooking.jsx';
 
 const MyReservation = () => {
+
+    document.title = 'My Reservations | Ocean View';
+
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setError] = useState(null);
@@ -31,7 +34,6 @@ const MyReservation = () => {
         setShowPaymentModal(false);
     };
     
-
     const fetchReservations = async () => {
         const currentUserId = localStorage.getItem('user_id');
 

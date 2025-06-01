@@ -7,6 +7,9 @@ import { getResortById } from "../../utils/cloudinaryapi";
 const CLOUD_NAME = "dpa4l9gxw";
 
 const Bookmarks = () => {
+
+    document.title = 'My Bookmarks | Ocean View';
+
     const navigate = useNavigate();
     const { bookmarkedResorts, loading, error } = useFetchUserBookmarks();
 

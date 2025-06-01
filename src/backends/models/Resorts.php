@@ -59,6 +59,21 @@ class Resorts
         return $result;
     }
 
+    public function updateResortDetails($resort_id, $resort_description, $room_description)
+    {
+        $stmt = $this->conn->prepare("
+        UPDATE " . $this->table . " 
+        SET resort_description = :resort_description, room_description = :room_description 
+        WHERE id = :resort_id
+    ");
+
+        $stmt->bindParam(':resort_description', $resort_description);
+        $stmt->bindParam(':room_description', $room_description);
+        $stmt->bindParam(':resort_id', $resort_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
 
     public function createResort($data)
     {

@@ -78,6 +78,8 @@ const ActivityLogFilters = ({ filters, setFilters }) => {
                     <option value="resort_events">Resort Events</option>
                     <option value="rooms">Rooms</option>
                     <option value="resorts">Resorts</option>
+                    <option value="payment_submissions
+">Payment Submission</option>
                 </select>
             </div>
 
