@@ -21,7 +21,7 @@ import { apiFetch } from '../../utils/apiFetch';
 const Resorts = () => {
 
     const containerRef = useRef(null);
- 
+
     const [resorts, setResorts] = useState();
     // Forms
     const [createResortForm, setCreateResortForm] = useState({
@@ -82,17 +82,6 @@ const Resorts = () => {
                 modal_title = 'View Resort';
                 break;
             case 'update':
-                // setEditResortForm({
-                //     values: {
-                //         id: resort.id || '',
-                //         name: resort.name || '',
-                //         location: resort.location || '',
-                //         location_coordinates: resort.location_coordinates || '',
-                //         tax_rate: resort.tax_rate || '',
-                //         status: resort.status || '',
-                //         contact_details: resort.contact_details || '',
-                //     }
-                // });
                 children = <UpdateResortModal resort={resort} handleEditFormInputChange={handleEditFormInputChange} editResortForm={{ values: resort }} />;
                 modal_title = 'Edit Resort';
                 break;
@@ -110,31 +99,6 @@ const Resorts = () => {
         setModal({ isOpen: true, variant, children, loading: false, title: modal_title });
     };
 
-    // useEffect(() => {
-    //     if (modal.variant === 'update' && Object.keys(editResortForm.values).some(key => editResortForm.values[key] !== '')) {
-    //         setModal({
-    //             isOpen: true,
-    //             variant: 'update',
-    //             children: <UpdateResortModal handleEditFormInputChange={handleEditFormInputChange} editResortForm={editResortForm} />,
-    //             loading: false,
-    //             title: 'Edit Resort'
-    //         });
-    //     }
-    // }, [modal.variant, editResortForm]);
-
-    // Modal rendering:
-    // {
-    //     modal.isOpen && (
-    //         modal.variant === 'update' ? (
-    //             isOpeningUpdateModal ? (
-    //                 <UpdateResortModal handleEditFormInputChange={handleEditFormInputChange} editResortForm={editResortForm} />
-    //             ) : null // Or a loading state if needed
-    //         ) : (
-    //             modal.children
-    //         )
-    //     )
-    // }
-
     const closeModal = () => {
         setModal(prev => ({ ...prev, isOpen: false }));
     };
@@ -151,16 +115,6 @@ const Resorts = () => {
         }));
     };
 
-    // const handleEditFormInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setEditResortForm(prev => ({
-    //         ...prev,
-    //         values: {
-    //             ...prev.values,
-    //             [name]: value
-    //         }
-    //     }));
-    // }; 
     const handleEditFormInputChange = (allValues) => {
         setEditResortForm(prev => ({
             ...prev,
@@ -183,7 +137,6 @@ const Resorts = () => {
                         result = await createResort(createResortForm.values);
                         break;
                     case 'update':
-                        // console.log(editResortForm.values);
                         result = await editResort(editResortForm.values);
                         break;
                     case 'delete':
@@ -224,23 +177,75 @@ const Resorts = () => {
 
     // Table Filters
 
-    const [filters, setFilters] = useState({ paginate: 5, page: 1, resort_name: null, status: '', tax_rate: '', contact_details: '', });
+    const [filters, setFilters] = useState({
+        paginate: 5,
+        page: 1,
+        resort_name: null,
+        status: '',
+        tax_rate: '',
+        contact_details: '',
+        resort_id: null,
+        tax_find: '',
+    });
 
-    const filteredResorts = resorts?.filter(resort => {
-        const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
-        const statusMatch = !filters.status || resort.status?.toLowerCase() === filters.status.toLowerCase();
-        const taxRateMatch = !filters.tax_rate || Number(resort.tax_rate) === Number(filters.tax_rate);
-        const contactMatch = !filters.contact_details || resort.contact_details?.includes(filters.contact_details);
+    const getFilteredResorts = () => {
+        if (filters.resort_id && Array.isArray(resorts) && resorts.length > 0) {
+            const targetId = Number(filters.resort_id);
+            let left = 0;
+            let right = resorts.length - 1;
 
-        return nameMatch && statusMatch && taxRateMatch && contactMatch;
-    }) || [];
+            while (left <= right) {
+                const middle = Math.floor((left + right) / 2);
+                const midId = Number(resorts[middle].id);
 
+                if (midId === targetId) {
+                    return [resorts[middle]];
+                } else if (targetId < midId) {
+                    right = middle - 1;
+                } else {
+                    left = middle + 1;
+                }
+            }
+
+            return [];
+        }
+
+        if (filters.tax_find && resorts.length > 0) {
+            let bestResort = resorts[0];
+
+            for (let i = 1; i < resorts.length; i++) {
+                const current = resorts[i];
+                if (filters.tax_find === "max" && Number(current.tax_rate) > Number(bestResort.tax_rate)) {
+                    bestResort = current;
+                }
+                if (filters.tax_find === "min" && Number(current.tax_rate) < Number(bestResort.tax_rate)) {
+                    bestResort = current;
+                }
+            }
+
+            return bestResort ? [bestResort] : [];
+        }
+
+        return resorts?.filter(resort => {
+            const nameMatch = !filters.resort_name || resort.name?.toLowerCase().includes(filters.resort_name.toLowerCase());
+            const statusMatch = !filters.status || resort.status?.toLowerCase() === filters.status.toLowerCase();
+            const taxRateMatch = !filters.tax_rate || Number(resort.tax_rate) === Number(filters.tax_rate);
+            const contactMatch = !filters.contact_details || resort.contact_details?.includes(filters.contact_details);
+            return nameMatch && statusMatch && taxRateMatch && contactMatch;
+        }) || [];
+    };
+
+
+    const filteredResorts = getFilteredResorts();
     const totalPages = Math.ceil(filteredResorts.length / filters.paginate);
-    const paginatedResorts = filteredResorts.slice((filters.page - 1) * filters.paginate, filters.page * filters.paginate);
+    const paginatedResorts = filteredResorts.slice(
+        (filters.page - 1) * filters.paginate,
+        filters.page * filters.paginate
+    );
 
     useEffect(() => {
         setFilters((prev) => ({ ...prev, page: 1 }));
-    }, [filters.resort_name, filters.paginate]);
+    }, [filters.resort_name, filters.paginate, filters.resort_id, filters.tax_find]);
 
     return (
         <div>
@@ -248,6 +253,46 @@ const Resorts = () => {
             {notify && (<ActionNotification isOpen={notify.open} variant={`${notify.type}`}> {notify.message} </ActionNotification>)}
 
             <FilterAndActions filters={filters} setFilters={setFilters} openModal={openModal} input_filter={{ key_to_filter: 'resort_name', placeholder: 'Resort Name', create_label: 'Add Resort' }} />
+
+            <div className="mb-4 mt-2 flex space-x-2">
+                <div>
+                    <label htmlFor="resort-id" className="block text-sm font-medium text-gray-700 mb-1">
+                        Filter by Resort ID
+                    </label>
+                    <input
+                        id="resort-id"
+                        type="number"
+                        placeholder="Enter Resort ID..."
+                        className=" w-40 px-4 py-1 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        onChange={(e) => {
+                            setFilters(prev => ({
+                                ...prev,
+                                resort_id: e.target.value ? Number(e.target.value) : null
+                            }));
+                        }}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="tax-find" className="block text-sm font-medium text-gray-700 mb-1">
+                        Find Resort by Tax Rate
+                    </label>
+                    <select
+                        id="tax-find"
+                        className="w-40 px-3 py-[4.7px] border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={filters.tax_find}
+                        onChange={(e) => {
+                            setFilters(prev => ({ ...prev, tax_find: e.target.value }));
+                        }}
+                    >
+                        <option value="">None</option>
+                        <option value="min">Lowest Tax Rate</option>
+                        <option value="max">Highest Tax Rate</option>
+                    </select>
+                </div>
+            </div>
+
+
+
 
             <Table theadings={['id', 'resort name', 'tax rate', 'status', 'contact_details', 'created_at', 'actions']} isLoading={loading} containerRef={containerRef} >
                 {filteredResorts.length > 0 ? (
