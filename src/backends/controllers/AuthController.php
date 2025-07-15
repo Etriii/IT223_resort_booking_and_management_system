@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../core/Request.php';
+require_once __DIR__ . '/../core/PasswordHashing.php';
 
 class AuthController
 {
@@ -33,7 +34,16 @@ class AuthController
 
         $user = $this->userModel->getUserByEmail($email);
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        // if (!$user || !password_verify($password, $user['password'])) {
+        //     echo json_encode([
+        //         'error' => [
+        //             'password' => 'Invalid password'
+        //         ]
+        //     ]);
+        //     return;
+        // }
+
+        if (!$user || (manual_custom_hash($password) != $user['password'])) {
             echo json_encode([
                 'error' => [
                     'password' => 'Invalid password'
@@ -46,7 +56,7 @@ class AuthController
 
         echo json_encode(["message" => "Login successful", "user" => $user]);
     }
-    
+
 
     public function register(Request $request)
     {
@@ -72,7 +82,6 @@ class AuthController
         }
 
         $success = $this->userModel->createUser($name, $email, $password);
-
         if ($success) {
             echo json_encode(["success" => true, "message" => "User registered successfully"]);
         } else {
@@ -94,22 +103,22 @@ class AuthController
     // }
 
     public function getLoggedInUser()
-{
-    if (isset($_COOKIE['user_id'])) {
-        $userId = $_COOKIE['user_id'];
-        $user = $this->userModel->getUserById($userId);
+    {
+        if (isset($_COOKIE['user_id'])) {
+            $userId = $_COOKIE['user_id'];
+            $user = $this->userModel->getUserById($userId);
 
-        if ($user) {
-            echo json_encode($user); // ✅ Return full user data
-            return;
-        } else {
-            echo json_encode(["success" => false, "message" => "User not found"]);
-            return;
+            if ($user) {
+                echo json_encode($user); // ✅ Return full user data
+                return;
+            } else {
+                echo json_encode(["success" => false, "message" => "User not found"]);
+                return;
+            }
         }
-    }
 
-    echo json_encode(["success" => false, "message" => 'No User Currently Logged In']);
-}
+        echo json_encode(["success" => false, "message" => 'No User Currently Logged In']);
+    }
 
     public function logout(Request $request)
     {

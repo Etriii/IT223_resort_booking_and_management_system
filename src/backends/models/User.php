@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../core/Model.php';
+require_once __DIR__ . '/../core/PasswordHashing.php';
 
 class User
 {
@@ -35,11 +36,16 @@ class User
                 $roleIds = explode(',', $user['roles']);
                 $roleNames = array_map(function ($id) {
                     switch ($id) {
-                        case '1': return 'Super Admin';
-                        case '2': return 'Resort Super Admin';
-                        case '3': return 'Resort Admin';
-                        case '4': return 'Guest';
-                        default: return 'Unknown';
+                        case '1':
+                            return 'Super Admin';
+                        case '2':
+                            return 'Resort Super Admin';
+                        case '3':
+                            return 'Resort Admin';
+                        case '4':
+                            return 'Guest';
+                        default:
+                            return 'Unknown';
                     }
                 }, $roleIds);
                 $user['role_names'] = $roleNames;
@@ -75,28 +81,33 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createUser($username, $email, $password, $status = 'active')
+    public function createUser($username, $email, $password)
     {
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $hashedPassword = manual_custom_hash($password);
 
         try {
-            $stmt = $this->conn->prepare("
-                INSERT INTO users (username, email, password, status) 
-                VALUES (:username, :email, :password, :status)
-            ");
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashedPassword);
-            $stmt->bindParam(':status', $status);
+            $stmt = $this->conn->prepare("CALL createUserWithRole(:p_username, :p_email, :p_password)");
+
+            $stmt->bindParam(':p_username', $username);
+            $stmt->bindParam(':p_email', $email);
+            $stmt->bindParam(':p_password', $hashedPassword);
 
             $stmt->execute();
 
-            return $this->conn->lastInsertId();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$row) {
+                error_log("Fetch failed or no user_id returned.");
+                return false;
+            }
+
+            return $row['user_id'];
         } catch (PDOException $e) {
             error_log("Error creating user: " . $e->getMessage());
             return false;
         }
     }
+
 
     public function updateUser($id, $username, $email, $status)
     {
